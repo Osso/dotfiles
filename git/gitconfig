@@ -7,6 +7,7 @@
 [alias]
     ci = commit
     co = checkout
+    ls = ls-files
     pull-overwrite = pull -s recursive -X theirs
     sh = show --color
 
@@ -52,6 +53,7 @@
     sa = stash apply
     sd = stash drop
 
+
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 [mergetool "sourcetree"]
@@ -63,9 +65,13 @@
 [mergetool]
     keepBackup = false
 
+[branch]
+    autosetuprebase = always
 [push]
     default = upstream
 [merge]
+    # Include summaries of merged commits in newly created merge commit messages
+    log = true
 	conflictstyle = diff3
 	tool = sublime
 
@@ -110,3 +116,11 @@
 [credential]
     # Save passwords to osx keychain
     helper = osxkeychain
+[apply]
+    # Detect whitespace errors when applying a patch
+    whitespace = fix
+
+# URL shorthands
+[url "git@github.com:"]
+    insteadOf = "github:"
+    pushInsteadOf = "git://github.com/"

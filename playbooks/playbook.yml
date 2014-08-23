@@ -8,9 +8,6 @@
     zsh_path: /bin/zsh
     current_shell: "{{ lookup('env','SHELL') }}"
   tasks:
-    - name: print from playbook
-      debug: msg="in playbooks/playbook.yml"
-
     - name: install homebrew
       command: ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)" creates=/usr/local/bin/brew
 
@@ -24,38 +21,37 @@
     - name: install apps from homebrew
       homebrew: name={{ item }} state=present
       with_items:
+        # Gnu utils like ls
+        - coreutils
+        # Invenio
         - autoconf
         - automake
-        - bash-completion
-        - coreutils
-        - gettext
+        # Version control
         - git
-        - glib
-        - go
-        - libffi
-        - libyaml
-        - mariadb
         - mercurial
-        - node
-        - openssl
-        - pkg-config
+        # More up to date and avoids poluting the system packages dir
         - python
-        - readline
-        - ruby
-        - sqlite
-        - sshfs
+        # Golang
+        - go
+        # Database
+        - mariadb
+        # File synching
         - syncthing
+        # Http client
         - wget
-        - xz
+        # For watching network traffic
         - ngrep
+        # For installing the mac os x apps
         - brew-cask
         - rename
+        # Shell completions
         - vagrant-completion
         - django-completion
         - pip-completion
+        - zsh-completions
+        - bash-completion
         # Required by zsh
         - gdbm
-        - zsh-completions
 
     - name: install cask apps from homebrew
       homebrew_cask: name={{ item }} state=present
@@ -84,10 +80,6 @@
     - name: Set default shell to zsh
       command: chsh -s {{ zsh_path }}
       when: "current_shell != zsh_path"
-
-    # - name: Change permissions of /usr/local because zsh complains
-    #   file: dest=/usr/local/share mode=755
-    #   sudo: true
 
     - name: Create bash conf directory
       file: dest=~/.bash state=directory
@@ -201,7 +193,6 @@
 
     - name: install apps from pip
       pip: name={{ item }}
-      sudo: yes
       with_items:
         # Virtual environments
         - virtualenv
@@ -217,6 +208,5 @@
         # Always useful
         - ipython
 
-    # - name: install powerline for vim
-    #   pip: name=git+git://github.com/Lokaltog/powerline
-    #   sudo: yes
+    - name: install powerline for vim
+      command: pip install git+git://github.com/Lokaltog/powerline creates=/usr/local/bin/powerline

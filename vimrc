@@ -15,6 +15,7 @@ syntax on
 set list listchars=tab:\»\
 
 " mappings
+nmap ; :
 nmap <BS> <Left>x
 imap <Esc><Space> <Esc>
 
