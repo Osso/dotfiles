@@ -1,0 +1,57 @@
+###############
+# Environment #
+###############
+
+# Do not query github in homebrew search
+export HOMEBREW_NO_GITHUB_API=1
+
+# Invenio
+export CFG_INVENIO_USER="osso"
+export CFG_INSPIRE_BIBTASK_USER="admin"
+export CFG_INVENIO_HOSTNAME="localhost:4000"
+export CFG_OPENOFFICE_TMPDIR="/opt/invenio/var/tmp/ooffice-tmp-files"
+
+# Language
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+
+# Colored file types for ls
+eval $(gdircolors -b "$HOME/.dircolors")
+
+# Move virtual envs to an easier to access directory
+export WORKON_HOME="~/envs"
+
+# Kerberos tickets to login to CERN
+export KRB5CCNAME="/tmp/krb5cc_501"
+
+# Needs for java stuff
+export JAVA_HOME="/Library/Java/Home"
+
+# Sublime as Editor
+export EDITOR='subl -w'
+
+# Custom git hooks
+# export PYTHONPATH="$HOME/lib/python"
+
+# Highlight section titles in manual pages (136 is yellow)
+export LESS_TERMCAP_md="$(tput setaf 136)";
+
+# Always enable colored `grep` output
+export GREP_OPTIONS="--color=auto";
+
+# Link Homebrew casks in `/Applications` rather than `~/Applications`
+export HOMEBREW_CASK_OPTS="--appdir=/Applications";
+
+# Homebrew paths for go
+export PATH="$PATH:/usr/local/opt/go/libexec/bin"
+# Include homebrew paths
+export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
+# Include home path
+export PATH="$PATH:~/bin"
+
+# Better 'less': less -FRX
+# -F: quit if the contents fit the screen
+# -R: colors
+# -X: no clearing of the screen after quit
+export LESS="FRX"
+

@@ -1,0 +1,71 @@
+# Display a binary clock
+function bclock()
+{
+    perl -e 'for(;;){@d=split("",`date +%H%M%S`);print"\r";for(0..5){printf"%.4b ",$d[$_]}sleep 1}'
+}
+
+# Display box
+# e.g.
+# #######
+# # box #
+# #######
+function box() {
+    t="$1xxxx"
+    c=${2:-#}
+    echo ${t//?/$c}
+    echo "$c $1 $c"
+    echo ${t//?/$c}
+}
+
+# Roll a single die of "$1" sides, just once
+# default number of sides is 6
+# written by Dallas Vogels
+function roll()
+{
+    function roll_die() {
+        # capture parameter
+        declare -i DIE_SIDES=$1
+        # check for die sides
+        if [ ! $DIE_SIDES -gt 0 ]; then
+          # default to 6
+          DIE_SIDES=6
+        fi
+        # echo to screen
+        echo $[ ( $RANDOM % $DIE_SIDES )  + 1 ]
+    }
+    # roll_die 10  # returns 1 to 10 as per 10 sides
+    # roll_die 2   # returns 1 or 2 as per 2 sides
+    roll_die "$1"
+}
+
+# Jump to a project directory and setup the environment
+# e.g. work_on_project i
+# will execute ~/Projects/invenio and activate invenio virtual environment
+function work_on_project() {
+    j $@
+    if [ -f .project_env ]; then
+        source .project_env
+    fi
+}
+
+# Show all processes that match
+function psgrep() {
+    if [ ! -z $1 ] ; then
+        echo "Grepping for processes matching $1..."
+        ps aux | grep -i $1 | grep -v grep
+    else
+        echo "!! Need name to grep for"
+    fi
+}
+
+
+# Kill all processes that match
+function killit() {
+    # Kills any process that matches a regexp passed to it
+    ps aux | grep -v "grep" | grep -i "$@" | awk '{print $2}' | xargs sudo kill
+}
+
+# Remove trailing whitespace from a file
+function remove_trailing_whitespace() {
+    find . -name $* -exec sed -i '' -e's/[[:space:]]*$//' {} \;
+}

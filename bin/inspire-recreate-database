@@ -1,0 +1,79 @@
+#!/usr/local/bin/python
+
+import os
+import sys
+
+from plumbum import local
+from plumbum.cmd import (make, rm, cp, inveniocfg, echo, bibupload, bibrank,
+                         bibindex, bibreformat, webcoll, dbexec, touch, bibauthorid)
+
+CFG_INVENIO_SRCDIR = os.environ.get('CFG_INVENIO_SRCDIR', "~/src/invenio")
+CFG_INSPIRE_SRCDIR = os.environ.get('CFG_INSPIRE_SRCDIR', "~/src/inspire")
+CFG_INVENIO_PREFIX = os.environ.get('CFG_INVENIO_PREFIX', "/opt/invenio")
+CFG_INVENIO_HOSTNAME = os.environ.get('CFG_INVENIO_HOSTNAME')
+CFG_INVENIO_DOMAINNAME = os.environ.get('CFG_INVENIO_DOMAINNAME')
+CFG_INVENIO_USER = os.environ.get('CFG_INVENIO_USER', 'osso')
+CFG_INVENIO_ADMIN = os.environ.get('CFG_INVENIO_ADMIN', 'osso@localhost')
+CFG_INSPIRE_BIBTASK_USER = os.environ.get('CFG_INSPIRE_BIBTASK_USER', 'admin')
+
+
+def die(msg):
+    print >>sys.stderr, msg
+    sys.exit(1)
+
+
+def silence(cmd):
+    return cmd > "/dev/null"
+
+
+def main():
+    if not CFG_INVENIO_PREFIX:
+        die("CFG_INVENIO_PREFIX is empty")
+
+    print("Deleting invenio")
+    with local.cwd(CFG_INVENIO_PREFIX):
+        rm['-rf', "lib/invenio"]()
+        rm['-rf', "var"]()
+        rm['-rf', "etc"]()
+    print("Installing invenio")
+    with local.cwd(CFG_INVENIO_SRCDIR):
+        silence(make['-s'])()
+        silence(make['-s', 'install'])()
+    print("Recreating configuration file")
+    cp["%s/../invenio-local.conf" % CFG_INVENIO_SRCDIR, "%s/etc/" % CFG_INVENIO_PREFIX]()
+    silence(inveniocfg['--update-all'])()
+    print("Dropping tables")
+    inveniocfg['--drop-tables', '--yes-i-know']()
+    print("Creating tables")
+    inveniocfg['--create-tables', '--yes-i-know']()
+    print("Loading atlantis demo site without records")
+    silence(inveniocfg['--create-demo-site', '--yes-i-know'])()
+    print("Installing INSPIRE")
+    with local.cwd(CFG_INSPIRE_SRCDIR):
+        silence(make['-s'])()
+        silence(make['-s', 'install'])()
+        print("Installing INSPIRE db changes")
+        make['install-dbchanges']()
+
+        print("Loading INSPIRE demo site")
+        (echo["TRUNCATE schTASK"] | dbexec)()
+        make['load-demo-records']()
+        bibupload['1']()
+        bibindex['2']()
+        webcoll['3']()
+        bibrank['4']()
+        bibauthorid['--update-personid', '--all-records', '-u', CFG_INSPIRE_BIBTASK_USER]()
+        bibauthorid['5']()
+
+    print ("Installing jquery plugins")
+    with local.cwd(CFG_INVENIO_SRCDIR):
+        make['install-jquery-plugins']()
+
+    # print("Restarting Invenio WSGI app")
+    # touch["%s/var/www-wsgi/invenio.wsgi" % CFG_INVENIO_PREFIX]()
+
+    print "Done"
+
+
+if __name__ == '__main__':
+    main()

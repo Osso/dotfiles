@@ -1,0 +1,25 @@
+# Scrolling line by line
+set smooth
+# Tab size
+set tabsize 4
+# Python syntax coloring
+# include "/usr/share/nano/python.nanorc"
+# Disable backup files *~
+unset backup
+# Case insensitive search
+unset casesensitive
+# Autoindent text
+set autoindent
+# Display cursor position
+set const
+# Characters to display when show invisibles is activated
+set whitespace "»."
+# Don’t wrap text at all.
+set nowrap
+# When Home is pressed anywhere but at the very beginning of
+# non-whitespace characters on a line, the cursor will jump to that beginning
+set smarthome
+# Enable soft line wrapping for easier viewing of very long lones.
+set softwrap
+# Save automatically on exit, don’t prompt.
+set tempfile

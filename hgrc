@@ -1,0 +1,23 @@
+%include ~/.hgrc_local
+[ui]
+ignore = ~/.hgignore
+
+[pager]
+pager = less
+
+[extensions]
+# Rebase usually needed for a nicer history in feature branches
+rebase=
+histedit=
+# Like cherry-pick
+transplant=
+
+# To kepp?
+convert=
+mq=
+graphlog=
+purge=
+pager=
+mq=
+churn=
+#hggit = ~/src/hg-git/hggit

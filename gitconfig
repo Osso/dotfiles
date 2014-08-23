@@ -1,0 +1,112 @@
+[include]
+  # For username / creds / etc
+  path = ~/.gitconfig_local
+[core]
+    excludesfile = /Users/osso/.gitignore
+    quotepath = false
+[alias]
+    ci = commit
+    co = checkout
+    pull-overwrite = pull -s recursive -X theirs
+    sh = show --color
+
+    # One letter shortcuts
+    b = branch
+    d = diff --color
+    a = commit -a --amend
+    c = commit -a -m
+    s = status --branch --short
+    r = rebase -i
+    f = fetch
+    z = cherry-pick
+    p = pull --rebase
+
+    # Rebase
+    ra = rebase --abort
+    rc = rebase --continue
+    rs = rebase --skip
+
+    # Cherry-pick
+    zc = cherry-pick --continue
+    za = cherry-pick --abort
+
+    mt = mergetool -y
+    ds = diff --staged
+
+    # Branches listing
+    lbi = !"git for-each-ref --format='%(committerdate:short) %(refname)' --sort=committerdate refs/heads/*$1*"
+    rbi = !"git for-each-ref --format='%(committerdate:short) %(refname)' --sort=committerdate refs/remotes/$1"
+    # Logs
+    l = log --graph --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold white)— %an%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
+    ll = log --oneline --abbrev=8 --stat --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold white)— %an%C(reset)%C(bold yellow)%d%C(reset)'
+    lp = log -p
+    promote = !"git push --set-upstream origin \"$(git symbolic-ref --quiet --short HEAD)\""
+    delete-branch = !"~/bin/git-delete-branch"
+
+    # bisect
+    good = bisect good
+    bad = bisect bad
+    # stash
+    ss = stash
+    sl = stash list
+    sa = stash apply
+    sd = stash drop
+
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[mergetool "sublime"]
+    cmd = subl -w $MERGED
+    trustExitCode = false
+[mergetool]
+    keepBackup = false
+
+[push]
+    default = upstream
+[merge]
+	conflictstyle = diff3
+	tool = sublime
+
+[color]
+  branch = auto
+  diff = auto
+  status = auto
+[color "branch"]
+    plain = normal
+    current = normal reverse
+    local = normal
+    remote = normal
+[color "diff"]
+    plain = normal
+    commit = yellow
+    whitespace = normal red
+    meta = yellow
+    frag = yellow bold
+    old = red bold
+    new = green bold
+[color "status"]
+    header = normal
+    added = green
+    changed = yellow
+    untracked = normal
+    updated = green
+    nobranch = red
+[color "grep"]
+    match = normal
+[color "interactive"]
+    prompt = normal
+    header = normal
+    help = normal
+    error = normal
+
+[advice]
+    # Do not display a warning when checking out a commit hash
+    detachedHead = False
+[rerere]
+    # I am still not convinced
+    enabled = false
+[credential]
+    # Save passwords to osx keychain
+    helper = osxkeychain

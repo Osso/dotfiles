@@ -1,0 +1,64 @@
+#!/usr/bin/env python
+
+import requests
+import sys
+import os
+import ConfigParser
+from urllib import quote
+
+CONFIG_FILE_PATH = os.path.join(os.environ['HOME'], '.jenkins')
+CONFIG_DEFAULT_SECTION = 'default'
+
+if not os.path.isfile(CONFIG_FILE_PATH):
+    print >> sys.stderr, """Please create a config file at ~/.jenkins
+and set USERNAME, PASSWORD, REPO and JOB_NAME."""
+    sys.exit(1)
+
+
+def parse_config(path, section=CONFIG_DEFAULT_SECTION):
+    config = ConfigParser.ConfigParser()
+    config.read(path)
+
+    try:
+        base_url = config.get(section, 'base_url')
+    except ConfigParser.NoOptionError:
+        base_url = 'https://jenkins.invenio-software.org'
+
+    return {
+        'job_name': config.get(section, 'job name', 'invenio-master-ondemand'),
+        'repo': config.get(section, 'repo'),
+        'username': config.get(section, 'username'),
+        'password': config.get(section, 'password'),
+        'branches': config.get(section, 'branches'),
+        'base_url': base_url,
+    }
+
+
+def get_branches(config):
+    return [branch.strip() for branch in config.split(',')]
+
+
+def submit_job(config, branch):
+    params = {'branch': quote(branch), 'repo': quote(config['repo'])}
+    data = 'name=MYREPO&value=%(repo)s&name=MYBRANCH&value=%(branch)s&name=MYBUILDMODE&value=complete&statusCode=303&redirectTo=.&json=%%7B%%22parameter%%22%%3A+%%5B%%7B%%22name%%22%%3A+%%22MYREPO%%22%%2C+%%22value%%22%%3A+%%22%(repo)s%%22%%7D%%2C+%%7B%%22name%%22%%3A+%%22MYBRANCH%%22%%2C+%%22value%%22%%3A+%%22%(branch)s%%22%%7D%%2C+%%7B%%22name%%22%%3A+%%22MYBUILDMODE%%22%%2C+%%22value%%22%%3A+%%22complete%%22%%7D%%5D%%2C+%%22statusCode%%22%%3A+%%22303%%22%%2C+%%22redirectTo%%22%%3A+%%22.%%22%%7D&Submit=Build' % params
+
+    url = "%s/job/%s/build" % (config['base_url'], config['job_name'])
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+
+    requests.post(url,
+                  data=data,
+                  verify=False,
+                  auth=(config['username'], config['password']),
+                  headers=headers)
+
+
+def main(argv, config_path):
+    config = parse_config(config_path)
+    branch = argv[1].split('/')[2]
+    if branch in config['branches']:
+        print 'Submitting build to Jenkins for branch %s' % branch
+        submit_job(config, branch)
+
+
+if __name__ == '__main__':
+    main(sys.argv, CONFIG_FILE_PATH)
