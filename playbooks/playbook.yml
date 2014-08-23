@@ -103,68 +103,68 @@
       sudo: no
       with_items:
         # Bash
-        - from: bash_profile
+        - from: shells/bash/profile
           to: ~/.bash_profile
-        - from: bashrc
+        - from: shells/bash/bashrc
           to: ~/.bashrc
         # Zsh
-        - from: zsh_profile
+        - from: shells/zsh/profile
           to: ~/.zprofile
-        - from: zshrc
+        - from: shells/zsh/zshrc
           to: ~/.zshrc
 
         # Shell colors
-        - from: shell_colors
+        - from: shells/colors
           to: ~/.bash/colors
-        - from: shell_colors
+        - from: shells/colors
           to: ~/.zsh/colors
 
         # Dir colors
-        - from: dircolors
+        - from: shells/dircolors
           to: ~/.dircolors
 
         # Shell prompt
-        - from: bash_prompt
+        - from: shells/bash/prompt
           to: ~/.bash/prompt
-        - from: zsh_prompt
+        - from: shells/zsh/prompt
           to: ~/.zsh/prompt
 
         # Alias
-        - from: shell_alias
+        - from: shells/alias
           to: ~/.bash/alias
-        - from: shell_alias
+        - from: shells/alias
           to: ~/.zsh/alias
 
         # Shell env
-        - from: shell_env
+        - from: shells/env
           to: ~/.bash/env
-        - from: shell_env
+        - from: shells/env
           to: ~/.zsh/env
 
         # Shell funcs
-        - from: shell_func
+        - from: shells/func
           to: ~/.bash/func
-        - from: shell_func
+        - from: shells/func
           to: ~/.zsh/func
 
         # Git
-        - from: gitconfig
+        - from: git/gitconfig
           to: ~/.gitconfig
-        - from: gitignore
+        - from: git/gitignore
           to: ~/.gitignore
 
         # Mercurial
-        - from: hgrc
+        - from: hg/hgrc
           to: ~/.hgrc
-        - from: hgignore
+        - from: hg/hgignore
           to: ~/.hgignore
 
         # Zsh bookmarks
-        - from: zshmarks/zshmarks.plugin.zsh
+        - from: shells/zsh/zshmarks/zshmarks.plugin.zsh
           to: ~/.zsh/zshmarks
-        - from: zshmarks/_jump
+        - from: shells/zsh/zshmarks/_jump
           to: ~/.zsh/autocomplete/_jump
-        - from: zsh_bookmarks
+        - from: shells/zsh/bookmarks
           to: ~/.bookmarks
 
         # Misc
