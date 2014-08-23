@@ -52,6 +52,8 @@
         - bash-completion
         # Required by zsh
         - gdbm
+        # Required by shell prompt
+        - vcprompt
 
     - name: install cask apps from homebrew
       homebrew_cask: name={{ item }} state=present
