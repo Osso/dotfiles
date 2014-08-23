@@ -9,13 +9,13 @@ packages via pip.
 
 
 It covers the configuration of:
- - bash
- - zsh
- - git
- - mercurial
- - vim
- - nano
- - wget
+  * bash
+  * zsh
+  * git
+  * mercurial
+  * vim
+  * nano
+  * wget
 
 There's a bunch of scripts in ~/bin
 
@@ -23,12 +23,12 @@ There's a bunch of scripts in ~/bin
 ### Shells
 
 Sets up:
- - prompt
- - history
- - aliases/funcs
- - autocompletion
- - env variables (including ls colors)
- - terminal options (enable ctrl-q/s)
+  * prompt
+  * history
+  * aliases/funcs
+  * autocompletion
+  * env variables (including ls colors)
+  * terminal options (enable ctrl-q/s)
 
 
 ### Sublime Text
@@ -39,8 +39,8 @@ Hopefully I get to add them to it soon.
 
 
 Sets up:
-    - keybindings
-    - settings
+  * keybindings
+  * settings
 
 
 ### Vim
@@ -49,7 +49,7 @@ I rarely use VIM, so this configuration is mostly to make it a bit prettier
 and easier to use.
 
 Sets up:
-    - [powerline](https://github.com/Lokaltog/powerline) status bar
-    - disables a bunch of keys till I get familiar with the others
-    - alt+direction to go around in insert mode
-    - ctrl-a and ctrl-e work as expected
+  * [powerline](https://github.com/Lokaltog/powerline) status bar
+  * disables a bunch of keys till I get familiar with the others
+  * alt+direction to go around in insert mode
+  * ctrl-a and ctrl-e work as expected
