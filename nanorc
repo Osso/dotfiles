@@ -19,7 +19,5 @@ set nowrap
 # When Home is pressed anywhere but at the very beginning of
 # non-whitespace characters on a line, the cursor will jump to that beginning
 set smarthome
-# Enable soft line wrapping for easier viewing of very long lones.
-set softwrap
 # Save automatically on exit, don’t prompt.
 set tempfile
