@@ -37,23 +37,21 @@
         "CVS",
         "autom4te.cache"
     ],
-    // "font_face": "Monaco",
-    "font_size": 12.0,
-    // "font_face": "Inconsolata for Powerline",
     "font_face": "Inconsolata-g for Powerline",
-    // "font_size": 15.0,
+    "font_size": 12.0,
     "ignored_packages":
     [
         "Vintage"
     ],
     "indent_to_bracket": true,
     "remember_open_files": false,
-    "rulers": [
+    "rulers":
+    [
         80
     ],
     "smart_indent": true,
     "tab_size": 4,
-    "theme": "Soda Light.sublime-theme",
+    "theme": "Brogrammer.sublime-theme",
     "translate_tabs_to_spaces": true,
     "trim_automatic_white_space": true,
     "trim_trailing_white_space_on_save": true
