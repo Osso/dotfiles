@@ -107,6 +107,8 @@
           to: ~/.zprofile
         - from: shells/zsh/zshrc
           to: ~/.zshrc
+        - from: shells/zsh/completion
+          to: ~/.zsh/completion
 
         # Shell colors
         - from: shells/colors

@@ -32,43 +32,13 @@ source ~/.zsh/prompt
 source ~/.zsh/alias
 source ~/.zsh/func
 source ~/.zsh/zshmarks
+source ~/.zsh/completion
 
 # Homebrew virtualenvwrapper
 source /usr/local/bin/virtualenvwrapper.sh
 
 # Colorization of command line similar to fish shell
 # source ~/src/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-
-################
-# autocomplete #
-################
-
-# Homebrew autocompletion
-fpath=(/usr/local/share/zsh-completions $fpath)
-
-# Custom autocompletion
-fpath=(~/.zsh/autocomplete $fpath)
-
-autoload -U compinit
-compinit -u
-
-# Add `killall` tab completion
-zstyle ':completion:*:processes-names' command 'ps -e -o comm='
-
-# Autocomplete projects for `w` and 'j' alias
-compdef work_on_project=jump
-
-zmodload zsh/complist
-zstyle ':completion:*' menu select=2
-bindkey -M menuselect ' ' accept-and-infer-next-history
-
-# Example of completion of files in a directory
-# #compdef c
-# _files -W $PROJECTS -/
-
-# Case-insensitive completion
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 
 ####################
