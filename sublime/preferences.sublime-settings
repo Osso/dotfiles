@@ -3,6 +3,7 @@
     "detect_indentation": false,
     "file_exclude_patterns":
     [
+        "*.min.js",
         "*.pyc",
         "*.pyo",
         "*.exe",
