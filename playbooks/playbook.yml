@@ -39,6 +39,7 @@
         - syncthing
         # Http client
         - wget
+        - httpie
         # For watching network traffic
         - ngrep
         # For installing the mac os x apps
