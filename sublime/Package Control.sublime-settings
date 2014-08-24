@@ -1,0 +1,28 @@
+{
+	"auto_upgrade_last_run": null,
+	"installed_packages":
+	[
+		"CSS Completions",
+		"Dockerfile Syntax Highlighting",
+		"GitGutter",
+		"Homebrew-formula-syntax",
+		"INI",
+		"jQuery",
+		"Keymaps",
+		"Markdown Preview",
+		"Package Control",
+		"PHP Completions Kit",
+		"PHPUnit Completions",
+		"Python 3",
+		"Python Auto-Complete",
+		"SaltStack-related syntax highlighting and snippets",
+		"SideBarEnhancements",
+		"sublime-github",
+		"SublimeLinter",
+		"SublimeLinter-pep8",
+		"SublimeLinter-phplint",
+		"SublimeLinter-pylint",
+		"Tag",
+		"Theme - Soda"
+	]
+}
