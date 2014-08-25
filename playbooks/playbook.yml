@@ -224,8 +224,6 @@
         - pylint
         # Always useful
         - ipython
-        # For deploying on INSPIRE
-        - fabric
 
     - name: install powerline for vim
       command: pip install git+git://github.com/Lokaltog/powerline creates=/usr/local/bin/powerline
