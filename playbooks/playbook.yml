@@ -209,6 +209,8 @@
           to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/DetectSyntax.sublime-settings"
         - from: sublime/Snippets.py
           to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/Snippets.py"
+        - from: sublime/Move.py
+          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/Move.py"
         - from: sublime/PythonSnippets.sublime-commands
           to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/PythonSnippets.sublime-commands"
         - from: sublime/SublimePython.sublime-settings
