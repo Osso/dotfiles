@@ -93,6 +93,12 @@
     - name: Create zsh autocomplete plugins directory
       file: dest=~/.zsh/autocomplete state=directory
 
+    - name: Create ipython conf directory (1/2)
+      file: dest=~/.ipython state=directory
+
+    - name: Create ipython conf directory (2/2)
+      file: dest=~/.ipython/profile_default state=directory
+
     - name: create homedir symlinks
       file: src="~/Sync/Provisioning/{{ item.from }}" dest="{{ item.to }}" state=link
       sudo: no
@@ -176,6 +182,12 @@
         - from: nanorc
           to: ~/.nanorc
 
+        # IPython
+        - from: python/invenio.ipython.py
+          to: ~/.ipython/invenio.ipython.py
+        - from: python/ipython_config.py
+          to: ~/.ipython/profile_default/ipython_config.py
+
         # Path Directories
         - from: bin
           to: ~/bin
@@ -212,6 +224,8 @@
         - pylint
         # Always useful
         - ipython
+        # For deploying on INSPIRE
+        - fabric
 
     - name: install powerline for vim
       command: pip install git+git://github.com/Lokaltog/powerline creates=/usr/local/bin/powerline
