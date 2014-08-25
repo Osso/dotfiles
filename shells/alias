@@ -98,7 +98,7 @@ alias tall="t *_unit_tests.py *_regression_tests.py"
 alias mysql-on-demand-t1="mysql inspirehep -h dbod-insp-t1.cern.ch -u admin -p -P5503"
 alias mysql-on-demand-c1="mysql -h dbod-insp-ci1.cern.ch -u admin -p -P5501"
 # CERN proxy
-alias lxplus-proxy="ssh -C2qfTnN -D 8081 lxplus.cern.ch"
+alias lxplus-proxy="ssh -C2qfTnN -D 8081 lxplus"
 
 # Pipe my public key to my clipboard.
 alias pubkey="more ~/.ssh/id_rsa.pub | pbcopy | echo '=> Public key copied to pasteboard.'"
