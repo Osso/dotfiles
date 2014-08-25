@@ -2,7 +2,7 @@
 # Alias #
 #########
 
-if [ "$0" = 'zsh' ]; then
+if [[ "$0" =~ 'zsh' ]]; then
     alias -g L="|less"
     alias -g ..="cd .."
     alias -g ...="cd ../.."
