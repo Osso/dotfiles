@@ -195,14 +195,26 @@
           to: ~/lib
 
         # Sublime
-        - from: sublime/keybindings.sublime-keymap
+        - from: sublime/Default (OSX).sublime-keymap
           to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/Default (OSX).sublime-keymap"
-        - from: sublime/preferences.sublime-settings
+        - from: sublime/Preferences.sublime-settings
           to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings"
         - from: sublime/RunMultipleCommands.py
           to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/RunMultipleCommands.py"
-        - from: sublime/twilight.tmTheme
-          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/Twilight (SL).tmTheme"
+        - from: sublime/Twilight.tmTheme
+          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/Twilight.tmTheme"
+        - from: sublime/Package Control.sublime-settings
+          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings"
+        - from: sublime/DetectSyntax.sublime-settings
+          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/DetectSyntax.sublime-settings"
+        - from: sublime/Snippets.py
+          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/Snippets.py"
+        - from: sublime/PythonSnippets.sublime-commands
+          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/PythonSnippets.sublime-commands"
+        - from: sublime/SublimePython.sublime-settings
+          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/SublimePython.sublime-settings"
+        - from: sublime/SublimeLinter.sublime-settings
+          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/SublimeLinter.sublime-settings"
 
     - name: easy install pip
       easy_install: name=pip
