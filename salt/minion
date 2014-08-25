@@ -1,0 +1,13 @@
+id: mac-mini.local
+file_client: local
+file_roots:
+    base:
+        - /Users/osso/Sync/Provisioning/salt
+root_dir: /tmp/salt
+pki_dir: pki
+cachedir: cache
+log_file: log
+# log_level: debug
+autoload_dynamic_modules: True
+fileserver_limit_traversal: True
+user: osso

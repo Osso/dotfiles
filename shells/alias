@@ -79,6 +79,7 @@ alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo 
 # Provision OSX
 alias provision="ansible-playbook ~/Sync/Provisioning/playbooks/*.yml -i '*', -Kv"
 alias provision-facts="ansible localhost -i 127.0.0.1, -m setup --connection=local"
+alias provision-salt="salt-call --local state.highstate -c /tmp/salt"
 
 # INSPIRE Deploy scripts
 alias fab="fab -k -u adeiana"
