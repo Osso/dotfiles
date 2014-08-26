@@ -38,7 +38,7 @@
 		"CVS",
 		"autom4te.cache"
 	],
-	"font_face": "Inconsolata-g for Powerline",
+	"font_face": "Inconsolata-dz for Powerline",
 	"font_size": 12.0,
 	"ignored_packages":
 	[

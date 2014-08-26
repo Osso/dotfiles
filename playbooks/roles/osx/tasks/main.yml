@@ -7,6 +7,7 @@
   with_items:
     - osso/formula
     - caskroom/cask
+    - caskroom/fonts
     - homebrew/completions
 
 - name: install apps from homebrew
@@ -62,6 +63,7 @@
     - grandperspective
     - mplayerx
     - istat-menus
+    - font-inconsolata-dz-for-powerline
 
 #  # Needs to be installed after XQuartz
 # - name: install apps from homebrew
