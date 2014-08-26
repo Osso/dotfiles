@@ -87,5 +87,6 @@
     { "keys": ["super+v"], "command": "paste" },
     { "keys": ["super+shift+v"], "command": "paste_and_indent" },
     { "keys": ["super+option+v"], "command": "paste_from_history" },
+    { "keys": ["f12"], "command": "goto_definition" },
 ]
 
