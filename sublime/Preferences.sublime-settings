@@ -57,4 +57,5 @@
 	"trim_automatic_white_space": true,
 	"trim_trailing_white_space_on_save": true,
 	"show_full_path": true,
+	"close_windows_when_empty": true,
 }

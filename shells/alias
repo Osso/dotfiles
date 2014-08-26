@@ -77,7 +77,8 @@ alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl"
 
 # Provision OSX
-alias provision="ansible-playbook ~/Sync/Provisioning/playbooks/*.yml --connection=local -i 127.0.0.1, -Kv"
+alias provision="ansible-playbook ~/Sync/Provisioning/playbooks/*.yml -i '*', -Kv"
+alias provision-facts="ansible localhost -i 127.0.0.1, -m setup --connection=local"
 
 # INSPIRE Deploy scripts
 alias fab="fab -k -u adeiana"

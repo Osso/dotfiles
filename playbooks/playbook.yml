@@ -1,88 +1,29 @@
 ---
-- name: MacOS X Provisioning
-  hosts: workstation
-  gather_facts: False
+- name: Alessio's Provisioning
   hosts: 127.0.0.1
   connection: local
+
   vars:
-    zsh_path: /bin/zsh
-    current_shell: "{{ lookup('env','SHELL') }}"
+    shell_path: "/bin/zsh"
+    current_shell: "{{ ansible_env.SHELL }}"
+    sublime_path: "/Users/osso/Library/Application Support/Sublime Text 3"
+    provisioning_path: "{{ ansible_env.PROVISIONING_PATH | default('~/Sync/Provisioning') }}"
+
+  roles:
+    - role: debian
+      when: ansible_os_family == 'Debian'
+    - role: osx
+      when: ansible_os_family == 'Darwin'
+
   tasks:
-    - name: install homebrew
-      command: ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)" creates=/usr/local/bin/brew
-
-    - name: add homebrew taps
-      homebrew_tap: tap={{ item }} state=present
-      with_items:
-        - osso/formula
-        - caskroom/cask
-        - homebrew/completions
-
-    - name: install apps from homebrew
-      homebrew: name={{ item }} state=present
-      with_items:
-        # Gnu utils like ls
-        - coreutils
-        # Invenio
-        - autoconf
-        - automake
-        # Version control
-        - git
-        - mercurial
-        # More up to date and avoids poluting the system packages dir
-        - python
-        # Golang
-        - go
-        # Database
-        - mariadb
-        # File synching
-        - syncthing
-        # Http client
-        - wget
-        - httpie
-        # For watching network traffic
-        - ngrep
-        # For installing the mac os x apps
-        - brew-cask
-        - rename
-        # Shell completions
-        - vagrant-completion
-        - django-completion
-        - pip-completion
-        - zsh-completions
-        - bash-completion
-        # Required by zsh
-        - gdbm
-        # Required by shell prompt
-        - vcprompt
-
-    - name: install cask apps from homebrew
-      homebrew_cask: name={{ item }} state=present
-      with_items:
-        - alfred
-        - dropbox
-        # - java not compatible with Yosemite yet
-        - skype
-        - vagrant
-        - virtualbox
-        - cleanmymac
-        - colloquy
-        - fitbit-connect
-        - grandperspective
-        - mplayerx
-        - istat-menus
-
-    #  # Needs to be installed after XQuartz
-    # - name: install apps from homebrew
-    #   homebrew: name=poppler state=present
 
     - name: Allow homebrew zsh to be selected as default shell
       sudo: true
-      lineinfile: dest=/etc/shells line={{ zsh_path }}
+      lineinfile: dest=/etc/shells line={{ shell_path }}
 
-    - name: Set default shell to zsh
-      command: chsh -s {{ zsh_path }}
-      when: "current_shell != zsh_path"
+    - name: Set default shell to {{ shell_path }}
+      command: chsh -s {{ shell_path }}
+      when: "current_shell != shell_path"
 
     - name: Create bash conf directory
       file: dest=~/.bash state=directory
@@ -100,7 +41,7 @@
       file: dest=~/.ipython/profile_default state=directory
 
     - name: create homedir symlinks
-      file: src="~/Sync/Provisioning/{{ item.from }}" dest="{{ item.to }}" state=link
+      file: src="{{ provisioning_path }}/{{ item.from }}" dest="{{ item.to }}" state=link
       sudo: no
       with_items:
         # Bash
@@ -196,27 +137,27 @@
 
         # Sublime
         - from: sublime/Default (OSX).sublime-keymap
-          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/Default (OSX).sublime-keymap"
+          to: "{{ sublime_path }}/Packages/User/Default (OSX).sublime-keymap"
         - from: sublime/Preferences.sublime-settings
-          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings"
+          to: "{{ sublime_path }}/Packages/User/Preferences.sublime-settings"
         - from: sublime/RunMultipleCommands.py
-          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/RunMultipleCommands.py"
+          to: "{{ sublime_path }}/Packages/User/RunMultipleCommands.py"
         - from: sublime/Twilight.tmTheme
-          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/Twilight.tmTheme"
+          to: "{{ sublime_path }}/Packages/User/Twilight.tmTheme"
         - from: sublime/Package Control.sublime-settings
-          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings"
+          to: "{{ sublime_path }}/Packages/User/Package Control.sublime-settings"
         - from: sublime/DetectSyntax.sublime-settings
-          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/DetectSyntax.sublime-settings"
+          to: "{{ sublime_path }}/Packages/User/DetectSyntax.sublime-settings"
         - from: sublime/Snippets.py
-          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/Snippets.py"
+          to: "{{ sublime_path }}/Packages/User/Snippets.py"
         - from: sublime/Move.py
-          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/Move.py"
+          to: "{{ sublime_path }}/Packages/User/Move.py"
         - from: sublime/PythonSnippets.sublime-commands
-          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/PythonSnippets.sublime-commands"
+          to: "{{ sublime_path }}/Packages/User/PythonSnippets.sublime-commands"
         - from: sublime/SublimePython.sublime-settings
-          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/SublimePython.sublime-settings"
+          to: "{{ sublime_path }}/Packages/User/SublimePython.sublime-settings"
         - from: sublime/SublimeLinter.sublime-settings
-          to: "/Users/osso/Library/Application Support/Sublime Text 3/Packages/User/SublimeLinter.sublime-settings"
+          to: "{{ sublime_path }}/Packages/User/SublimeLinter.sublime-settings"
 
     - name: easy install pip
       easy_install: name=pip

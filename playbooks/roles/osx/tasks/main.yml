@@ -1,0 +1,68 @@
+
+- name: install homebrew
+  command: ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)" creates=/usr/local/bin/brew
+
+- name: add homebrew taps
+  homebrew_tap: tap={{ item }} state=present
+  with_items:
+    - osso/formula
+    - caskroom/cask
+    - homebrew/completions
+
+- name: install apps from homebrew
+  homebrew: name={{ item }} state=present
+  with_items:
+    # Gnu utils like ls
+    - coreutils
+    # Invenio
+    - autoconf
+    - automake
+    # Version control
+    - git
+    - mercurial
+    # More up to date and avoids poluting the system packages dir
+    - python
+    # Golang
+    - go
+    # Database
+    - mariadb
+    # File synching
+    - syncthing
+    # Http client
+    - wget
+    - httpie
+    # For watching network traffic
+    - ngrep
+    # For installing the mac os x apps
+    - brew-cask
+    - rename
+    # Shell completions
+    - vagrant-completion
+    - django-completion
+    - pip-completion
+    - zsh-completions
+    - bash-completion
+    # Required by zsh
+    - gdbm
+    # Required by shell prompt
+    - vcprompt
+
+- name: install cask apps from homebrew
+  homebrew_cask: name={{ item }} state=present
+  with_items:
+    - alfred
+    - dropbox
+    # - java not compatible with Yosemite yet
+    - skype
+    - vagrant
+    - virtualbox
+    - cleanmymac
+    - colloquy
+    - fitbit-connect
+    - grandperspective
+    - mplayerx
+    - istat-menus
+
+#  # Needs to be installed after XQuartz
+# - name: install apps from homebrew
+#   homebrew: name=poppler state=present
