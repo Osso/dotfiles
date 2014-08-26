@@ -1,0 +1,31 @@
+- name: Install apt packages:
+  apt: "name={{ item }}"
+  with_items:
+    # Invenio
+    - autoconf
+    - automake
+    - poppler-utils
+    # Version control
+    - mercurial
+    - git
+    # More up to date and avoids poluting the system packages dir
+    - python
+    # Golang
+    - go
+    # Database
+    - mariadb-server
+    # File synching
+    # - syncthing
+    # Http client
+    - wget
+    - httpie
+    # For watching network traffic
+    - ngrep
+    # Mass rename
+    - rename
+    # Required by shell prompt
+    - vcprompt
+    # More apps
+    - dropbox
+    - skype
+    - vagrant
