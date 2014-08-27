@@ -45,8 +45,9 @@ source /usr/local/bin/virtualenvwrapper.sh
 # terminal options #
 ####################
 
-# Use ^H to match the terminal and lxplus servers
-# stty erase ^H
+# Make fn+backspace and the delete button work as forward delete
+bindkey '^[[3~' delete-char
+
 # Disable special handling of ^s and ^q by OS X Terminal
 stty -ixon -ixoff
 
