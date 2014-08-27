@@ -6,7 +6,7 @@
   vars:
     shell_path: "/bin/zsh"
     current_shell: "{{ ansible_env.SHELL }}"
-    sublime_path: "/Users/osso/Library/Application Support/Sublime Text 3"
+    sublime_path: "{{ ansible_env.SUBLIME_PATH | default('/Users/osso/Library/Application Support/Sublime Text 3') }}"
     provisioning_path: "{{ ansible_env.PROVISIONING_PATH | default('~/Sync/Provisioning') }}"
 
   roles:
