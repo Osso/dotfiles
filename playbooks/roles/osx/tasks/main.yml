@@ -47,6 +47,9 @@
     - gdbm
     # Required by shell prompt
     - vcprompt
+    # For drone
+    - bazaar
+    - ngrok
 
 - name: install cask apps from homebrew
   homebrew_cask: name={{ item }} state=present
