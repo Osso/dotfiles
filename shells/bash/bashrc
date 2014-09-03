@@ -35,7 +35,9 @@ source ~/.bash/func
 # Finished adapting your PATH environment variable for use with MacPorts.
 
 # Homebrew virtualenvwrapper
-source /usr/local/bin/virtualenvwrapper.sh
+if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
+    source /usr/local/bin/virtualenvwrapper.sh
+fi
 
 
 ################

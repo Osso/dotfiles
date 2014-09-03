@@ -35,7 +35,9 @@ source ~/.zsh/zshmarks
 source ~/.zsh/completion
 
 # Homebrew virtualenvwrapper
-source /usr/local/bin/virtualenvwrapper.sh
+if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
+    source /usr/local/bin/virtualenvwrapper.sh
+fi
 
 # Colorization of command line similar to fish shell
 # source ~/src/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
