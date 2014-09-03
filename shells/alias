@@ -16,10 +16,12 @@ alias  ....="cd ../../.."
 alias  .....="cd ../../../.."
 
 # Ls aliases
-alias ls="gls --color"
-alias ll="gls --color -lh"
-alias la="gls --color -lha"
-alias ldir="gls -d */"
+if [[ "$(uname)" == 'Darwin' ]]; then
+    alias ls="gls --color"
+fi
+alias ll="ls --color -lh"
+alias la="ls --color -lha"
+alias ldir="ls -d */"
 
 # Make install
 alias mi="make -s install"
