@@ -38,6 +38,10 @@ source ~/.zsh/completion
 if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
     source /usr/local/bin/virtualenvwrapper.sh
 fi
+# System installed virtualenvwrapper
+if [ -f /usr/bin/virtualenvwrapper.sh ]; then
+    source /usr/bin/virtualenvwrapper.sh
+fi
 
 # Colorization of command line similar to fish shell
 # source ~/src/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
