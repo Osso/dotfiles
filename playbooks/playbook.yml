@@ -160,7 +160,7 @@
 
     - name: easy install pip
       easy_install: name=pip
-      sudo: yes
+      # sudo: yes
 
     - name: install apps from pip
       pip: name={{ item }}
