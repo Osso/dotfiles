@@ -113,3 +113,6 @@ alias df="df -h"
 alias du="du -h -c"
 alias mkdir="mkdir -vp"
 alias tree="tree -Cs"
+
+# Puppet
+alias run_puppet="sudo puppet agent -t"
