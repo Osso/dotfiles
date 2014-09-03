@@ -33,7 +33,7 @@ alias servethis="python -c 'import SimpleHTTPServer; SimpleHTTPServer.test()'"
 alias debug_email="python -m smtpd -n -c DebuggingServer localhost:1025"
 
 # Git pipes
-alias gd="g d | e"
+alias gd="g diff | e"
 alias gs="g show | e"
 
 # One letter shortcuts
