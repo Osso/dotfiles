@@ -71,3 +71,8 @@
 #  # Needs to be installed after XQuartz
 # - name: install apps from homebrew
 #   homebrew: name=poppler state=present
+
+- name: Allow homebrew zsh to be selected as default shell
+  sudo: true
+  lineinfile: dest=/etc/shells line={{ shell_path }}
+

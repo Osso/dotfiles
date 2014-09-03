@@ -17,10 +17,6 @@
 
   tasks:
 
-    - name: Allow homebrew zsh to be selected as default shell
-      sudo: true
-      lineinfile: dest=/etc/shells line={{ shell_path }}
-
     - name: Set default shell to {{ shell_path }}
       command: chsh -s {{ shell_path }}
       when: "current_shell != shell_path"
