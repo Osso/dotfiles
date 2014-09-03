@@ -46,6 +46,9 @@ function work_on_project() {
     if [ -f .project_env ]; then
         source .project_env
     fi
+    if [ ! -z $PROJECT_NAME ]; then
+        echo -n -e "\033]0;${PROJECT_NAME}\007"
+    fi
 }
 
 # Show all processes that match
