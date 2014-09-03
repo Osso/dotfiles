@@ -61,4 +61,5 @@ export PROJECTS_DIR="$HOME/Projects"
 # Boot2docker
 if [[ "$(uname)" == 'Darwin' ]]; then
     export DOCKER_HOST="tcp://127.0.0.1:2375"
+    export SUBLIME_PATH="/Users/osso/Library/Application Support/Sublime Text 3"
 fi

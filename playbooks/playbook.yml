@@ -6,7 +6,7 @@
   vars:
     shell_path: "/bin/zsh"
     current_shell: "{{ ansible_env.SHELL }}"
-    sublime_path: "{{ ansible_env.SUBLIME_PATH | default('/Users/osso/Library/Application Support/Sublime Text 3') }}"
+    sublime_path: "{{ ansible_env.SUBLIME_PATH | default('') }}"
     provisioning_path: "{{ ansible_env.PROVISIONING_PATH | default('~/Sync/Provisioning') }}"
 
   roles:
@@ -38,7 +38,6 @@
 
     - name: create homedir symlinks
       file: src="{{ provisioning_path }}/{{ item.from }}" dest="{{ item.to }}" state=link
-      sudo: no
       with_items:
         # Bash
         - from: shells/bash/profile
@@ -131,29 +130,33 @@
         - from: lib
           to: ~/lib
 
+    - name: create sublime symlinks
+      file: src="{{ provisioning_path }}/{{ item.from }}" dest="{{ sublime_path }}/{{ item.to }}" state=link
+      when: sublime_path != ''
+      with_items:
         # Sublime
         - from: sublime/Default (OSX).sublime-keymap
-          to: "{{ sublime_path }}/Packages/User/Default (OSX).sublime-keymap"
+          to: Packages/User/Default (OSX).sublime-keymap
         - from: sublime/Preferences.sublime-settings
-          to: "{{ sublime_path }}/Packages/User/Preferences.sublime-settings"
+          to: Packages/User/Preferences.sublime-settings
         - from: sublime/RunMultipleCommands.py
-          to: "{{ sublime_path }}/Packages/User/RunMultipleCommands.py"
+          to: Packages/User/RunMultipleCommands.py
         - from: sublime/Twilight.tmTheme
-          to: "{{ sublime_path }}/Packages/User/Twilight.tmTheme"
+          to: Packages/User/Twilight.tmTheme
         - from: sublime/Package Control.sublime-settings
-          to: "{{ sublime_path }}/Packages/User/Package Control.sublime-settings"
+          to: Packages/User/Package Control.sublime-settings
         - from: sublime/DetectSyntax.sublime-settings
-          to: "{{ sublime_path }}/Packages/User/DetectSyntax.sublime-settings"
+          to: Packages/User/DetectSyntax.sublime-settings
         - from: sublime/Snippets.py
-          to: "{{ sublime_path }}/Packages/User/Snippets.py"
+          to: Packages/User/Snippets.py
         - from: sublime/Move.py
-          to: "{{ sublime_path }}/Packages/User/Move.py"
+          to: Packages/User/Move.py
         - from: sublime/PythonSnippets.sublime-commands
-          to: "{{ sublime_path }}/Packages/User/PythonSnippets.sublime-commands"
+          to: Packages/User/PythonSnippets.sublime-commands
         - from: sublime/SublimePython.sublime-settings
-          to: "{{ sublime_path }}/Packages/User/SublimePython.sublime-settings"
+          to: Packages/User/SublimePython.sublime-settings
         - from: sublime/SublimeLinter.sublime-settings
-          to: "{{ sublime_path }}/Packages/User/SublimeLinter.sublime-settings"
+          to: Packages/User/SublimeLinter.sublime-settings
 
     - name: easy install pip
       easy_install: name=pip
