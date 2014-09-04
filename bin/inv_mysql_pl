@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+
+from invenio.dbquery import run_sql
+from itertools import chain
+
+headers = ('query_id', 'user', 'host', 'database', 'cmd',
+           'elapsed_time', 'status', 'info')
+headers = ('query_id', 'host', 'cmd',
+           'elapsed_time', 'status', 'info', 'progress')
+
+queries = run_sql('show full processlist')
+def filter_result(query_id, user, host, database, cmd,
+                  elapsed_time, status, info, progress):
+    host = host.replace('.cern.ch', '')
+    return (query_id, host, cmd, elapsed_time, status, info, progress)
+queries = [filter_result(*q) for q in queries]
+
+# Compute lengths
+lengths = {}
+for row in chain([headers], queries):
+    for col, dummy in enumerate(row):
+        lengths[col] = max(len(str(row[col])), lengths.get(col, 0))
+
+
+def generate_row(row):
+    return " | ".join(str(data).ljust(lengths[col]) for col,data in enumerate(row))
+
+
+headers_row = generate_row(headers)
+print headers_row
+print '-' * len(headers_row)
+for row in queries:
+    #query_id, user, host, database, status, elapsed_time, info
+    if row[2] != 'Sleep':
+        print generate_row(row)
