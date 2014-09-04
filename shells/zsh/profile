@@ -9,3 +9,9 @@ source ~/.zsh/env
 if [ -f ~/.zsh/env_local ]; then
     source ~/.zsh/env_local
 fi
+
+# All the configuration is there
+# Do nothing if not in interactive mode
+if [ -n "$PS1" ]; then
+    source ~/.zshrc
+fi

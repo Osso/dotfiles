@@ -7,4 +7,7 @@ if [ -f ~/.zsh/env_local ]; then
 fi
 
 # All the configuration is there
-source ~/.bashrc
+# Do nothing if not in interactive mode
+if [ -n "$PS1" ]; then
+    source ~/.bashrc
+fi
