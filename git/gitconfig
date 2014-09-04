@@ -68,7 +68,7 @@
 [branch]
     autosetuprebase = always
 [push]
-    default = upstream
+    default = current
 [merge]
     # Include summaries of merged commits in newly created merge commit messages
     log = true
