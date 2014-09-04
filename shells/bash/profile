@@ -1,4 +1,10 @@
 # Env is inherited, so we only need to set it once
 source ~/.bash/env
+
+# Local environment
+if [ -f ~/.zsh/env_local ]; then
+    source ~/.bash/env_local
+fi
+
 # All the configuration is there
 source ~/.bashrc
