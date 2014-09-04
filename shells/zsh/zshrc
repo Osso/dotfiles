@@ -51,8 +51,13 @@ fi
 # terminal options #
 ####################
 
-# Make fn+backspace and the delete button work as forward delete
+# Rebind codes to what I expect them to do
 bindkey '^[[3~' delete-char
+bindkey '^A' beginning-of-line
+bindkey '^E' end-of-line
+bindkey '^[f' forward-word
+bindkey '^[b' backward-word
+bindkey '^K' kill-line
 
 # Disable special handling of ^s and ^q by OS X Terminal
 stty -ixon -ixoff
