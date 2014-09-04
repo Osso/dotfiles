@@ -1,1 +1,11 @@
+###############
+# Environment #
+###############
+
+# Common environment
 source ~/.zsh/env
+
+# Local environment
+if [ -f ~/.zsh/env_local ]; then
+    source ~/.zsh/env_local
+fi
