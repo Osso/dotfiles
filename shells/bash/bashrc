@@ -48,7 +48,9 @@ fi
 ################
 
 # Homebrew autocompletion
-source /usr/local/etc/bash_completion
+if [ -f /usr/local/etc/bash_completion ]; then
+    source /usr/local/etc/bash_completion
+fi
 # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
 complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2 | tr ' ' '\n')" scp sftp ssh;
 # Add `killall` tab completion for common apps
