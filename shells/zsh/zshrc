@@ -80,3 +80,11 @@ autoload -U zmv
 alias zmv="noglob zmv -W"
 # Auto-correction in case of typos
 setopt correctall
+
+
+#################
+# other options #
+#################
+
+# Colored file types for ls
+eval $(dircolors -b "$HOME/.dircolors")

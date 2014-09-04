@@ -15,9 +15,6 @@ export CFG_OPENOFFICE_TMPDIR="/opt/invenio/var/tmp/ooffice-tmp-files"
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
-# Colored file types for ls
-eval $(gdircolors -b "$HOME/.dircolors")
-
 # Move virtual envs to an easier to access directory
 export WORKON_HOME="~/envs"
 

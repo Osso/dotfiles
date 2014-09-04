@@ -18,6 +18,7 @@ alias  .....="cd ../../../.."
 # Ls aliases
 if [[ "$(uname)" == 'Darwin' ]]; then
     alias ls="gls --color"
+    alias dircolors="gdircolors"
 fi
 alias ll="ls --color -lh"
 alias la="ls --color -lha"
