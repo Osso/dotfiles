@@ -33,6 +33,7 @@ source ~/.zsh/alias
 source ~/.zsh/func
 source ~/.zsh/zshmarks
 source ~/.zsh/completion
+source ~/.zsh/terminalapp
 
 # Homebrew virtualenvwrapper
 if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then

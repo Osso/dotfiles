@@ -51,6 +51,8 @@
           to: ~/.zshrc
         - from: shells/zsh/completion
           to: ~/.zsh/completion
+        - from: shells/zsh/terminalapp
+          to: ~/.zsh/terminalapp
 
         # Shell colors
         - from: shells/colors
