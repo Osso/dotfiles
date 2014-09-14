@@ -1,6 +1,6 @@
 {
 	"close_windows_when_empty": true,
-	"color_scheme": "Packages/User/Twilight (SL).tmTheme",
+	"color_scheme": "Packages/User/Twilight.tmTheme",
 	"detect_indentation": false,
 	"file_exclude_patterns":
 	[
@@ -43,8 +43,9 @@
 	"font_size": 12.0,
 	"ignored_packages":
 	[
-		"Vintage",
-		"Python Auto-Complete"
+		"Python Auto-Complete",
+		"BracketHighlighter",
+		"Vintage"
 	],
 	"indent_to_bracket": true,
 	"remember_open_files": false,
