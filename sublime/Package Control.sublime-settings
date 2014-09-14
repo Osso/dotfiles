@@ -3,12 +3,13 @@
 	"installed_packages":
 	[
 		"AutoPEP8",
+		"BracketHighlighter",
 		"CoffeeScript",
-		"CSS Completions",
 		"Dockerfile Syntax Highlighting",
 		"FileDiffs",
 		"GitGutter",
 		"Homebrew-formula-syntax",
+		"HTML5",
 		"INI",
 		"Jedi - Python autocompletion",
 		"jQuery",
@@ -17,6 +18,7 @@
 		"nginx",
 		"Package Control",
 		"PHP Completions Kit",
+		"PHP-Twig",
 		"PHPUnit Completions",
 		"Puppet",
 		"Python 3",
