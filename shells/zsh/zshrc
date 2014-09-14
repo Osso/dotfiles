@@ -84,8 +84,6 @@ setopt NO_LIST_BEEP
 # Use zmv, mass renaming module
 autoload -U zmv
 alias zmv="noglob zmv -W"
-# Auto-correction in case of typos
-setopt correctall
 
 
 #################
