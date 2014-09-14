@@ -90,6 +90,7 @@
 
     { "keys": ["f12"], "command": "goto_definition" },
     { "keys": ["f11"], "command": "sublime_jedi_goto" },
+    { "keys": ["f10"], "command": "markdown_preview_select", "args": {"target": "browser"} },
     { "keys": ["f8"], "command": "auto_pep8", "args": {"preview": false} }
 ]
 
