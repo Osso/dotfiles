@@ -11,7 +11,7 @@
                 "@disable": false,
                 "args": [],
                 "excludes": [],
-                "ignore": "E265,E272,E121,E122,E126,E127,E128,E131,E203,E221,E501,E302,E226",
+                "ignore": "E265,E272,E121,E122,E126,E127,E128,E131,E203,E221,E501,E302,E226,E124",
                 "max-line-length": null,
                 "select": ""
             },
