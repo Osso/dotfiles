@@ -44,6 +44,9 @@
     promote = !"git push --set-upstream origin \"$(git symbolic-ref --quiet --short HEAD)\""
     delete-branch = !"~/bin/git-delete-branch"
 
+
+    # merge
+    mff = merge --ff-only
     # bisect
     good = bisect good
     bad = bisect bad
