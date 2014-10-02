@@ -50,6 +50,8 @@
     # For drone
     - bazaar
     - ngrok
+    # Stuff
+    - ssh-copy-id
 
 - name: install cask apps from homebrew
   homebrew_cask: name={{ item }} state=present
@@ -67,6 +69,7 @@
     - mplayerx
     - istat-menus
     - font-inconsolata-dz-for-powerline
+    - slate
 
 #  # Needs to be installed after XQuartz
 # - name: install apps from homebrew
