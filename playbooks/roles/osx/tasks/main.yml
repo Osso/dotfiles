@@ -70,6 +70,9 @@
     - istat-menus
     - font-inconsolata-dz-for-powerline
     - slate
+    - timemachineeditor
+    - adium
+    - grandperspective
 
 #  # Needs to be installed after XQuartz
 # - name: install apps from homebrew
