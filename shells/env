@@ -60,3 +60,5 @@ if [ -n "$PS1" ]; then
     # -X: no clearing of the screen after quit
     export LESS="FRX"
 fi
+
+export FLEETCTL_TUNNEL="192.168.1.44"
