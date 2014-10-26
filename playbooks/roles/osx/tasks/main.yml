@@ -15,9 +15,6 @@
   with_items:
     # Gnu utils like ls
     - coreutils
-    # Invenio
-    - autoconf
-    - automake
     # Version control
     - git
     - mercurial
@@ -67,7 +64,7 @@
   with_items:
     - alfred
     - dropbox
-    # - java not compatible with Yosemite yet
+    - java
     - skype
     - vagrant
     - virtualbox
@@ -82,10 +79,6 @@
     - timemachineeditor
     - adium
     - grandperspective
-
-#  # Needs to be installed after XQuartz
-# - name: install apps from homebrew
-#   homebrew: name=poppler state=present
 
 - name: Allow homebrew zsh to be selected as default shell
   sudo: true
