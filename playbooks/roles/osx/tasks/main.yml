@@ -22,8 +22,6 @@
     - python
     # Golang
     - go
-    # Database
-    - mariadb
     # File synching
     - syncthing
     # Http client
@@ -79,6 +77,16 @@
     - timemachineeditor
     - adium
     - grandperspective
+    - transmit
+    - one-password
+    - github
+    - bonjour-browser
+    - firefox
+    - istumbler
+    - kismac
+    - seashore
+    - sourcetree
+    - transmission
 
 - name: Allow homebrew zsh to be selected as default shell
   sudo: true
