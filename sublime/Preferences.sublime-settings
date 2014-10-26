@@ -33,6 +33,8 @@
 	],
 	"folder_exclude_patterns":
 	[
+		".tox",
+		"build",
 		"__pycache__",
 		".svn",
 		".git",
