@@ -52,6 +52,15 @@
     - ngrok
     # Stuff
     - ssh-copy-id
+    # Tapir
+    - fcgi
+    - gettext
+    - glib
+    - protobuf
+    - hiredis
+    - log4c
+    - avro-c
+    - bsdmake
 
 - name: install cask apps from homebrew
   homebrew_cask: name={{ item }} state=present
