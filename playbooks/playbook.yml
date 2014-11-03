@@ -16,7 +16,6 @@
       when: ansible_os_family == 'Darwin'
 
   tasks:
-
     - name: Set default shell to {{ shell_path }}
       command: chsh -s {{ shell_path }}
       when: "current_shell != shell_path"
@@ -131,6 +130,8 @@
           to: ~/bin
         - from: lib
           to: ~/lib
+        - from: ../src
+          to: ~/src
 
     - name: create sublime symlinks
       file: src="{{ provisioning_path }}/{{ item.from }}" dest="{{ sublime_path }}/{{ item.to }}" state=link
