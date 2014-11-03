@@ -4,7 +4,6 @@
 	[
 		"AutoPEP8",
 		"BracketHighlighter",
-		"CoffeeScript",
 		"Dockerfile Syntax Highlighting",
 		"FileDiffs",
 		"GitGutter",
