@@ -46,6 +46,7 @@ bind down:ctrl;cmd   push down  bar-resize:screenSizeY/2
 bind f1:cmd focus 'Google Chrome'
 bind f2:cmd focus 'Sublime Text'
 bind f3:cmd focus 'Terminal'
+bind f4:cmd focus 'Mail'
 
 # Window Hints
 bind esc:cmd hint
