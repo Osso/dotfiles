@@ -118,6 +118,8 @@
           to: ~/.pylintrc
         - from: nanorc
           to: ~/.nanorc
+        - from: slate
+          to: ~/.slate
 
         # IPython
         - from: python/invenio.ipython.py
