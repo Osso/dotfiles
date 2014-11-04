@@ -58,6 +58,7 @@
     - bsdmake
     # CoreOS on NAS
     - fleetctl
+    - docker
 
 - name: install cask apps from homebrew
   homebrew_cask: name={{ item }} state=present
