@@ -73,7 +73,7 @@ fi
 
 # Format for vcprompt
 # Shows revision control information
-export VCPROMPT_FORMAT=" %b %%{${blue}%%}[%m%u]"
+export VCPROMPT_FORMAT=" %b %%{${blue}%%}[%m%u]${reset}"
 
 # Prompt
 # e.g. osso at mac-mini in Provisioning master [+] (invenio)
