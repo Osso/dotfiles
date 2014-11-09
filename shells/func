@@ -46,12 +46,6 @@ function work_on_project() {
     if [ -f .project_env ]; then
         source .project_env
     fi
-    if [ -n $PROJECT_NAME ]; then
-        env PROJECT_PROMPT=" {$PROJECT_NAME}" $SHELL
-    else
-        $SHELL
-    fi
-    PROJECT_NAME=""
 }
 
 # Show all processes that match
