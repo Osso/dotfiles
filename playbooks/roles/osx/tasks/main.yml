@@ -89,6 +89,7 @@
     - seashore
     - sourcetree
     - transmission
+    - viscosity
 
 - name: Allow homebrew zsh to be selected as default shell
   sudo: true
