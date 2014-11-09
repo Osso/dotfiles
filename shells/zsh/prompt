@@ -88,6 +88,8 @@ PROMPT+=" in %{${green}%}%c%{${reset}%}"
 PROMPT+='%{${violet}%}$(vcprompt)%{${reset}%}'
 # Virtual environment
 PROMPT+='$(virtualenv_prompt)'
+# Project environment
+PROMPT+='${PROJECT_PROMPT}'
 # Prompt itself
 PROMPT+='
 $ '
