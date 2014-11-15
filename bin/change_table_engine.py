@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 engine = 'innodb'
-host= 'localhost'
+host = 'localhost'
 db_name = 'inspirehep'
-user= 'root'
-passwd= ''
+user = 'root'
+passwd = ''
 skip_tables = ()
 
 import MySQLdb
