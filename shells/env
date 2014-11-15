@@ -62,3 +62,6 @@ if [ -n "$PS1" ]; then
 fi
 
 export FLEETCTL_TUNNEL="192.168.1.44"
+
+
+export GOPATH=~/src/gocode
