@@ -56,6 +56,7 @@
     - log4c
     - avro-c
     - bsdmake
+    - pkg-config
     # CoreOS on NAS
     - fleetctl
     - docker
