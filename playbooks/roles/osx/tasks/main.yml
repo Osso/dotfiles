@@ -47,6 +47,7 @@
     - ngrok
     # Stuff
     - ssh-copy-id
+    - tree
     # Tapir
     - fcgi
     - gettext

@@ -57,7 +57,7 @@ alias localip="ipconfig getifaddr en0"
 alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
 
 # Flush Directory Service cache
-alias flushdns="dscacheutil -flushcache && killall -HUP mDNSResponder"
+alias flushdns="dscacheutil -flushcache"
 
 # View HTTP traffic
 alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
@@ -83,24 +83,6 @@ alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo 
 alias provision="ansible-playbook ~/Sync/Provisioning/playbooks/*.yml -i '*', -Kv"
 alias provision-facts="ansible localhost -i 127.0.0.1, -m setup --connection=local"
 
-# INSPIRE Deploy scripts
-alias fab="fab -k -u adeiana"
-alias invenio-fab="fab -f ~/src/scripts/fabfile.py repo:ops"
-alias invenio-dev="fab -f ~/src/scripts/fabfile.py repo:ops dev ops"
-alias invenio-test="fab -f ~/src/scripts/fabfile.py test repo:ops ops"
-alias invenio-test2="fab -f ~/src/scripts/fabfile.py test2 repo:ops ops"
-alias invenio-prod="fab -f ~/src/scripts/fabfile.py repo:ops prod ops"
-alias inspire-test="fab -f ~/src/scripts/fabfile.py repo:ops test inspire"
-alias inspire-test2="fab -f ~/src/scripts/fabfile.py repo:ops test2 inspire"
-alias inspire-prod="fab -f ~/src/scripts/fabfile.py repo:ops prod inspire"
-alias vm-install="fab -f ~/src/scripts/docextract_fabfile.py"
-# Bibsched shortcut
-alias rbibsched='ssh inspire05 -t "sudo -u apache /opt/cds-invenio/bin/bibsched"'
-# Invenio / INSPIRE
-alias tall="t *_unit_tests.py *_regression_tests.py"
-# INSPIRE db on demand
-alias mysql-on-demand-t1="mysql inspirehep -h dbod-insp-t1.cern.ch -u admin -p -P5503"
-alias mysql-on-demand-c1="mysql -h dbod-insp-ci1.cern.ch -u admin -p -P5501"
 # CERN proxy
 alias lxplus-proxy="ssh -C2qfTnN -D 8081 lxplus"
 
@@ -117,5 +99,4 @@ alias du="du -h -c"
 alias mkdir="mkdir -vp"
 alias tree="tree -Cs"
 
-# Puppet
-alias run_puppet="sudo puppet agent -t"
+alias docker-dangling="docker rmi $(docker images -q -f dangling=true)"

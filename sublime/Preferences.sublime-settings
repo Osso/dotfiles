@@ -41,14 +41,14 @@
 		".hg",
 		"CVS",
 		"autom4te.cache",
-        ".vagrant"
+		".vagrant"
 	],
 	"font_face": "Inconsolata-dz for Powerline",
 	"font_size": 12.0,
 	"ignored_packages":
 	[
-		"BracketHighlighter",
 		"Vintage",
+		"BracketHighlighter",
 		"Python Auto-Complete"
 	],
 	"indent_to_bracket": true,

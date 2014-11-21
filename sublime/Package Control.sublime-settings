@@ -4,6 +4,7 @@
 	[
 		"AutoPEP8",
 		"BracketHighlighter",
+		"CMake",
 		"Dockerfile Syntax Highlighting",
 		"FileDiffs",
 		"GitGutter",
