@@ -80,10 +80,9 @@
     - slate
     - timemachineeditor
     - adium
-    - grandperspective
     - transmit
     - onepassword
-    - github
+    # - github
     - bonjour-browser
     - firefox
     - istumbler
