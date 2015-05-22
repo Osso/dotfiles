@@ -7,6 +7,16 @@
         "gutter_theme_excludes": [],
         "lint_mode": "background",
         "linters": {
+            "clang": {
+                "@disable": false,
+                "args": [],
+                "excludes": [],
+                "extra_flags": "",
+                "include_dirs": [
+                    "/Users/osso/Projects/tapir/tapir/tapir_gtp",
+                    "/usr/local/include/glib-2.0"
+                ]
+            },
             "pep8": {
                 "@disable": false,
                 "args": [],
@@ -43,6 +53,7 @@
         },
         "mark_style": "outline",
         "no_column_highlights_line": false,
+        "passive_warnings": false,
         "paths": {
             "linux": [],
             "osx": [],
