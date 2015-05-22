@@ -85,6 +85,10 @@
     { "keys": ["super+x"], "command": "cut" },
     { "keys": ["super+c"], "command": "copy" },
     { "keys": ["super+v"], "command": "paste" },
+
+    { "keys": ["super+comma"], "command": "copy" },
+    { "keys": ["super+period"], "command": "paste" },
+
     { "keys": ["super+shift+v"], "command": "paste_and_indent" },
     { "keys": ["super+option+v"], "command": "paste_from_history" },
 
