@@ -1,2 +1,3 @@
-ssh root@nas "rsync -avP root@mangahelpers.com:/home/ /mnt/array/mh-backups --exclude=/home/mysql --exclude=/home/lost+found"
+ssh root@nas "rsync -avP root@mangahelpers.com:/var/backups /mnt/array/mh-backups/"
+ssh root@nas "rsync -avP root@mangahelpers.com:/var/mangahelpers /mnt/array/mh-backups/"
 
