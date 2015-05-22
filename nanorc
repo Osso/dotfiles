@@ -9,7 +9,7 @@ unset backup
 # Case insensitive search
 unset casesensitive
 # Autoindent text
-set autoindent
+# set autoindent
 # Display cursor position
 set const
 # Characters to display when show invisibles is activated
