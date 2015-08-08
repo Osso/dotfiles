@@ -114,6 +114,7 @@
 [advice]
     # Do not display a warning when checking out a commit hash
     detachedHead = False
+    pushNonFastForward = False
 [rerere]
     # I am still not convinced
     enabled = false
