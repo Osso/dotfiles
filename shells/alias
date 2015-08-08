@@ -48,6 +48,7 @@ alias v="vagrant"
 alias w="work_on_project"
 alias p="ipython"
 alias m="make"
+alias n="ninja"
 
 # External IP address
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
@@ -57,7 +58,8 @@ alias localip="ipconfig getifaddr en0"
 alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
 
 # Flush Directory Service cache
-alias flushdns="dscacheutil -flushcache"
+# alias flushdns="dscacheutil -flushcache"
+alias flushdns="sudo killall -HUP mDNSResponder"
 
 # View HTTP traffic
 alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
