@@ -1,4 +1,8 @@
 {
+	"caret_extra_bottom": 2,
+	"caret_extra_top": 2,
+	"caret_extra_width": 2,
+	"caret_style": "solid",
 	"close_windows_when_empty": true,
 	"color_scheme": "Packages/User/Twilight.tmTheme",
 	"detect_indentation": false,
@@ -44,11 +48,14 @@
 		".vagrant"
 	],
 	"font_face": "Inconsolata-dz for Powerline",
-	"font_size": 12.0,
+	"font_size": 11.0,
 	"ignored_packages":
 	[
 		"Vintage",
+		"SublimeLinter-phplint",
 		"BracketHighlighter",
+		"CSS",
+		"GitGutter",
 		"Python Auto-Complete"
 	],
 	"indent_to_bracket": true,
@@ -63,5 +70,6 @@
 	"theme": "Brogrammer.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"trim_automatic_white_space": true,
-	"trim_trailing_white_space_on_save": true
+	"trim_trailing_white_space_on_save": true,
+	"wide_caret": true
 }

@@ -25,10 +25,53 @@
                 "max-line-length": null,
                 "select": ""
             },
-            "phplint": {
+            "php": {
                 "@disable": false,
                 "args": [],
                 "excludes": []
+            },
+            "phplint": {
+                "@disable": true,
+                "args": [],
+                "excludes": [],
+                "ignore_match": [
+                    ".*camelCase.*",
+                    ".*invalid value EXPR of type.*",
+                    ".*we guess the function.*",
+                    ".*undeclared function.*",
+                    ".*unused function.*",
+                    ".*operator applied to a value of type unknow.*",
+                    ".*missing '@return TYPE'.*",
+                    ".*missing '@param TYPE.*",
+                    ".*undefined type for argument.*",
+                    ".*guessed signature.*",
+                    ".*not declared.*",
+                    ".*invalid type null.*",
+                    ".*type cannot be compared.*",
+                    ".*unknown class.*",
+                    ".*variable still not found in global scope.*"
+                ]
+            },
+            "phpmd": {
+                "@disable": true,
+                "args": [],
+                "excludes": [],
+                "ignore_match": [
+                    ".*reduce the number of dependencies.*",
+                    ".*to keep the number of public items.*",
+                    ".*to keep the number of fields under.*",
+                    ".*to keep the number of methods under.*",
+                    ".*Else is never necessary.*",
+                    ".*Avoid really long classes.*",
+                    ".*Avoid using static access.*",
+                    ".*Avoid variables with short names like.*",
+                    ".*camelCase.*",
+                    ".*Cyclomatic.*",
+                    ".*NPath.*",
+                    ".*boolean flag argument.*"
+                ],
+                "rulesets": "cleancode,design,naming,unusedcode",
+                "rulesets_avail": "cleancode,codesize,controversial,design,naming,unusedcode"
             },
             "pylint": {
                 "@disable": false,
