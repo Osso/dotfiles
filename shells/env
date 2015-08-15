@@ -27,12 +27,17 @@ export JAVA_HOME="/Library/Java/Home"
 # Link Homebrew casks in `/Applications` rather than `~/Applications`
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
+# Go home!
+export GOPATH=~/go
+# Paths for go
+export PATH="$PATH:~/go/bin"
 # Homebrew paths for go
 export PATH="$PATH:/usr/local/opt/go/libexec/bin"
 # Include homebrew paths
 export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 # Include home path
 export PATH="$PATH:$HOME/bin"
+
 
 # Projects directory
 export PROJECTS_DIR="$HOME/Projects"
@@ -62,6 +67,3 @@ if [ -n "$PS1" ]; then
 fi
 
 export FLEETCTL_TUNNEL="192.168.1.45"
-
-
-export GOPATH=~/src/gocode
