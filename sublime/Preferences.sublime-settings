@@ -49,13 +49,19 @@
 	],
 	"font_face": "Inconsolata-dz for Powerline",
 	"font_size": 11.0,
+	"hack_ssh_address": "vagrant",
+	"hack_ssh_enable": true,
+	"hack_ssh_folder": "/home/globalcomix/gc",
 	"ignored_packages":
 	[
-		"Vintage",
-		"SublimeLinter-phplint",
 		"BracketHighlighter",
-		"CSS",
+		"SublimeLinter-phpmd",
+		"Vintage",
+		"sublime-github",
 		"GitGutter",
+		"SublimeLinter-phplint",
+		"Hack",
+		"CSS",
 		"Python Auto-Complete"
 	],
 	"indent_to_bracket": true,
