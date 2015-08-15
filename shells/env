@@ -30,7 +30,7 @@ export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 # Go home!
 export GOPATH=~/go
 # Paths for go
-export PATH="$PATH:~/go/bin"
+export PATH="$PATH:$HOME/go/bin"
 # Homebrew paths for go
 export PATH="$PATH:/usr/local/opt/go/libexec/bin"
 # Include homebrew paths
