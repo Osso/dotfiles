@@ -7,6 +7,11 @@
         "gutter_theme_excludes": [],
         "lint_mode": "background",
         "linters": {
+            "checksourceformatting": {
+                "@disable": false,
+                "args": [],
+                "excludes": []
+            },
             "clang": {
                 "@disable": false,
                 "args": [],

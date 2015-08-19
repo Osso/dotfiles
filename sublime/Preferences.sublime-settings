@@ -54,15 +54,15 @@
 	"hack_ssh_folder": "/home/globalcomix/gc",
 	"ignored_packages":
 	[
-		"BracketHighlighter",
-		"SublimeLinter-phpmd",
-		"Vintage",
-		"sublime-github",
 		"GitGutter",
+		"Python Auto-Complete",
+		"SublimeLinter-phpmd",
 		"SublimeLinter-phplint",
 		"Hack",
+		"Vintage",
 		"CSS",
-		"Python Auto-Complete"
+		"sublime-github",
+		"BracketHighlighter"
 	],
 	"indent_to_bracket": true,
 	"remember_open_files": false,
