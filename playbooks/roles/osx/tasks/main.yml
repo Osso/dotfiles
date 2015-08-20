@@ -48,6 +48,7 @@
     # Stuff
     - ssh-copy-id
     - tree
+    - ncdu
     # Tapir
     - fcgi
     - gettext
