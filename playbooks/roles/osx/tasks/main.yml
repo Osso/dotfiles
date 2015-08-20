@@ -92,6 +92,7 @@
     - sourcetree
     - transmission
     - viscosity
+    - numi
 
 - name: Allow homebrew zsh to be selected as default shell
   sudo: true
