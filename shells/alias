@@ -24,8 +24,6 @@ alias ll="ls --color -lh"
 alias la="ls --color -lha"
 alias ldir="ls -d */"
 
-# Make install
-alias mi="make -s install"
 # Lock computer
 alias lock="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 # Serve a directory via http
@@ -39,8 +37,10 @@ alias gs="g show | e"
 
 # One letter shortcuts
 alias t="nosetests --exclude=TEST_SUITE --exclude=run_test_suite"
-alias g="git"
+alias c="docker-compose"
+alias d="docker"
 alias e="subl"
+alias g="git"
 alias i="inspire-make-install"
 alias j="jump"
 alias h="history"
@@ -72,7 +72,7 @@ command -v md5sum > /dev/null || alias md5sum="md5"
 command -v sha1sum > /dev/null || alias sha1sum="shasum"
 
 # Copy to clipboard
-alias c="pbcopy"
+alias pb="pbcopy"
 
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
