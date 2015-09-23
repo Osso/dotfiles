@@ -18,8 +18,9 @@ config resizePercentOf screenSize
 # Push Bindings
 bind right:ctrl;cmd  push right bar-resize:screenSizeX/2
 bind left:ctrl;cmd   push left  bar-resize:screenSizeX/2
-bind up:ctrl;cmd     push up    bar-resize:screenSizeY/2
+bind up:ctrl;cmd     push up    bar-resize:screenSizeY
 bind down:ctrl;cmd   push down  bar-resize:screenSizeY/2
+# bind up:ctrl;cmd     push up    bar-resize:screenSizeY/2
 
 # Nudge Bindings
 # bind right:shift;alt nudge +10% +0
@@ -46,7 +47,9 @@ bind down:ctrl;cmd   push down  bar-resize:screenSizeY/2
 bind f1:cmd focus 'Google Chrome'
 bind f2:cmd focus 'Sublime Text'
 bind f3:cmd focus 'Terminal'
-bind f4:cmd focus 'Mail'
+bind f4:cmd focus 'Slack'
+bind f5:cmd focus 'Skype'
+bind f6:cmd focus 'Mail'
 
 # Window Hints
 bind esc:cmd hint
