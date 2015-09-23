@@ -33,6 +33,7 @@
 		"Rust",
 		"SaltStack-related syntax highlighting and snippets",
 		"SideBarEnhancements",
+		"Solarized Color Scheme",
 		"sublime-github",
 		"SublimeLinter",
 		"SublimeLinter-pep8",
@@ -44,6 +45,7 @@
 		"SublimeLinter-xmllint",
 		"Tag",
 		"Theme - Brogrammer",
-		"Theme - Soda"
+		"Theme - Soda",
+		"Theme - Soda SolarizedDark"
 	]
 }

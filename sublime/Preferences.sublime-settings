@@ -4,7 +4,7 @@
 	"caret_extra_width": 2,
 	"caret_style": "solid",
 	"close_windows_when_empty": true,
-	"color_scheme": "Packages/User/Twilight.tmTheme",
+	"color_scheme": "Packages/Solarized Color Scheme/Solarized (light).tmTheme",
 	"detect_indentation": false,
 	"file_exclude_patterns":
 	[
@@ -54,15 +54,15 @@
 	"hack_ssh_folder": "/home/globalcomix/gc",
 	"ignored_packages":
 	[
-		"GitGutter",
-		"Python Auto-Complete",
-		"SublimeLinter-phpmd",
 		"SublimeLinter-phplint",
-		"Hack",
 		"Vintage",
+		"Python Auto-Complete",
+		"Hack",
 		"CSS",
-		"sublime-github",
-		"BracketHighlighter"
+		"GitGutter",
+		"BracketHighlighter",
+		"SublimeLinter-phpmd",
+		"sublime-github"
 	],
 	"indent_to_bracket": true,
 	"remember_open_files": false,
@@ -73,7 +73,7 @@
 	"show_full_path": true,
 	"smart_indent": true,
 	"tab_size": 4,
-	"theme": "Brogrammer.sublime-theme",
+	"theme": "Soda SolarizedDark.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"trim_automatic_white_space": true,
 	"trim_trailing_white_space_on_save": true,
