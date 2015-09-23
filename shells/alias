@@ -37,7 +37,7 @@ alias gs="g show | e"
 
 # One letter shortcuts
 alias t="nosetests --exclude=TEST_SUITE --exclude=run_test_suite"
-alias c="docker-compose"
+alias c="cargo"
 alias d="docker"
 alias e="subl"
 alias g="git"
@@ -49,6 +49,8 @@ alias w="work_on_project"
 alias p="ipython"
 alias m="make"
 alias n="ninja"
+
+alias dco="docker-compose"
 
 # External IP address
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
