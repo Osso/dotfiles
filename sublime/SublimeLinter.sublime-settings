@@ -22,6 +22,11 @@
                     "/usr/local/include/glib-2.0"
                 ]
             },
+            "hack": {
+                "@disable": false,
+                "args": [],
+                "excludes": []
+            },
             "pep8": {
                 "@disable": false,
                 "args": [],

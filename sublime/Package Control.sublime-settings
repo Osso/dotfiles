@@ -1,5 +1,6 @@
 {
 	"auto_upgrade_last_run": null,
+	"bootstrapped": true,
 	"in_process_packages":
 	[
 	],
@@ -43,7 +44,6 @@
 		"SublimeLinter-pylint",
 		"SublimeLinter-ruby",
 		"SublimeLinter-xmllint",
-		"Tag",
 		"Theme - Brogrammer",
 		"Theme - Soda",
 		"Theme - Soda SolarizedDark"

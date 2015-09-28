@@ -4,7 +4,7 @@
 	"caret_extra_width": 2,
 	"caret_style": "solid",
 	"close_windows_when_empty": true,
-	"color_scheme": "Packages/Solarized Color Scheme/Solarized (light).tmTheme",
+	"color_scheme": "Packages/Solarized Color Scheme/Solarized (dark).tmTheme",
 	"detect_indentation": false,
 	"file_exclude_patterns":
 	[
@@ -28,6 +28,7 @@
 		"*.class",
 		"*.psd",
 		"*.db",
+		"Cargo.lock",
 		"Makefile",
 		"Makefile.in",
 		"config.guess",
@@ -43,7 +44,7 @@
 		".svn",
 		".git",
 		".hg",
-		"CVS",
+		"target",
 		"autom4te.cache",
 		".vagrant"
 	],
@@ -54,15 +55,15 @@
 	"hack_ssh_folder": "/home/globalcomix/gc",
 	"ignored_packages":
 	[
-		"SublimeLinter-phplint",
-		"Vintage",
-		"Python Auto-Complete",
-		"Hack",
+		"BracketHighlighter",
 		"CSS",
 		"GitGutter",
-		"BracketHighlighter",
+		"GoSublime",
+		"Python Auto-Complete",
+		"sublime-github",
+		"SublimeLinter-phplint",
 		"SublimeLinter-phpmd",
-		"sublime-github"
+		"Vintage"
 	],
 	"indent_to_bracket": true,
 	"remember_open_files": false,
