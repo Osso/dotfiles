@@ -1,9 +1,10 @@
 [include]
-  # For username / creds / etc
-  path = ~/.gitconfig_local
+    # For username / creds / etc
+    path = ~/.gitconfig_local
 [core]
     excludesfile = /Users/osso/.gitignore
     quotepath = false
+    pager = diff-highlight | less -r
 [alias]
     ci = commit
     co = checkout
@@ -94,8 +95,13 @@
     whitespace = normal red
     meta = yellow
     frag = yellow bold
-    old = red bold
-    new = green bold
+    old = red
+    new = green
+[color "diff-highlight"]
+   oldNormal = "red"
+   oldHighlight = "red ul"
+   newNormal = "green"
+   newHighlight = "green ul"
 [color "status"]
     header = normal
     added = green
