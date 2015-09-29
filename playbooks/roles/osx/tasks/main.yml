@@ -7,7 +7,7 @@
   with_items:
     - osso/formula
     - caskroom/cask
-    - caskroom/fonts
+    - caskroom/homebrew-fonts
     - homebrew/completions
 
 - name: install apps from homebrew
