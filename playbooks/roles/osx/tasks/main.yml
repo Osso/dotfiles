@@ -15,6 +15,7 @@
   with_items:
     # Gnu utils like ls
     - coreutils
+    - gnu-sed
     # Version control
     - git
     - mercurial
