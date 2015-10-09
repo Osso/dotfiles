@@ -4,7 +4,7 @@
 [core]
     excludesfile = /Users/osso/.gitignore
     quotepath = false
-    pager = git-strip-diff | diff-highlight | less
+    pager = diff-highlight | git-strip-diff | less
 [alias]
     ci = commit
     co = checkout
