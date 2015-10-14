@@ -5,21 +5,12 @@
 # Do not query github in homebrew search
 export HOMEBREW_NO_GITHUB_API=1
 
-# Invenio
-export CFG_INVENIO_USER="osso"
-export CFG_INSPIRE_BIBTASK_USER="admin"
-export CFG_INVENIO_HOSTNAME="localhost:4000"
-export CFG_OPENOFFICE_TMPDIR="/opt/invenio/var/tmp/ooffice-tmp-files"
-
 # Language
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
 # Move virtual envs to an easier to access directory
 export WORKON_HOME="~/envs"
-
-# Kerberos tickets to login to CERN
-export KRB5CCNAME="/tmp/krb5cc_501"
 
 # Needs for java stuff
 export JAVA_HOME="/Library/Java/Home"
