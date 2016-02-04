@@ -29,20 +29,13 @@ export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 # Include home path
 export PATH="$PATH:$HOME/bin"
 
-
 # Projects directory
 export PROJECTS_DIR="$HOME/Projects"
-
-# Boot2docker
-if [[ "$(uname)" == 'Darwin' ]]; then
-    export DOCKER_HOST="tcp://127.0.0.1:2375"
-    export SUBLIME_PATH="/Users/osso/Library/Application Support/Sublime Text 3"
-fi
 
 # Interactive mode environment
 if [ -n "$PS1" ]; then
     # Sublime as Editor
-    export EDITOR='subl -w'
+    export EDITOR='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl -w'
 
     # Highlight section titles in manual pages (136 is yellow)
     export LESS_TERMCAP_md="$(tput setaf 136)"

@@ -24,6 +24,8 @@ alias ll="ls --color -lh"
 alias la="ls --color -lha"
 alias ldir="ls -d */"
 
+alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
+
 # Lock computer
 alias lock="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 # Serve a directory via http
@@ -43,14 +45,18 @@ alias e="subl"
 alias g="git"
 alias i="inspire-make-install"
 alias j="jump"
+alias e="subl"
 alias h="history"
 alias v="vagrant"
 alias w="work_on_project"
 alias p="ipython"
 alias m="make"
 alias n="ninja"
+alias r="rancher-compose"
 
+alias ru="rancher-compose up --force-recreate -d -p -c"
 alias dco="docker-compose"
+alias de="docker exec -it"
 
 # External IP address
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
