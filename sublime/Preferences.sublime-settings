@@ -1,10 +1,12 @@
 {
+	"always_show_minimap_viewport": true,
+	"bold_folder_labels": true,
 	"caret_extra_bottom": 2,
 	"caret_extra_top": 2,
 	"caret_extra_width": 2,
 	"caret_style": "solid",
 	"close_windows_when_empty": true,
-	"color_scheme": "Packages/Solarized Color Scheme/Solarized (dark).tmTheme",
+	"color_scheme": "Packages/User/SublimeLinter/Material One Dark (SL).tmTheme",
 	"detect_indentation": false,
 	"file_exclude_patterns":
 	[
@@ -49,23 +51,23 @@
 		".vagrant"
 	],
 	"font_face": "Inconsolata-dz for Powerline",
-	"font_size": 11.0,
+	"font_size": 12.0,
 	"hack_ssh_address": "vagrant",
 	"hack_ssh_enable": true,
 	"hack_ssh_folder": "/home/globalcomix/gc",
+	"highlight_line": true,
 	"ignored_packages":
 	[
-		"BracketHighlighter",
+		"C Improved",
+		"ClangAutoComplete",
 		"CSS",
-		"GitGutter",
-		"GoSublime",
-		"Python Auto-Complete",
-		"sublime-github",
-		"SublimeLinter-phplint",
-		"SublimeLinter-phpmd",
+		"Python",
 		"Vintage"
 	],
 	"indent_to_bracket": true,
+	"line_padding_bottom": 1,
+	"line_padding_top": 1,
+	"overlay_scroll_bars": "enabled",
 	"remember_open_files": false,
 	"rulers":
 	[
@@ -74,7 +76,7 @@
 	"show_full_path": true,
 	"smart_indent": true,
 	"tab_size": 4,
-	"theme": "Soda SolarizedDark.sublime-theme",
+	"theme": "Material One Dark.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"trim_automatic_white_space": true,
 	"trim_trailing_white_space_on_save": true,
