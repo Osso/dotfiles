@@ -22,7 +22,8 @@ setopt HIST_REDUCE_BLANKS
 setopt APPEND_HISTORY
 # Store datetime in history file
 setopt EXTENDED_HISTORY
-
+# Allows comments in interactive mode
+setopt INTERACTIVE_COMMENTS
 
 #########################
 # included config files #
@@ -58,8 +59,9 @@ bindkey '^A' beginning-of-line
 bindkey '^E' end-of-line
 bindkey '^[f' forward-word
 bindkey '^[b' backward-word
-bindkey '^K' kill-line
-
+bindkey '^[K' kill-line
+bindkey '^[U' backward-kill-line
+bindkey '^[R' history-incremental-pattern-search-backward
 # Disable special handling of ^s and ^q by OS X Terminal
 stty -ixon -ixoff
 
@@ -92,3 +94,12 @@ alias zmv="noglob zmv -W"
 
 # Colored file types for ls
 eval $(dircolors -b "$HOME/.dircolors")
+
+# turn off ZLE bracketed paste in dumb term
+# otherwise turn on ZLE bracketed-paste-magic
+if [[ $TERM == dumb ]]; then
+    unset zle_bracketed_paste
+else
+    autoload -Uz bracketed-paste-magic
+    zle -N bracketed-paste bracketed-paste-magic
+fi
