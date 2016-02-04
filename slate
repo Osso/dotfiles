@@ -46,7 +46,7 @@ bind down:ctrl;cmd   push down  bar-resize:screenSizeY/2
 # bind down:ctrl;alt focus above
 bind f1:cmd focus 'Google Chrome'
 bind f2:cmd focus 'Sublime Text'
-bind f3:cmd focus 'Terminal'
+bind f3:cmd focus 'iTerm'
 bind f4:cmd focus 'Slack'
 bind f5:cmd focus 'Skype'
 bind f6:cmd focus 'Mail'
