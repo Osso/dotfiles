@@ -1,21 +1,26 @@
 - name: Install apt packages
+  become: true
   apt: "name={{ item }}"
   with_items:
-    # Invenio
+    # Fonts for text editor and vim
+    - fonts-powerline
+    - fonts-inconsolata
+    # Shell
+    - zsh
+    # Brother scanning requires this
+    - libusb-dev
+    # Needed by this notebook
+    - python-pip
+    # Common dev stuff
     - autoconf
     - automake
-    - poppler-utils
     # Version control
     - mercurial
     - git
     # More up to date and avoids poluting the system packages dir
     - python
     # Golang
-    - go
-    # Database
-    - mariadb-server
-    # File synching
-    # - syncthing
+    - golang
     # Http client
     - wget
     - httpie
@@ -23,9 +28,17 @@
     - ngrep
     # Mass rename
     - rename
-    # Required by shell prompt
-    - vcprompt
+    # OpenVPN in network manager
+    - network-manager-openvpn-gnome
     # More apps
     - dropbox
-    - skype
+    - skypeforlinux
     - vagrant
+    # Required by shell prompt
+    # - vcprompt
+    # File synching
+    # - syncthing
+    # - spotify
+    # - mattermost
+    # SSH tunnels
+    - gstm

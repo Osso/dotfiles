@@ -45,6 +45,11 @@ if [ -f /usr/bin/virtualenvwrapper.sh ]; then
     source /usr/bin/virtualenvwrapper.sh
 fi
 
+# Hint for missing package
+if [ -f /etc/zsh_command_not_found ]; then
+    source /etc/zsh_command_not_found
+fi
+
 # Colorization of command line similar to fish shell
 # source ~/src/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
@@ -56,12 +61,17 @@ fi
 # Rebind codes to what I expect them to do
 bindkey '^[[3~' delete-char
 bindkey '^A' beginning-of-line
+bindkey ';5D' beginning-of-line
 bindkey '^E' end-of-line
+bindkey ';5C' end-of-line
 bindkey '^[f' forward-word
 bindkey '^[b' backward-word
+bindkey ';3C' forward-word
+bindkey ';3D' backward-word
 bindkey '^[K' kill-line
 bindkey '^[U' backward-kill-line
 bindkey '^[R' history-incremental-pattern-search-backward
+
 # Disable special handling of ^s and ^q by OS X Terminal
 stty -ixon -ixoff
 
@@ -103,3 +113,4 @@ else
     autoload -Uz bracketed-paste-magic
     zle -N bracketed-paste bracketed-paste-magic
 fi
+test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_integration.zsh

@@ -38,8 +38,9 @@
 		"Pretty JSON",
 		"Puppet",
 		"Python 3",
+		"PyYapf Python Formatter",
 		"requirementstxt",
-		"Rust",
+		"Rust Enhanced",
 		"SFTP",
 		"SideBarEnhancements",
 		"Solarized Color Scheme",
@@ -50,6 +51,7 @@
 		"SublimeLinter-pylint",
 		"SublimeLinter-ruby",
 		"SublimeLinter-xmllint",
-		"Terraform"
+		"Terraform",
+		"Theme - Brogrammer"
 	]
 }

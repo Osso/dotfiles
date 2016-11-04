@@ -35,13 +35,10 @@ export PROJECTS_DIR="$HOME/Projects"
 # Interactive mode environment
 if [ -n "$PS1" ]; then
     # Sublime as Editor
-    export EDITOR='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl -w'
+    export EDITOR='subl -w'
 
     # Highlight section titles in manual pages (136 is yellow)
     export LESS_TERMCAP_md="$(tput setaf 136)"
-
-    # Always enable colored `grep` output
-    export GREP_OPTIONS="--color=auto"
 
     # Better 'less': less -FRX
     # -F: quit if the contents fit the screen
@@ -49,5 +46,3 @@ if [ -n "$PS1" ]; then
     # -X: no clearing of the screen after quit
     export LESS="FRX"
 fi
-
-export FLEETCTL_TUNNEL="192.168.1.45"

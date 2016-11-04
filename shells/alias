@@ -24,7 +24,9 @@ alias ll="ls --color -lh"
 alias la="ls --color -lha"
 alias ldir="ls -d */"
 
-alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
+if [[ "$(uname)" == 'Darwin' ]]; then
+	alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
+fi
 
 # Lock computer
 alias lock="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
@@ -59,7 +61,7 @@ alias dco="docker-compose"
 alias de="docker exec -it"
 
 # External IP address
-alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias publicip="dig +short myip.opendns.com @resolver1.opendns.com"
 # Local IP address
 alias localip="ipconfig getifaddr en0"
 # All IP addresses
@@ -90,7 +92,7 @@ alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl"
 
 # Provision OSX
-alias provision="ansible-playbook ~/Sync/Provisioning/playbooks/*.yml -i '*', -Kv"
+alias provision="ansible-playbook ~/Sync/Provisioning/playbooks/*.yml -i 127.0.0.1, -Kv"
 alias provision-facts="ansible localhost -i 127.0.0.1, -m setup --connection=local"
 
 # CERN proxy
@@ -110,3 +112,7 @@ alias mkdir="mkdir -vp"
 alias tree="tree -Cs"
 
 alias docker-dangling="docker rmi \$(docker images -q -f dangling=true)"
+
+alias bu="brew update && brew upgrade"
+
+alias grep="grep --color=auto"
