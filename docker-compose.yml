@@ -1,0 +1,34 @@
+hd-idle:
+  image: ossoleil/hd-idle
+  restart: always
+avahi:
+  image: avahi
+  net: host
+  volumes:
+    - /var/run/dbus:/var/run/dbus
+  restart: always
+netatalk:
+  image: ossoleil/netatalk
+  ports:
+    - 548:548
+  volumes:
+    - /mnt/array/timemachine:/mnt/timemachine
+  restart: always
+samba:
+  image: samba
+  ports:
+    - 445:445
+  volumes:
+    - /mnt/array/main:/mnt/array/main
+    - /mnt/array/syncthing/alessio/NAS:/mnt/array/syncthing/alessio/NAS
+  restart: always
+smartmontools:
+  image: ossoleil/smartmontools
+  privileged: true
+  restart: always
+syncthing:
+  image: syncthing
+  net: host
+  volumes:
+    - /mnt/array/syncthing:/home/syncthing
+  restart: always
