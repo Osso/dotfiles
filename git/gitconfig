@@ -58,7 +58,7 @@
 
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
+	path = 
 [mergetool "sourcetree"]
 	cmd = /Users/osso/Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
@@ -122,9 +122,6 @@
 [rerere]
     # I am still not convinced
     enabled = false
-[credential]
-    # Save passwords to osx keychain
-    helper = osxkeychain
 [apply]
     # Detect whitespace errors when applying a patch
     whitespace = fix
@@ -137,3 +134,5 @@
 	clean = git media clean %f
 	smudge = git media smudge %f
 	required = true
+[credential]
+	helper = /usr/share/doc/git/contrib/credential/gnome-keyring/git-credential-gnome-keyring

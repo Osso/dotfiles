@@ -1,6 +1,6 @@
 {
     "user": {
-        "debug": false,
+        "debug": true,
         "delay": 0.25,
         "error_color": "D02000",
         "gutter_theme": "Packages/SublimeLinter/gutter-themes/Default/Default.gutter-theme",
@@ -126,6 +126,7 @@
         "show_errors_on_save": false,
         "show_marks_in_minimap": true,
         "syntax_map": {
+            "Python3": "python",
             "html (django)": "html",
             "html (rails)": "html",
             "html 5": "html",

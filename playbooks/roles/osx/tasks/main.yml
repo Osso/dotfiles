@@ -43,13 +43,12 @@
     - gdbm
     # Required by shell prompt
     - vcprompt
-    # For drone
-    - bazaar
-    - ngrok
     # Stuff
+    - ngrok
     - ssh-copy-id
     - tree
     - ncdu
+    - docker
     # Tapir
     - fcgi
     - gettext
@@ -60,9 +59,6 @@
     - avro-c
     - bsdmake
     - pkg-config
-    # CoreOS on NAS
-    - fleetctl
-    - docker
 
 - name: install cask apps from homebrew
   homebrew_cask: name={{ item }} state=present
@@ -97,6 +93,6 @@
     - gitup
 
 - name: Allow homebrew zsh to be selected as default shell
-  sudo: true
+  become: true
   lineinfile: dest=/etc/shells line={{ shell_path }}
 

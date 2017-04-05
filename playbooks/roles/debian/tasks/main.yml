@@ -42,3 +42,9 @@
     # - mattermost
     # SSH tunnels
     - gstm
+
+- name: Increase the number of file watches
+  become: true
+  lineinfile: dest=/etc/sysctl.conf line=fs.inotify.max_user_watches=1048576
+
+

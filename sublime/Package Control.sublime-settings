@@ -17,6 +17,7 @@
 		"CSS3",
 		"Dockerfile Syntax Highlighting",
 		"FileDiffs",
+		"FindKeyConflicts",
 		"Fluentd",
 		"GitGutter",
 		"GoSublime",
@@ -39,6 +40,7 @@
 		"Puppet",
 		"Python 3",
 		"PyYapf Python Formatter",
+		"RawLineEdit",
 		"requirementstxt",
 		"Rust Enhanced",
 		"SFTP",
@@ -51,7 +53,6 @@
 		"SublimeLinter-pylint",
 		"SublimeLinter-ruby",
 		"SublimeLinter-xmllint",
-		"Terraform",
-		"Theme - Brogrammer"
+		"Terraform"
 	]
 }

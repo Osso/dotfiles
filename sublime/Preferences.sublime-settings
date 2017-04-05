@@ -51,7 +51,7 @@
 		".vagrant"
 	],
 	"font_face": "Inconsolata",
-	"font_size": 13.0,
+	"font_size": 14.0,
 	"hack_ssh_address": "vagrant",
 	"hack_ssh_enable": true,
 	"hack_ssh_folder": "/home/globalcomix/gc",
@@ -62,7 +62,7 @@
 		"ClangAutoComplete",
 		"CSS",
 		"MagicPython",
-		"Python",
+		"Python 3",
 		"SFTP",
 		"sublime-github",
 		"SublimeLinter-phplint",

@@ -40,9 +40,9 @@ source ~/.zsh/terminalapp
 if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
     source /usr/local/bin/virtualenvwrapper.sh
 fi
-# System installed virtualenvwrapper
-if [ -f /usr/bin/virtualenvwrapper.sh ]; then
-    source /usr/bin/virtualenvwrapper.sh
+# Ubuntu virtual wrapper
+if [ -f /usr/share/virtualenvwrapper/virtualenvwrapper.sh ]; then
+    source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 fi
 
 # Hint for missing package
@@ -113,4 +113,7 @@ else
     autoload -Uz bracketed-paste-magic
     zle -N bracketed-paste bracketed-paste-magic
 fi
-test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_integration.zsh
+
+if [ -f ~/.iterm2_shell_integration.zsh ]; then
+    source ~/.iterm2_shell_integration.zsh
+fi
