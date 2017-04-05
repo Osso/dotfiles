@@ -42,6 +42,22 @@
     # - mattermost
     # SSH tunnels
     - gstm
+    # Python packages
+    # Virtual environments
+    - python3-virtualenv
+    - virtualenvwrapper
+    # CLI awk like python
+    - pythonpy
+    # Requires by some scripts in ~/bin
+    - python3-plumbum
+    # Linters for sublime text
+    - python3-pep8
+    - pylint3
+    # Always useful
+    - ipython3
+    # VIM
+    - python3-powerline
+
 
 - name: Increase the number of file watches
   become: true

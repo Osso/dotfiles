@@ -96,3 +96,26 @@
   become: true
   lineinfile: dest=/etc/shells line={{ shell_path }}
 
+- name: easy install pip
+  easy_install: name=pip
+  # sudo: yes
+
+- name: install apps from pip
+  pip: name={{ item }}
+  with_items:
+    # Virtual environments
+    - virtualenv
+    - virtualenvwrapper
+    - pew
+    # CLI awk like python
+    - pythonpy
+    # Requires by some scripts in ~/bin
+    - plumbum
+    # Linters for sublime text
+    - pep8
+    - pylint
+    # Always useful
+    - ipython
+
+- name: install powerline for vim
+  command: pip install git+git://github.com/Lokaltog/powerline creates=/usr/local/bin/powerline

@@ -146,43 +146,19 @@
           to: Packages/User/Preferences.sublime-settings
         - from: sublime/RunMultipleCommands.py
           to: Packages/User/RunMultipleCommands.py
-        - from: sublime/Twilight.tmTheme
-          to: Packages/User/Twilight.tmTheme
         - from: sublime/Package Control.sublime-settings
           to: Packages/User/Package Control.sublime-settings
         - from: sublime/DetectSyntax.sublime-settings
           to: Packages/User/DetectSyntax.sublime-settings
         - from: sublime/Snippets.py
           to: Packages/User/Snippets.py
-        - from: sublime/Move.py
-          to: Packages/User/Move.py
+        - from: sublime/delete_subword.sublime-macro
+          to: Packages/User/delete_subword.sublime-macro
+        - from: sublime/delete_subword_forward.sublime-macro
+          to: Packages/User/delete_subword_forward.sublime-macro
         - from: sublime/PythonSnippets.sublime-commands
           to: Packages/User/PythonSnippets.sublime-commands
         - from: sublime/SublimePython.sublime-settings
           to: Packages/User/SublimePython.sublime-settings
         - from: sublime/SublimeLinter.sublime-settings
           to: Packages/User/SublimeLinter.sublime-settings
-
-    - name: easy install pip
-      easy_install: name=pip
-      # sudo: yes
-
-    - name: install apps from pip
-      pip: name={{ item }}
-      with_items:
-        # Virtual environments
-        - virtualenv
-        - virtualenvwrapper
-        - pew
-        # CLI awk like python
-        - pythonpy
-        # Requires by some scripts in ~/bin
-        - plumbum
-        # Linters for sublime text
-        - pep8
-        - pylint
-        # Always useful
-        - ipython
-
-    - name: install powerline for vim
-      command: pip install git+git://github.com/Lokaltog/powerline creates=/usr/local/bin/powerline

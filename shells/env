@@ -46,3 +46,8 @@ if [ -n "$PS1" ]; then
     # -X: no clearing of the screen after quit
     export LESS="FRX"
 fi
+
+SUBLIME_PATH="/home/osso/.config/sublime-text-3"
+if [ -d "$SUBLIME_PATH" ]; then
+    export SUBLIME_PATH
+fi
