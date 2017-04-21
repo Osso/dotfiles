@@ -6,7 +6,7 @@
 	"caret_extra_width": 2,
 	"caret_style": "solid",
 	"close_windows_when_empty": true,
-	"color_scheme": "Packages/User/SublimeLinter/Material Spacegray (SL).tmTheme",
+	"color_scheme": "Packages/User/Material Spacegray (SL).tmTheme",
 	"detect_indentation": false,
 	"file_exclude_patterns":
 	[

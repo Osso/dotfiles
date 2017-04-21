@@ -6,6 +6,7 @@
 	],
 	"installed_packages":
 	[
+		"A File Icon",
 		"AutoPEP8",
 		"BracketHighlighter",
 		"C Improved",
@@ -29,6 +30,7 @@
 		"Keymaps",
 		"MagicPython",
 		"Markdown Preview",
+		"Material Theme",
 		"Materialize",
 		"nginx",
 		"Package Control",
@@ -53,6 +55,7 @@
 		"SublimeLinter-pylint",
 		"SublimeLinter-ruby",
 		"SublimeLinter-xmllint",
-		"Terraform"
+		"Terraform",
+		"Theme - Spacegray"
 	]
 }

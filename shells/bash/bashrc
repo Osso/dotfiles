@@ -69,10 +69,10 @@ complete -o nospace -W "$(/bin/ls ~/Projects)" p;
 ####################
 
 # Make fn+backspace and the delete button work as forward delete
-bind '^[[3~' delete-char
+#bind '^[[3~' delete-char
 
 # Disable special handling of ^s and ^q by OS X Terminal
-stty -ixon -ixoff
+#stty -ixon -ixoff
 
 
 ################
