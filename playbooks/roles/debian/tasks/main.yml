@@ -51,8 +51,10 @@
     # Requires by some scripts in ~/bin
     - python3-plumbum
     # Linters for sublime text
+    - pep8
     - python3-pep8
     - pylint3
+    - pylint
     # Always useful
     - ipython3
     # VIM

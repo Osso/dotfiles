@@ -35,7 +35,7 @@
                 "@disable": false,
                 "args": [],
                 "excludes": [],
-                "ignore": "E265,E272,E121,E122,E126,E127,E128,E131,E203,E221,E501,E302,E226,E124",
+                "ignore": "E265,E272,E121,E122,E126,E127,E128,E131,E203,E221,E501,E302,E226,E124,E402",
                 "max-line-length": null,
                 "select": ""
             },
@@ -92,7 +92,9 @@
                 "args": [],
                 "disable": "",
                 "enable": "",
-                "excludes": [],
+                "excludes": [
+                    "C0413"
+                ],
                 "paths": [],
                 "rcfile": "",
                 "show-codes": true
@@ -159,6 +161,10 @@
             "yaml (stylelint)": "yaml",
             "yaml (yarn)": "yaml"
         },
+        "tooltip_fontsize": "1rem",
+        "tooltip_theme": "Packages/SublimeLinter/tooltip-themes/Default/Default.tooltip-theme",
+        "tooltip_theme_excludes": [],
+        "tooltips": false,
         "warning_color": "DDB700",
         "wrap_find": true
     }
