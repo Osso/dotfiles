@@ -48,7 +48,9 @@
 		".hg",
 		"target",
 		"autom4te.cache",
-		".vagrant"
+		".vagrant",
+		".cache",
+		"*.egg-info"
 	],
 	"font_face": "Inconsolata",
 	"font_size": 14.0,
