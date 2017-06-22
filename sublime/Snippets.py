@@ -25,11 +25,11 @@ class PythonSnippetsIpythonConsole(sublime_plugin.TextCommand):
 class PythonSnippetsSignedOff(sublime_plugin.TextCommand):
     def run(self, edit):
         for selection in self.view.sel():
-            s = """Signed-off-by: Alessio Deiana <alessio.deiana@cern.ch>"""
+            s = """Signed-off-by: Alessio Deiana <adeiana@gmail.com>"""
             self.view.replace(edit, selection, s)
 
 class PythonSnippetsTested(sublime_plugin.TextCommand):
     def run(self, edit):
         for selection in self.view.sel():
-            s = """Tested-by: Alessio Deiana <alessio.deiana@cern.ch>"""
+            s = """Tested-by: Alessio Deiana <adeiana@gmail.com>"""
             self.view.replace(edit, selection, s)

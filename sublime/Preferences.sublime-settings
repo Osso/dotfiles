@@ -6,7 +6,7 @@
 	"caret_extra_width": 2,
 	"caret_style": "solid",
 	"close_windows_when_empty": true,
-	"color_scheme": "Packages/User/Material Spacegray (SL).tmTheme",
+	"color_scheme": "Packages/Solarized Color Scheme/Solarized (light).tmTheme",
 	"detect_indentation": false,
 	"file_exclude_patterns":
 	[
@@ -63,6 +63,7 @@
 		"C Improved",
 		"ClangAutoComplete",
 		"CSS",
+		"Jedi - Python autocompletion",
 		"MagicPython",
 		"Python 3",
 		"Rust Enhanced",
@@ -70,12 +71,16 @@
 		"sublime-github",
 		"SublimeLinter-phplint",
 		"Tag",
-		"Theme - Soda",
 		"Vintage"
 	],
 	"indent_to_bracket": true,
 	"line_padding_bottom": 1,
 	"line_padding_top": 1,
+	"material_theme_accent_acid-lime": true,
+	"material_theme_accent_blue": true,
+	"material_theme_accent_brba": true,
+	"material_theme_accent_bright-teal": true,
+	"material_theme_accent_cyan": true,
 	"overlay_scroll_bars": "enabled",
 	"remember_open_files": false,
 	"rulers":
@@ -85,7 +90,7 @@
 	"show_full_path": true,
 	"smart_indent": true,
 	"tab_size": 4,
-	"theme": "Material Spacegray.sublime-theme",
+	"theme": "Solarized Flat Light.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"trim_automatic_white_space": true,
 	"trim_trailing_white_space_on_save": true,

@@ -48,6 +48,7 @@
 		"SFTP",
 		"SideBarEnhancements",
 		"Solarized Color Scheme",
+		"SublimeCodeIntel",
 		"SublimeLinter",
 		"SublimeLinter-contrib-clang",
 		"SublimeLinter-pep8",
@@ -56,6 +57,7 @@
 		"SublimeLinter-ruby",
 		"SublimeLinter-xmllint",
 		"Terraform",
+		"Theme - Solarized Flat",
 		"Theme - Spacegray"
 	]
 }
