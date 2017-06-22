@@ -43,7 +43,7 @@ alias gs="g show | e"
 alias t="nosetests --exclude=TEST_SUITE --exclude=run_test_suite"
 alias c="cargo"
 alias d="docker"
-alias e="subl"
+alias e="atom"
 alias g="git"
 alias j="jump"
 alias h="history"
@@ -67,7 +67,11 @@ alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[
 
 # Flush Directory Service cache
 # alias flushdns="dscacheutil -flushcache"
-alias flushdns="sudo killall -HUP mDNSResponder"
+if [[ "$(uname)" == 'Darwin' ]]; then
+  alias flushdns="sudo killall -HUP mDNSResponder"
+else
+  alias flushdns="sudo service nscd restart"
+fi
 
 # View HTTP traffic
 alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
