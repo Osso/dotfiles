@@ -66,3 +66,10 @@
   lineinfile: dest=/etc/sysctl.conf line=fs.inotify.max_user_watches=1048576
 
 
+- name: Disable nscd hosts cache
+  become: true
+  lineinfile:
+    dest: '/etc/nscd.conf'
+    regexp: 'enable-cache    hosts'
+    line: 'enable-cache    hosts   no'
+
