@@ -43,8 +43,10 @@ function cmd_status()
 {
     if [ $? -eq 0 ]; then
         s="[%{${green}%}OK%{${reset}%}]"
+        # s="%{${green}%}✓%{${reset}%}"
     else
         s="[%{${red}%}FAILED%{${reset}%}]"
+        # s="%{${red}%}✗%{${reset}%}"
     fi
     echo "${s}"
 }
