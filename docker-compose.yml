@@ -32,3 +32,10 @@ syncthing:
   volumes:
     - /mnt/array/syncthing:/home/syncthing
   restart: always
+nbd:
+  image: nbd
+  net: host
+  privileged: true
+  restart: always
+  volumes:
+    - /dev/disk:/dev/disk
