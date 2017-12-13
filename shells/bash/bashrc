@@ -85,6 +85,3 @@ shopt -s cdspell
 # shopt -s autocd
 # Case-insensitive globbing (used in pathname expansion)
 shopt -s nocaseglob
-
-
-source ~/.xsh
