@@ -118,5 +118,13 @@ if [ -f ~/.iterm2_shell_integration.zsh ]; then
     source ~/.iterm2_shell_integration.zsh
 fi
 
-
-source ~/.xsh
+POWERLEVEL9K_MODE='nerdfont-complete'
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs command_execution_time time battery ram)
+DEFAULT_USER=osso
+POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
+POWERLEVEL9K_HIDE_BRANCH_ICON=true
+POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+if [ -f ~/src/powerlevel9k/powerlevel9k.zsh-theme ]; then
+    source  ~/src/powerlevel9k/powerlevel9k.zsh-theme
+fi
