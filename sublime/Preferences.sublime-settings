@@ -53,7 +53,7 @@
 		"*.egg-info"
 	],
 	"font_face": "Inconsolata",
-	"font_size": 13,
+	"font_size": 15,
 	"hack_ssh_address": "vagrant",
 	"hack_ssh_enable": true,
 	"hack_ssh_folder": "/home/globalcomix/gc",
@@ -62,15 +62,18 @@
 	[
 		"ClangAutoComplete",
 		"CSS",
+		"Git",
 		"GitGutter",
 		"GoSublime",
 		"MagicPython",
 		"PHP Completions Kit",
 		"phpfmt",
+		"Pylinter",
 		"Python 3",
 		"Rust Enhanced",
 		"SFTP",
 		"sublime-github",
+		"SublimeLinter-pep8",
 		"SublimeLinter-phplint",
 		"Tag",
 		"Theme - Soda",
@@ -83,7 +86,7 @@
 	"remember_open_files": false,
 	"rulers":
 	[
-		80
+		79
 	],
 	"show_full_path": true,
 	"smart_indent": true,

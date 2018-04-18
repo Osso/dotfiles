@@ -111,9 +111,7 @@ alias mkdir="mkdir -vp"
 alias tree="tree -Cs"
 
 alias docker-dangling="docker rmi \$(docker images -q -f dangling=true)"
-
 alias bu="brew update && brew upgrade"
-
 alias grep="grep --color=auto"
-
 alias ua="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
+alias a="sudo apt"

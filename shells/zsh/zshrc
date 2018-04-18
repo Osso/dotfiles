@@ -9,15 +9,18 @@ HISTFILE="$HOME/.zsh/history"
 HISTSIZE=10000
 SAVEHIST=10000
 # Ignore these commands
-HISTIGNORE='ls:bg:fg:history:ll:exit:pwd:cd:cd -:exit:date:* --help'
+HISTORY_IGNORE='(ls|bg|fg|history|ll|exit|pwd|cd|cd -|date|* --help|g s|g add -A|e .*|e|g c .*|kill .*|g d|g b|g b -r)'
 # Share history between sessions
 setopt SHARE_HISTORY
 # Write history incrementally (after each command)
 setopt INC_APPEND_HISTORY
 # Don't record dupes in history
+setopt HIST_SAVE_NO_DUPS
 setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_EXPIRE_DUPS_FIRST
 # Remove excess blanks in command line
 setopt HIST_REDUCE_BLANKS
+setopt HIST_IGNORE_SPACE
 # Append to history (instead of overwriting it)
 setopt APPEND_HISTORY
 # Store datetime in history file
@@ -59,18 +62,25 @@ fi
 ####################
 
 # Rebind codes to what I expect them to do
+
+# delete
 bindkey '^[[3~' delete-char
-bindkey '^A' beginning-of-line
-bindkey ';5D' beginning-of-line
-bindkey '^E' end-of-line
-bindkey ';5C' end-of-line
-bindkey '^[f' forward-word
-bindkey '^[b' backward-word
-bindkey ';3C' forward-word
-bindkey ';3D' backward-word
-bindkey '^[K' kill-line
-bindkey '^[U' backward-kill-line
-bindkey '^[R' history-incremental-pattern-search-backward
+# Ctrl+<arrow>
+bindkey ';5C' forward-word
+bindkey ';5D' backward-word
+# Alt+<arrow>
+bindkey ';3D' beginning-of-line
+bindkey ';3C' end-of-line
+# Ctrl+delete
+bindkey '^[[3;5~' kill-word
+# Ctrl+backspace
+bindkey '^H' backward-kill-word
+# Ctrl+r
+bindkey '^R' history-incremental-pattern-search-backward
+# Alt+backspace
+bindkey '\e\C-?' backward-kill-line
+# Alt+delete
+bindkey '^[[3;3~' kill-line
 
 # Disable special handling of ^s and ^q by OS X Terminal
 stty -ixon -ixoff
