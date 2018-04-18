@@ -1,0 +1,14 @@
+#!/bin/bash
+
+function connect {
+    rm -f /tmp/nas-docker.sock
+    echo 'Redirected nas:/var/run/docker.sock to /tmp/nas-docker.sock'
+    ssh -N -p 22 -c aes256-ctr root@nas -L /tmp/nas-docker.sock:/var/run/docker.sock
+}
+
+if [ -S /tmp/nas-docker.sock ]; then
+    echo "Already connected, use 'w p'"
+else
+    connect
+    rm -f /tmp/nas-docker.sock && echo 'Deleted /tmp/nas-docker.sock'
+fi

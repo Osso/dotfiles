@@ -1,0 +1,13 @@
+#!/bin/bash
+
+function connect {
+    rm -f /tmp/docker.sock
+    echo 'Redirecting mh:/var/run/docker.sock to /tmp/docker.sock'
+    ssh -N -p 22 -c aes256-ctr osso@mangahelpers.com -L /tmp/docker.sock:/var/run/docker.sock
+}
+
+connect
+rm -f /tmp/docker.sock
+echo 'Deleted /tmp/docker.sock'
+
+
