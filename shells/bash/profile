@@ -2,7 +2,7 @@
 source ~/.bash/env
 
 # Local environment
-if [ -f ~/.zsh/env_local ]; then
+if [ -f ~/.bash/env_local ]; then
     source ~/.bash/env_local
 fi
 
