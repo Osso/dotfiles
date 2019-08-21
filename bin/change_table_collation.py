@@ -1,8 +1,8 @@
 collation = 'utf8_general_ci'
 host = 'db'
-db = 'mangah_forum'
-user = 'root'
-passwd = 'PBeQG8sHqM4S'
+db = ''
+user = ''
+passwd = ''
 skip_tables = ()
 
 import MySQLdb

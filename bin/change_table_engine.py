@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 engine = 'innodb'
 host = 'localhost'
-db_name = 'inspirehep'
-user = 'root'
+db_name = ''
+user = ''
 passwd = ''
 skip_tables = ()
 
