@@ -1,5 +1,5 @@
 {
-    "debug": false,
+    "debug": true,
     "delay": 0.3,
     "no_column_highlights_line": true,
     // "error_color": "D02000",
@@ -11,14 +11,7 @@
             "args": [],
             "excludes": [],
             "extra_flags": "",
-            "include_dirs": [
-                "/Users/osso/Projects/tapir/tapir/tapir_gtp",
-                "/usr/local/Cellar/glib/2.46.2/include/glib-2.0",
-                "/usr/local/Cellar/glib/2.46.2/lib/glib-2.0/include",
-                "/usr/local/include",
-                "/Users/osso/Projects/tapir/tapir/build/includes",
-                "/usr/local/opt/openssl/include"
-            ]
+            "include_dirs": []
         },
         "pep8": {
             "@disable": false,
@@ -82,10 +75,8 @@
         "pylint": {
             "@disable": false,
             "args": [],
-            "disable": "",
-            "enable": "",
             "excludes": [],
-            "paths": [],
+            "paths": ["/home/osso/sfr/repos/pims/src"],
             "rcfile": "",
             "show-codes": true
         },

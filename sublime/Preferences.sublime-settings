@@ -6,7 +6,7 @@
 	"caret_extra_width": 2,
 	"caret_style": "solid",
 	"close_windows_when_empty": true,
-	"color_scheme": "Packages/User/SublimeLinter/Mariana (SL).tmTheme",
+	"color_scheme": "Packages/Color Scheme - Default/Mariana.sublime-color-scheme",
 	"detect_indentation": false,
 	"file_exclude_patterns":
 	[
@@ -53,7 +53,7 @@
 		"*.egg-info"
 	],
 	"font_face": "Inconsolata",
-	"font_size": 15,
+	"font_size": 13,
 	"hack_ssh_address": "vagrant",
 	"hack_ssh_enable": true,
 	"hack_ssh_folder": "/home/globalcomix/gc",
@@ -67,7 +67,6 @@
 		"GoSublime",
 		"MagicPython",
 		"PHP Completions Kit",
-		"phpfmt",
 		"Pylinter",
 		"Python 3",
 		"Rust Enhanced",
@@ -91,7 +90,7 @@
 	"show_full_path": true,
 	"smart_indent": true,
 	"tab_size": 4,
-	"theme": "Material Spacegray.sublime-theme",
+	"theme": "Material One Dark.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"trim_automatic_white_space": true,
 	"trim_trailing_white_space_on_save": true,
