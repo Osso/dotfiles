@@ -60,10 +60,8 @@ alias de="docker exec -it"
 
 # External IP address
 alias publicip="dig +short myip.opendns.com @resolver1.opendns.com"
-# Local IP address
-alias localip="ipconfig getifaddr en0"
 # All IP addresses
-alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
+alias localips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
 
 # Flush Directory Service cache
 # alias flushdns="dscacheutil -flushcache"
@@ -115,3 +113,4 @@ alias bu="brew update && brew upgrade"
 alias grep="grep --color=auto"
 alias ua="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
 alias a="sudo apt"
+alias psg="ps aux | grep"
