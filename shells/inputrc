@@ -1,0 +1,178 @@
+# Unbind
+
+"\C-g": nop  # abort
+"\C-x\C-g": nop  # abort
+"\e\C-g": nop  # abort
+"\C-j": nop  # accept-line
+"\C-b": nop  # backward-char
+"\eOD": nop  # backward-char
+"\e[D": nop  # backward-char
+"\C-?": nop  # backward-delete-char
+"\C-x\C-?": nop  # backward-kill-line
+"\e\C-h": nop  # backward-kill-word
+"\eb": nop  # backward-word
+"\e<": nop  # beginning-of-history
+"\C-a": nop  # beginning-of-line
+"\eOH": nop  # beginning-of-line
+"\e[H": nop  # beginning-of-line
+"\e[200~": nop  # bracketed-paste-begin
+"\C-xe": nop  # call-last-kbd-macro
+"\ec": nop  # capitalize-word
+"\C-]": nop  # character-search
+"\e\C-]": nop  # character-search-backward
+"\C-i": nop  # complete
+"\e\e": nop  # complete
+"\e!": nop  # complete-command
+"\e/": nop  # complete-filename
+"\e@": nop  # complete-hostname
+"\e{": nop  # complete-into-braces
+"\e~": nop  # complete-username
+"\e$": nop  # complete-variable
+"\C-d": nop  # delete-char
+"\e[3~": nop  # delete-char
+"\e\\": nop  # delete-horizontal-space
+"\e-": nop  # digit-argument
+"\e0": nop  # digit-argument
+"\e1": nop  # digit-argument
+"\e2": nop  # digit-argument
+"\e3": nop  # digit-argument
+"\e4": nop  # digit-argument
+"\e5": nop  # digit-argument
+"\e6": nop  # digit-argument
+"\e7": nop  # digit-argument
+"\e8": nop  # digit-argument
+"\e9": nop  # digit-argument
+"\C-x\C-v": nop  # display-shell-version
+"\C-xA": nop  # do-lowercase-version
+"\C-xB": nop  # do-lowercase-version
+"\C-xC": nop  # do-lowercase-version
+"\C-xD": nop  # do-lowercase-version
+"\C-xE": nop  # do-lowercase-version
+"\C-xF": nop  # do-lowercase-version
+"\C-xG": nop  # do-lowercase-version
+"\C-xH": nop  # do-lowercase-version
+"\C-xI": nop  # do-lowercase-version
+"\C-xJ": nop  # do-lowercase-version
+"\C-xK": nop  # do-lowercase-version
+"\C-xL": nop  # do-lowercase-version
+"\C-xM": nop  # do-lowercase-version
+"\C-xN": nop  # do-lowercase-version
+"\C-xO": nop  # do-lowercase-version
+"\C-xP": nop  # do-lowercase-version
+"\C-xQ": nop  # do-lowercase-version
+"\C-xR": nop  # do-lowercase-version
+"\C-xS": nop  # do-lowercase-version
+"\C-xT": nop  # do-lowercase-version
+"\C-xU": nop  # do-lowercase-version
+"\C-xV": nop  # do-lowercase-version
+"\C-xW": nop  # do-lowercase-version
+"\C-xX": nop  # do-lowercase-version
+"\C-xY": nop  # do-lowercase-version
+"\C-xZ": nop  # do-lowercase-version
+"\eA": nop  # do-lowercase-version
+"\eB": nop  # do-lowercase-version
+"\eC": nop  # do-lowercase-version
+"\eD": nop  # do-lowercase-version
+"\eE": nop  # do-lowercase-version
+"\eF": nop  # do-lowercase-version
+"\eG": nop  # do-lowercase-version
+"\eH": nop  # do-lowercase-version
+"\eI": nop  # do-lowercase-version
+"\eJ": nop  # do-lowercase-version
+"\eK": nop  # do-lowercase-version
+"\eL": nop  # do-lowercase-version
+"\eM": nop  # do-lowercase-version
+"\eN": nop  # do-lowercase-version
+"\eP": nop  # do-lowercase-version
+"\eQ": nop  # do-lowercase-version
+"\eR": nop  # do-lowercase-version
+"\eS": nop  # do-lowercase-version
+"\eT": nop  # do-lowercase-version
+"\eU": nop  # do-lowercase-version
+"\eV": nop  # do-lowercase-version
+"\eW": nop  # do-lowercase-version
+"\eX": nop  # do-lowercase-version
+"\eY": nop  # do-lowercase-version
+"\eZ": nop  # do-lowercase-version
+"\el": nop  # downcase-word
+"\e\C-i": nop  # dynamic-complete-history
+"\C-x\C-e": nop  # edit-and-execute-command
+"\C-x)": nop  # end-kbd-macro
+"\e>": nop  # end-of-history
+"\C-e": nop  # end-of-line
+"\eOF": nop  # end-of-line
+"\e[F": nop  # end-of-line
+"\C-x\C-x": nop  # exchange-point-and-mark
+"\C-f": nop  # forward-char
+"\eOC": nop  # forward-char
+"\e[C": nop  # forward-char
+"\C-s": nop  # forward-search-history
+"\ef": nop  # forward-word
+"\eg": nop  # glob-complete-word
+"\C-x*": nop  # glob-expand-word
+"\C-xg": nop  # glob-list-expansions
+"\e^": nop  # history-expand-line
+"\e#": nop  # insert-comment
+"\e*": nop  # insert-completions
+"\e.": nop  # insert-last-argument
+"\e_": nop  # insert-last-argument
+"\ed": nop  # kill-word
+"\C-n": nop  # next-history
+"\eOB": nop  # next-history
+"\e[B": nop  # next-history
+"\en": nop  # non-incremental-forward-search-history
+"\ep": nop  # non-incremental-reverse-search-history
+"\C-x!": nop  # possible-command-completions
+"\e=": nop  # possible-completions
+"\e?": nop  # possible-completions
+"\C-x/": nop  # possible-filename-completions
+"\C-x@": nop  # possible-hostname-completions
+"\C-x~": nop  # possible-username-completions
+"\C-x$": nop  # possible-variable-completions
+"\C-p": nop  # previous-history
+"\eOA": nop  # previous-history
+"\e[A": nop  # previous-history
+"\C-q": nop  # quoted-insert
+"\C-v": nop  # quoted-insert
+"\C-x\C-r": nop  # re-read-init-file
+"\e\C-r": nop  # revert-line
+"\er": nop  # revert-line
+"\C-@": nop  # set-mark
+"\e ": nop  # set-mark
+"\e\C-e": nop  # shell-expand-line
+"\C-x(": nop  # start-kbd-macro
+"\e&": nop  # tilde-expand
+"\C-t": nop  # transpose-chars
+"\et": nop  # transpose-words
+"\C-x\C-u": nop  # undo
+"\C-u": nop  # unix-line-discard
+"\C-w": nop  # unix-word-rubout
+"\eu": nop  # upcase-word
+"\C-y": nop  # yank
+"\e.": nop  # yank-last-arg
+"\e_": nop  # yank-last-arg
+"\e\C-y": nop  # yank-nth-arg
+"\ey": nop  # yank-pop
+
+# Bind
+
+"\C-m": accept-line
+"\C-_": undo
+"\C-k": kill-line
+"\C-r": reverse-search-history
+"\C-o": operate-and-get-next
+"\C-l": clear-screen
+# Ctrl+<arrow>
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+# Alt+<arrow>
+"\e[1;3D": beginning-of-line
+"\e[1;3C": end-of-line
+# Ctrl+delete
+"\e[3;5~": kill-word
+# Ctrl+backspace
+"\C-H": backward-kill-word
+# Alt+backspace
+"\e\C-?" backward-kill-line
+# Alt+delete
+"\e[3;3~": kill-line

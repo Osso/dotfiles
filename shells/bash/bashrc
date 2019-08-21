@@ -64,17 +64,6 @@ complete -o bashdefault -o default -o nospace -F _vagrant v
 complete -o nospace -W "$(/bin/ls ~/Projects)" p;
 
 
-####################
-# terminal options #
-####################
-
-# Make fn+backspace and the delete button work as forward delete
-#bind '^[[3~' delete-char
-
-# Disable special handling of ^s and ^q by OS X Terminal
-#stty -ixon -ixoff
-
-
 ################
 # bash options #
 ################
@@ -85,3 +74,21 @@ shopt -s cdspell
 # shopt -s autocd
 # Case-insensitive globbing (used in pathname expansion)
 shopt -s nocaseglob
+
+# Rebind codes to what I expect them to do
+
+# # Ctrl+<arrow>
+# bind '"\e[1;5C": forward-word'
+# bind '"\e[1;5D": backward-word'
+# # Alt+<arrow>
+# bind '"\e[1;3D": beginning-of-line'
+# bind '"\e[1;3C": end-of-line'
+# # Ctrl+delete
+# bind '"\e[3;5~":kill-word'
+# # Ctrl+backspace
+# bind '\C-H: backward-kill-word'
+# # Alt+backspace
+# bind '"\e\C-?": backward-kill-line'
+# # Alt+delete
+# bind '"\e[3;3~": kill-line'
+

@@ -120,6 +120,8 @@
           to: ~/.nanorc
         - from: slate
           to: ~/.slate
+        - from: shells/inputrc
+          to: ~/.inputrc
 
         # IPython
         - from: python/invenio.ipython.py

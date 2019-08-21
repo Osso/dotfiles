@@ -84,6 +84,8 @@ bindkey '^[[3;3~' kill-line
 
 # Disable special handling of ^s and ^q by OS X Terminal
 stty -ixon -ixoff
+# Bind interrupt to ctrl+shift+c
+stty intr '^C'
 
 
 ###############
