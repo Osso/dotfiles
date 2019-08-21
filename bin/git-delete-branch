@@ -1,5 +1,11 @@
 #!/bin/sh
 
-current_branch="$(git symbolic-ref --quiet --short HEAD)"
-remote_ref="$(git rev-parse --abbrev-ref --symbolic-full-name @{u} | sed 's#/# #')"
-git co master && git push --delete ${remote_ref} && git b -D "${current_branch}"
+# current_branch="$(git symbolic-ref --quiet --short HEAD)"
+# remote_ref="$(git rev-parse --abbrev-ref --symbolic-full-name @{u} | sed 's#/# #')"
+# git co master && git push --delete ${remote_ref} && git b -D "${current_branch}"
+
+
+# git push origin --delete "refs/remotes/origin/$1" && git b -D "$1"
+git co master
+git b -D "$1"
+git push origin :"$1"
