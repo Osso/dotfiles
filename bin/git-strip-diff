@@ -14,4 +14,7 @@ $sed -r "s/^($color_code_regex)index .*$/\n\1/g" | \
 $sed -r "s/^($color_code_regex)\+\+\+(.*)$/\1+++\5\n\1\x1B\[m/g" | \
 
 # actually strips the leading symbols
-$sed -r "s/^($color_code_regex)[\+\-]/\1 /g"
+$sed -r "s/^($color_code_regex)[\+\-]/\1/g" | \
+
+# strip leading whitespace
+$sed -r "s/^ //g"
