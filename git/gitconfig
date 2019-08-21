@@ -11,6 +11,9 @@
     ls = ls-files
     pull-overwrite = pull -s recursive -X theirs
     sh = show --color
+    pm = pull
+    pu = push
+    pf = push -f
 
     # One letter shortcuts
     b = branch
@@ -27,6 +30,8 @@
     ra = rebase --abort
     rc = rebase --continue
     rs = rebase --skip
+    rm = rebase -i origin/master
+    rnm = rebase -i origin/next_master
 
     # Cherry-pick
     zc = cherry-pick --continue
@@ -55,6 +60,7 @@
     sl = stash list
     sa = stash apply
     sd = stash drop
+    sp = stash pop
 
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
