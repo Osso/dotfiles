@@ -2,9 +2,6 @@
 # Environment #
 ###############
 
-# Do not query github in homebrew search
-export HOMEBREW_NO_GITHUB_API=1
-
 # Language
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
@@ -12,20 +9,10 @@ export LC_ALL="en_US.UTF-8"
 # Move virtual envs to an easier to access directory
 export WORKON_HOME="~/envs"
 
-# Needs for java stuff
-export JAVA_HOME="/Library/Java/Home"
-
-# Link Homebrew casks in `/Applications` rather than `~/Applications`
-export HOMEBREW_CASK_OPTS="--appdir=/Applications"
-
 # Go home!
 export GOPATH=~/go
 # Paths for go
 export PATH="$PATH:$HOME/go/bin"
-# Homebrew paths for go
-export PATH="$PATH:/usr/local/opt/go/libexec/bin"
-# Include homebrew paths
-export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 # Include home path
 export PATH="$PATH:$HOME/bin"
 
@@ -51,3 +38,5 @@ SUBLIME_PATH="/home/osso/.config/sublime-text-3"
 if [ -d "$SUBLIME_PATH" ]; then
     export SUBLIME_PATH
 fi
+
+export DSTAT_OPTS="--bw --noupdate -cdngy -noheaders 5"
