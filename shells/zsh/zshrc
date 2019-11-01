@@ -81,11 +81,14 @@ bindkey '^R' history-incremental-pattern-search-backward
 bindkey '\e\C-?' backward-kill-line
 # Alt+delete
 bindkey '^[[3;3~' kill-line
+# Ctrl+z
+bindkey '^z' undo
 
 # Disable special handling of ^s and ^q by OS X Terminal
 stty -ixon -ixoff
 # Bind interrupt to ctrl+shift+c
 stty intr '^C'
+stty susp '^Z'
 
 
 ###############
