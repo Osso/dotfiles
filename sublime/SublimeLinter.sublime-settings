@@ -74,6 +74,7 @@
         },
         "pylint": {
             "@disable": false,
+            "executable": "/usr/bin/pylint3",
             "args": [],
             "excludes": [],
             "paths": ["/home/osso/sfr/repos/pims/src"],
