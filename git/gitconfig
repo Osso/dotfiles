@@ -14,6 +14,7 @@
     pm = pull
     pu = push
     pf = push -f
+    ups = reset HEAD~1
 
     # One letter shortcuts
     b = branch
@@ -25,6 +26,7 @@
     f = fetch
     z = cherry-pick
     p = pull --rebase
+    m = merge
 
     # Rebase
     ra = rebase --abort
@@ -52,6 +54,8 @@
 
     # merge
     mff = merge --ff-only
+    ma = merge --abort
+    mc = merge --continue
     # bisect
     good = bisect good
     bad = bisect bad
@@ -66,7 +70,7 @@
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path =
 [mergetool "sourcetree"]
-	cmd = /Users/osso/Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	cmd = opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
 [mergetool "sublime"]
     cmd = subl -w $MERGED
@@ -142,3 +146,6 @@
 	required = true
 [credential]
 	helper = /usr/share/doc/git/contrib/credential/gnome-keyring/git-credential-gnome-keyring
+[diff]
+	context = 3
+    #algorithm = patience
