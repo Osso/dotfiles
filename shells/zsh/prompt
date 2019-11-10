@@ -9,44 +9,45 @@ setopt PROMPT_SUBST
 # This does not play nice with a multiline prompt
 VIRTUAL_ENV_DISABLE_PROMPT=1
 
-if $(tput setaf 1 &> /dev/null); then
-    tput sgr0 # reset colors
-    bold=$(tput bold)
-    reset=$(tput sgr0)
-    # Solarized colors, taken from http://git.io/solarized-colors.
-    black=$(tput setaf 0)
-    blue=$(tput setaf 33)
-    cyan=$(tput setaf 37)
-    green=$(tput setaf 64)
-    orange=$(tput setaf 166)
-    purple=$(tput setaf 125)
-    red=$(tput setaf 124)
-    violet=$(tput setaf 61)
-    white=$(tput setaf 15)
-    yellow=$(tput setaf 136)
-else
-    bold=''
-    reset="\e[0m"
-    black="\e[1;30m"
-    blue="\e[1;34m"
-    cyan="\e[1;36m"
-    green="\e[1;32m"
-    orange="\e[1;33m"
-    purple="\e[1;35m"
-    red="\e[1;31m"
-    violet="\e[1;35m"
-    white="\e[1;37m"
-    yellow="\e[1;33m"
-fi
+source ~/.zsh/colors
+reset="$Color_Off"
+black="$Black"
+blue="$Blue"
+cyan="$Cyan"
+green="$Green"
+orange=$'\e[38;5;166m'
+purple="$Purple"
+red="$Red"
+violet=$'\e[38;5;61m'
+# bold_violet=$'\e[1;38;5;61m'
+white="$White"
+yellow="$Yellow"
+
+# if $(tput setaf 1 &> /dev/null); then
+#     tput sgr0 # reset colors
+#     bold=$(tput bold)
+#     reset=$(tput sgr0)
+#     # Solarized colors, taken from http://git.io/solarized-colors.
+#     black=$(tput setaf 0)
+#     blue=$(tput setaf 33)
+#     cyan=$(tput setaf 37)
+#     green=$(tput setaf 64)
+#     orange=$(tput setaf 166)
+#     purple=$(tput setaf 125)
+#     red=$(tput setaf 124)
+#     violet=$(tput setaf 61)
+#     white=$(tput setaf 15)
+#     yellow=$(tput setaf 136)
+# fi
 
 function cmd_status()
 {
     if [ $? -eq 0 ]; then
-        s="[%{${green}%}OK%{${reset}%}]"
-        # s="%{${green}%}✓%{${reset}%}"
+        # s="[%{${green}%}OK%{${reset}%}]"
+        s="%{${green}%}✓%{${reset}%}"
     else
-        s="[%{${red}%}FAILED%{${reset}%}]"
-        # s="%{${red}%}✗%{${reset}%}"
+        # s="[%{${red}%}FAILED%{${reset}%}]"
+        s="%{${red}%}✗%{${reset}%}"
     fi
     echo "${s}"
 }
@@ -68,19 +69,18 @@ fi
 
 # Highlight the hostname when connected via SSH.
 if [ -n "${SSH_TTY}" ]; then
-    host_style="${bold}${red}"
+    host_style="${red}"
 else
     host_style="${yellow}"
 fi
 
 # Format for vcprompt
 # Shows revision control information
-export VCPROMPT_FORMAT=" %b %%{${blue}%%}[%m%u]${reset}"
-export VCPROMPT_FORMAT=" %b"
+# export VCPROMPT_FORMAT="%b %%{${blue}%%}[%m%u]${reset}"
+export VCPROMPT_FORMAT="%b"
 
 # Prompt
 # e.g. osso at mac-mini in Provisioning master [+] (invenio)
-
 # User
 PROMPT="%{${user_style}%}%n%{${reset}%}"
 # Hostname
@@ -88,7 +88,7 @@ PROMPT+=" at %{${host_style}%}%m%{${reset}%}"
 # Current working directory
 PROMPT+=" in %{${green}%}%c%{${reset}%}"
 # Git branch and git status clues
-PROMPT+='%{${violet}%}$(vcprompt)%{${reset}%}'
+PROMPT+=' %{${violet}%}$(vcprompt)%{${reset}%}'
 # Virtual environment
 PROMPT+='$(virtualenv_prompt)'
 # Project environment
