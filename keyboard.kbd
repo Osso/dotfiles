@@ -1,0 +1,90 @@
+/*                            Colemak with symbols
+
+This file contains an example configuration for KMonad for the keyboard of a
+Dell Latitude E6430 laptop with ISO layout. This configuration should probably
+work for any keyboard, but the layout might not match the physical layout of
+that keyboard.
+
+*/
+
+
+/*                                     IO
+
+Ideally you'd use the 'by-id' subdirectory of /dev/input, since exact numberings
+are not guaranteed across restarts, but this doens't work for my laptop
+keyboard.
+
+*/
+
+INPUT = LINUX_DEVICE L64 /dev/input/by-id/usb-Matias_Ergo_Pro_Keyboard-event-kbd
+OUTPUT = UINPUT_SINK
+
+
+/*                                 Shortcuts
+
+I very much prefer a very dense layout and ensure that my grid can fit in
+5-character wide columns. This means I rename anything that is longer than 4
+characters to some alias.
+
+*/
+
+@num = LT-numpad            // Switching to the numpad layer
+@nav = LA-nav               // Switching to the nav layer
+@def = LR-nav               // Switching to the nav layer
+
+//@cap = TH 300 LA-syms caps
+@spc = TH 300 spc ret
+@cut = M-x
+@cpy = M-c
+@pst = M-v
+@pre = M-S-g
+@nxt = M-g
+@prs = A-S-g
+@nxs = A-g
+@udo = M-z
+@cw = M-w
+@1 = TH 300 1 !
+@2 = TH 300 2 @
+@3 = TH 300 3 #
+@4 = TH 300 4 $
+@8 = TH 300 8 *
+
+
+// Source codes
+SRC
+  esc  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  home end  ins  del
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    ret
+  caps a    s    d    f    g    h    j    k    l    ;    '    \
+  lsft 102d z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl      lmet lalt           spc            ralt rctl pgup up   pgdn
+                                                         left down rght
+
+// Normal layer
+LAYER default
+  esc  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  home end  ins  del
+  grv  @1   @2   @3   @4   5    6    7    @8   9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    ret
+  @nav a    s    d    f    g    h    j    k    l    ;    '    \
+  lsft @num z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl      lmet lalt           @spc           ralt rctl pgup up   pgdn
+                                                         left down rght
+
+// Navigation overlay
+LAYER nav
+  esc  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  home end  ins  del
+  grv  !    @    #    $    %    ^    &    *              _    +    bspc
+  tab       @cw  {    }         pgup      up   del  bspc [    ]    ret
+  @def [    ]    (    )         pgdn left down rght :    "    |
+  lsft @num @udo @cut @cpy @pst b    @prs @nxs @pre @nxt ?    rsft
+  lctl      lmet lalt           @spc           ralt rctl pgup up   pgdn
+                                                         left down rght
+
+
+// Numpad overlay
+LAYER numpad ~ anchor u
+                                     _    7    8    9    /
+                                     _    4    5    6    *
+                                     =    1    2    3    -
+                                                    0
+
