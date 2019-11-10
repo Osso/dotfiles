@@ -167,7 +167,7 @@ notes=FIXME,XXX,TODO
 max-line-length=80
 
 # Maximum number of lines in a module
-max-module-lines=1400
+max-module-lines=4000
 
 # String used as indentation unit. This is usually " " (4 spaces) or "\t" (1
 # tab).
@@ -253,6 +253,8 @@ int-import-graph=
 
 extension-pkg-whitelist=lxml
 
+# Force import order to recognize a module as part of a third party library.
+known-third-party=avro,pytest,pandas
 
 [DESIGN]
 
