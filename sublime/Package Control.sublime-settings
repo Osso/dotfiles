@@ -18,6 +18,7 @@
 		"Git",
 		"GoSublime",
 		"HTML5",
+		"IndentToAllBrackets",
 		"INI",
 		"isort",
 		"Jedi - Python autocompletion",
@@ -29,6 +30,7 @@
 		"Materialize",
 		"nginx",
 		"Package Control",
+		"PackageResourceViewer",
 		"PHP Completions Kit",
 		"PHP-Twig",
 		"phpfmt",
@@ -50,6 +52,7 @@
 		"SublimeLinter-ruby",
 		"SublimeLinter-xmllint",
 		"Terraform",
+		"Theme - Soda",
 		"Theme - Spacegray"
 	]
 }
