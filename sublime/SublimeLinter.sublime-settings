@@ -6,21 +6,6 @@
     "gutter_theme": "Koloria",
     "lint_mode": "load_save",
     "linters": {
-        "clang": {
-            "@disable": false,
-            "args": [],
-            "excludes": [],
-            "extra_flags": "",
-            "include_dirs": []
-        },
-        "pep8": {
-            "@disable": false,
-            "args": [],
-            "excludes": [],
-            "ignore": "E265,E272,E121,E122,E126,E127,E128,E131,E203,E221,E501,E302,E226,E124,E402",
-            "max-line-length": null,
-            "select": ""
-        },
         "phplint": {
             "@disable": true,
             "args": [],
@@ -42,27 +27,6 @@
                 ".*unknown class.*",
                 ".*variable still not found in global scope.*"
             ]
-        },
-        "phpmd": {
-            "@disable": true,
-            "args": [],
-            "excludes": [],
-            "ignore_match": [
-                ".*reduce the number of dependencies.*",
-                ".*to keep the number of public items.*",
-                ".*to keep the number of fields under.*",
-                ".*to keep the number of methods under.*",
-                ".*Else is never necessary.*",
-                ".*Avoid really long classes.*",
-                ".*Avoid using static access.*",
-                ".*Avoid variables with short names like.*",
-                ".*camelCase.*",
-                ".*Cyclomatic.*",
-                ".*NPath.*",
-                ".*boolean flag argument.*"
-            ],
-            "rulesets": "cleancode,design,naming,unusedcode",
-            "rulesets_avail": "cleancode,codesize,controversial,design,naming,unusedcode"
         },
         "pycodestyle": {
             "@disable": false,

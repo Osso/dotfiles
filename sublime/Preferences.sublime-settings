@@ -14,6 +14,8 @@
 		"*.jpg",
 		"*.pdf",
 		"*.png",
+		"*.ppt",
+		"*.pptx",
 		"*.rar",
 		"*.tar",
 		"*.tgz",
@@ -29,6 +31,7 @@
 	"caret_style": "solid",
 	"color_scheme": "Packages/Color Scheme - Default/Mariana.sublime-color-scheme",
 	"detect_indentation": false,
+	"enable_tab_scrolling": false,
 	"file_exclude_patterns":
 	[
 		"*.min.js",
@@ -53,21 +56,17 @@
 		".git",
 		".cache",
 		"*.egg-info",
-		"var"
+		"var",
+        "pip_packages"
 	],
 	"font_face": "Inconsolata",
 	"font_size": 13,
 	"highlight_line": true,
 	"ignored_packages":
 	[
-		"ClangAutoComplete",
-		"GoSublime",
 		"isort",
-		"MagicPython",
 		"PHP Completions Kit",
-		"Python 3",
 		"sublime-github",
-		"SublimeLinter-pep8",
 		"SublimeLinter-phplint",
 		"Tag",
 		"Vintage"
@@ -75,7 +74,7 @@
 	"indent_to_bracket": true,
 	"line_padding_bottom": 1,
 	"line_padding_top": 1,
-	"remember_open_files": false,
+	"overlay_scroll_bars": "disabled",
 	"rulers":
 	[
 		79,
@@ -85,10 +84,10 @@
 	"show_tab_close_buttons": false,
 	"smart_indent": true,
 	"tab_size": 4,
-	"theme": "Soda.sublime-theme",
+	"theme": "Pop.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"trim_automatic_white_space": true,
 	"trim_trailing_white_space_on_save": true,
 	"use_tab_stops": false,
-	"wide_caret": true,
+	"wide_caret": true
 }
