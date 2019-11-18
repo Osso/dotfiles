@@ -123,12 +123,6 @@
         - from: shells/inputrc
           to: ~/.inputrc
 
-        # IPython
-        - from: python/invenio.ipython.py
-          to: ~/.ipython/invenio.ipython.py
-        - from: python/ipython_config.py
-          to: ~/.ipython/profile_default/ipython_config.py
-
         # Path Directories
         - from: bin
           to: ~/bin
