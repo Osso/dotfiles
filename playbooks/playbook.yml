@@ -93,12 +93,6 @@
         - from: git/gitignore
           to: ~/.gitignore
 
-        # Mercurial
-        - from: hg/hgrc
-          to: ~/.hgrc
-        - from: hg/hgignore
-          to: ~/.hgignore
-
         # Zsh bookmarks
         - from: shells/zsh/zshmarks/zshmarks.plugin.zsh
           to: ~/.zsh/zshmarks
