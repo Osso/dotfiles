@@ -18,22 +18,23 @@
 
     # One letter shortcuts
     b = branch
-    d = diff --color
+    d = diff --color --patience
     a = commit -a --amend
     c = commit -a -m
     s = status --branch --short
-    r = rebase -i
+    r = rebase -i -X ignore-blank-lines -X patience
     f = fetch
     z = cherry-pick
-    p = pull --rebase
-    m = merge
+    p = pull --rebase -X patience
+    m = merge -X ignore-blank-lines --patience
 
     # Rebase
     ra = rebase --abort
     rc = rebase --continue
     rs = rebase --skip
-    rm = rebase -i origin/master
-    rnm = rebase -i origin/next_master
+    rmm = rebase -i -X ignore-blank-lines -X patience origin/master
+    rnm = rebase -i -X ignore-blank-lines -X patience origin/next_master
+    mnm = merge origin/next_master
 
     # Cherry-pick
     zc = cherry-pick --continue
@@ -46,9 +47,9 @@
     lbi = !"git for-each-ref --format='%(committerdate:short) %(refname)' --sort=committerdate refs/heads/*$1*"
     rbi = !"git for-each-ref --format='%(committerdate:short) %(refname)' --sort=committerdate refs/remotes/$1"
     # Logs
-    l = log --graph --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold white)— %an%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
-    ll = log --oneline --abbrev=8 --stat --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold white)— %an%C(reset)%C(bold yellow)%d%C(reset)'
-    lp = log -p
+    l = log --graph --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %s %C(bold)- %an%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
+    ll = log --oneline --abbrev=8 --stat --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %s %C(bold)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+    lp = log -p --patience
     promote = !"git push --set-upstream origin \"$(git symbolic-ref --quiet --short HEAD)\""
     delete-branch = !"~/bin/git-delete-branch"
 
@@ -149,3 +150,7 @@
 [diff]
 	context = 3
     #algorithm = patience
+
+[merge "py"]
+    name = A python merge driver using the AST
+    driver = git-merge-py %O %A %B
