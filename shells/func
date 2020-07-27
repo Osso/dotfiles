@@ -1,9 +1,3 @@
-# Display a binary clock
-function bclock()
-{
-    perl -e 'for(;;){@d=split("",`date +%H%M%S`);print"\r";for(0..5){printf"%.4b ",$d[$_]}sleep 1}'
-}
-
 # Display box
 # e.g.
 # #######
@@ -48,17 +42,6 @@ function work_on_project() {
     fi
 }
 
-# Show all processes that match
-function psgrep() {
-    if [ ! -z $1 ] ; then
-        echo "Grepping for processes matching $1..."
-        ps aux | grep -i $1 | grep -v grep
-    else
-        echo "!! Need name to grep for"
-    fi
-}
-
-
 # Kill all processes that match
 function killit() {
     # Kills any process that matches a regexp passed to it
@@ -66,7 +49,18 @@ function killit() {
 }
 
 
-# Simple apt package name search
+# Search packages by name
 function apts() {
   apt list "*$1*"
 }
+
+# List installed packages
+function apti() {
+  apt list "*$1*" | grep installed
+}
+
+
+function pycd () {
+    cd $(python -c "import os.path, $1; print(os.path.dirname($1.__file__))")
+}
+

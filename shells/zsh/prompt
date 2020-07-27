@@ -77,7 +77,7 @@ fi
 # Format for vcprompt
 # Shows revision control information
 # export VCPROMPT_FORMAT="%b %%{${blue}%%}[%m%u]${reset}"
-export VCPROMPT_FORMAT="%b"
+export VCPROMPT_FORMAT=" branch ${violet}%b${reset}"
 
 # Prompt
 # e.g. osso at mac-mini in Provisioning master [+] (invenio)
@@ -88,7 +88,7 @@ PROMPT+=" at %{${host_style}%}%m%{${reset}%}"
 # Current working directory
 PROMPT+=" in %{${green}%}%c%{${reset}%}"
 # Git branch and git status clues
-PROMPT+=' %{${violet}%}$(vcprompt)%{${reset}%}'
+PROMPT+='$(vcprompt)'
 # Virtual environment
 PROMPT+='$(virtualenv_prompt)'
 # Project environment
