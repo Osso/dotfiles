@@ -6,6 +6,6 @@
 
 
 # git push origin --delete "refs/remotes/origin/$1" && git b -D "$1"
-git co master
+git co origin/master
 git b -D "$1"
 git push origin :"$1"
