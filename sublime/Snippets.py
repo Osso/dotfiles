@@ -11,7 +11,7 @@ class PythonSnippetsPrintTraceback(sublime_plugin.TextCommand):
 class PythonSnippetsPdbTrace(sublime_plugin.TextCommand):
     def run(self, edit):
         for selection in self.view.sel():
-            s = """import ipdb; ipdb.set_trace()"""
+            s = """import pdb; pdb.set_trace()"""
             self.view.replace(edit, selection, s)
 
 

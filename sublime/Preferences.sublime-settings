@@ -29,7 +29,7 @@
 	"caret_extra_top": 3,
 	"caret_extra_width": 3,
 	"caret_style": "solid",
-	"color_scheme": "Packages/Color Scheme - Default/Mariana.sublime-color-scheme",
+	"color_scheme": "Packages/User/SublimeLinter/Mariana (SL).tmTheme",
 	"detect_indentation": false,
 	"enable_tab_scrolling": false,
 	"file_exclude_patterns":
@@ -57,14 +57,13 @@
 		".cache",
 		"*.egg-info",
 		"var",
-        "pip_packages"
+		"pip_packages"
 	],
 	"font_face": "Inconsolata",
-	"font_size": 13,
+	"font_size": 12,
 	"highlight_line": true,
 	"ignored_packages":
 	[
-		"isort",
 		"PHP Completions Kit",
 		"sublime-github",
 		"SublimeLinter-phplint",
@@ -72,13 +71,19 @@
 		"Vintage"
 	],
 	"indent_to_bracket": true,
+	"isort":
+	{
+		"settings_path": "/home/osso/.isort.cfg",
+		"sort_on_save": false
+	},
 	"line_padding_bottom": 1,
 	"line_padding_top": 1,
+	"margin": 0,
 	"overlay_scroll_bars": "disabled",
 	"rulers":
 	[
 		79,
-		119
+		104
 	],
 	"show_full_path": true,
 	"show_tab_close_buttons": false,

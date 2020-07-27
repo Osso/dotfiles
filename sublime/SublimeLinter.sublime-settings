@@ -1,5 +1,5 @@
 {
-    "debug": true,
+    "debug": false,
     "delay": 0.3,
     "no_column_highlights_line": true,
     // "error_color": "D02000",
@@ -32,13 +32,13 @@
             "@disable": false,
             "args": [],
             "excludes": [],
-            "ignore": "E265,E272,E121,E122,E126,E127,E128,E131,E203,E221,E501,E302,E226,E124,E402,E722,E266",
+            "ignore": "",
             "max-line-length": null,
             "select": ""
         },
         "pylint": {
             "@disable": false,
-            "executable": "/usr/bin/pylint3",
+            "executable": "/usr/local/bin/pylint",
             "args": [],
             "excludes": [],
             "paths": ["/home/osso/sfr/repos/pims/src"],
