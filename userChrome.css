@@ -1,0 +1,43 @@
+/*
+  Title: Drannex42's Personal userChrome.css for Firefox
+*/
+
+:root {
+  --sidebar-width: 50px;
+  --toolbar-height: -50px;
+/*   --menubar-height: -65px; */
+  --menubar-height: -40px;
+  --toolmenubar-height: -80px;
+  --sidebar-padding: calc(var(--sidebar-width) + 5px);
+  --toolbar-start-end-padding: 5px !important;
+  --toolbar-start-end-padding: 5px !important;
+  --tab-text-regular: black;
+}
+
+#sidebar-box {
+  z-index: 9999;
+  position: relative;
+  margin-top: var(--menubar-height);
+  border-right: 1px solid #ccc;
+  background: #f6f7f8;
+  transition: all 0.2s ease 0s;
+  max-width: var(--sidebar-width);
+  color: black !important;
+}
+
+#sidebar-box:hover {
+  max-width: 350px !important;
+  margin-right: -300px !important;
+}
+
+#sidebar {
+    min-width: 50px !important;
+}
+
+.browser-toolbar { margin-left: var(--sidebar-width); }
+#sidebar-splitter { display: none; }
+#sidebar-close { display: none; }
+#sidebar-title { display: none; }
+#sidebar-switcher-arrow { display: none; }
+/* Hide the title bar */
+#titlebar { display: none !important; }
