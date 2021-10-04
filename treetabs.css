@@ -7,22 +7,15 @@
    display: none;
 }
 /* Push tab labels slightly to the right so they're completely hidden in collapsed state */
-.tab .label {
-  padding: 0.1em 0 0.1em 0.8em;
-  margin-top: -0.2em;
-}
-.tab {
-  padding: 0.6em;
-  padding-left: 0.3em;
-}
 .favicon {
   --favicon-size: 1.2em;
-  margin: 0;
-  padding: 0;
-  margin-left: 0.3em
+  margin-left: 0.3em;
 }
 .newtab-button {
     display: none;
+}
+tab-item .label {
+  padding: 0.85em !important;
 }
 tab-item {
   border-radius: 0.3em;
@@ -30,10 +23,9 @@ tab-item {
 }
 tab-item.active {
   background: #ececec;
-  position: relative !important;
 }
 tab-item:hover {
-   background: #dedede;
+  background: #dedede;
 }
 
 :root.left #tabbar {
@@ -54,11 +46,8 @@ tab-item tab-closebox:hover {
   opacity: 0.5;
 }
 tab-item .contextual-identity-marker {
-  height: 100%;
+  height: 70%;
   width: 0.35em !important;
-  margin-top: -0.2em !important;
-  margin-left: 0.3em;
-
 }
 
 @media screen and (max-width: 51px) {
@@ -68,7 +57,4 @@ tab-item .contextual-identity-marker {
   tab-item .contextual-identity-marker {
     display: none;
   }
-}
-
-
 }
