@@ -4,7 +4,8 @@
 [core]
     excludesfile = /Users/osso/.gitignore
     quotepath = false
-    pager = diff-highlight | git-strip-diff | less
+	attributesfile = /home/osso/.gitattributes
+    # pager = diff-highlight | git-strip-diff | less
 [alias]
     ci = commit
     co = checkout
@@ -24,6 +25,7 @@
     s = status --branch --short
     r = rebase -i -X ignore-blank-lines -X patience
     f = fetch
+    u = push
     z = cherry-pick
     p = pull --rebase -X patience
     m = merge -X ignore-blank-lines --patience
@@ -82,7 +84,7 @@
 [branch]
     autosetuprebase = always
 [push]
-    default = current
+    default = upstream
 [merge]
     # Include summaries of merged commits in newly created merge commit messages
     log = true
@@ -146,7 +148,7 @@
 	smudge = git media smudge %f
 	required = true
 [credential]
-	helper = /usr/share/doc/git/contrib/credential/gnome-keyring/git-credential-gnome-keyring
+	helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 [diff]
 	context = 3
     #algorithm = patience
@@ -154,3 +156,11 @@
 [merge "py"]
     name = A python merge driver using the AST
     driver = git-merge-py %O %A %B
+
+[merge "lock"]
+    name = A python lockfile merge driver using the AST
+    driver = git-merge-lock %O %A %B
+
+[merge "in"]
+    name = A python deps merge driver using the AST
+    driver = git-merge-deps %O %A %B

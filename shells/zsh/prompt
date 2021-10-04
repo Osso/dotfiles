@@ -9,6 +9,13 @@ setopt PROMPT_SUBST
 # This does not play nice with a multiline prompt
 VIRTUAL_ENV_DISABLE_PROMPT=1
 
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# fi
+
 source ~/.zsh/colors
 reset="$Color_Off"
 black="$Black"
@@ -77,16 +84,16 @@ fi
 # Format for vcprompt
 # Shows revision control information
 # export VCPROMPT_FORMAT="%b %%{${blue}%%}[%m%u]${reset}"
-export VCPROMPT_FORMAT=" branch ${violet}%b${reset}"
-
+export VCPROMPT_FORMAT="  ${violet}%b${reset}"
+# 
 # Prompt
 # e.g. osso at mac-mini in Provisioning master [+] (invenio)
 # User
 PROMPT="%{${user_style}%}%n%{${reset}%}"
 # Hostname
-PROMPT+=" at %{${host_style}%}%m%{${reset}%}"
+PROMPT+=" @ %{${host_style}%}%m%{${reset}%}"
 # Current working directory
-PROMPT+=" in %{${green}%}%c%{${reset}%}"
+PROMPT+="  %{${green}%}%c%{${reset}%}"
 # Git branch and git status clues
 PROMPT+='$(vcprompt)'
 # Virtual environment
@@ -98,7 +105,21 @@ PROMPT+='
 $ '
 
 # Shows on the right
-RPS1='%* $(cmd_status)'
+RPS1=' %* $(cmd_status)'
 
 # Line continuation prompt
 PS2="%{${yellow}%}→ %{${reset}%}"
+
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# source /usr/share/powerlevel9k/powerlevel9k.zsh-theme
+source ~/Sync/src/powerlevel10k/powerlevel10k.zsh-theme
+# DEFAULT_USER='osso'
+# POWERLEVEL9K_MODE='awesome-fontconfig'
+# POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs time)
+# POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+# POWERLEVEL9K_LEFT_SEGMENT_SEPARATOR=''
+# POWERLEVEL9K_RIGHT_SEGMENT_SEPARATOR=''
+# POWERLEVEL9K_COLOR_SCHEME='dark'

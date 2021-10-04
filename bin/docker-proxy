@@ -5,7 +5,7 @@ REMOTE_DOCKER_SOCKET="${REMOTE_DOCKER_SOCKET:-/var/run/docker.sock}"
 
 function connect {
     rm -f "$PROXY_DOCKER_SOCKET"
-    echo "Redirecting mh:$REMOTE_DOCKER_SOCKET to $PROXY_DOCKER_SOCKET"
+    echo "Redirecting $PROXY_DOCKER_HOST:$REMOTE_DOCKER_SOCKET to $PROXY_DOCKER_SOCKET"
     ssh -N -p 22 -c aes256-ctr \
         "${PROXY_DOCKER_USER:-$USER}"@"${PROXY_DOCKER_HOST}" \
         -L "$PROXY_DOCKER_SOCKET:$REMOTE_DOCKER_SOCKET"

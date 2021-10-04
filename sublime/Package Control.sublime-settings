@@ -7,11 +7,12 @@
 	"installed_packages":
 	[
 		"A File Icon",
+		"Anaconda",
+		"CSS3",
 		"Dockerfile Syntax Highlighting",
 		"FileDiffs",
 		"Git",
 		"HTML5",
-		"IndentToAllBrackets",
 		"INI",
 		"isort",
 		"Jedi - Python autocompletion",
@@ -21,7 +22,6 @@
 		"Package Control",
 		"PackageResourceViewer",
 		"PHP Completions Kit",
-		"PHP-Twig",
 		"phpfmt",
 		"PHPUnit Completions",
 		"Pretty JSON",
@@ -30,10 +30,12 @@
 		"SideBarEnhancements",
 		"Solarized Color Scheme",
 		"sublack",
+		"SublimeCodeIntel",
 		"SublimeLinter",
 		"SublimeLinter-php",
 		"SublimeLinter-pycodestyle",
 		"SublimeLinter-pylint",
-		"Terraform"
-	]
+		"Twig",
+		"TypeScript Syntax",
+	],
 }

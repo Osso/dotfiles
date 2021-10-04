@@ -2,7 +2,6 @@
     "debug": false,
     "delay": 0.3,
     "no_column_highlights_line": true,
-    // "error_color": "D02000",
     "gutter_theme": "Koloria",
     "lint_mode": "load_save",
     "linters": {
@@ -38,7 +37,7 @@
         },
         "pylint": {
             "@disable": false,
-            "executable": "/usr/local/bin/pylint",
+            "executable": "/usr/bin/pylint",
             "args": [],
             "excludes": [],
             "paths": ["/home/osso/sfr/repos/pims/src"],

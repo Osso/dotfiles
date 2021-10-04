@@ -29,6 +29,7 @@ alias gd="g diff | e"
 alias gs="g show | e"
 
 # One letter shortcuts
+alias l="ls --color"
 alias t="pytest"
 alias c="cargo"
 alias d="docker"
@@ -56,8 +57,10 @@ alias flushdns="sudo service nscd restart"
 alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
 alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
 
-# Copy to clipboard
-alias pb="pbcopy"
+# Linux version of OSX pbcopy and pbpaste.
+alias pbcopy="xsel --clipboard --input"
+alias pbpaste="xsel --clipboard --output"
+
 
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
@@ -86,3 +89,4 @@ alias psg="ps aux | grep -v grep | grep -i"
 alias ipy="ipython3"
 alias aptrm="a autoremove --purge"
 alias aptsh="apt show"
+alias py.test="py.test-3"

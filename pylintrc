@@ -54,6 +54,7 @@ load-plugins=
 # W0223: Method in abstract class is not overwritten (not reliable)
 # W0232: Class has no __init__ method
 # W0402: Uses a deprecated module (not reliable)
+# W0503: line break before binary operator
 # W0511: fixme
 # W0603: Using global statement
 # W0613: Unused argument (unused arguements when subclassing)
@@ -78,7 +79,8 @@ disable=C0103,C0111,C0301,C0325,C0330,C0412,C0413,E1101,F0401,W0142,W0201,
         R0915,similarities,fixme,import-outside-toplevel,
         pointless-string-statement,bare-except,redefined-builtin,
         too-many-public-methods,too-many-locals,line-too-long,import-error,
-        missing-module-docstring
+        missing-module-docstring,too-many-boolean-expressions,
+        too-many-branches,too-many-return-statements
 
 [REPORTS]
 
@@ -133,6 +135,7 @@ zope=no
 # Defaults to REQUEST,acl_users,aq_parent
 generated-members=REQUEST,acl_users,aq_parent
 
+ignored-modules=Levenshtein
 
 [SIMILARITIES]
 
@@ -248,7 +251,7 @@ int-import-graph=
 extension-pkg-whitelist=lxml
 
 # Force import order to recognize a module as part of a third party library.
-known-third-party=avro,pytest,pandas,mock,requests_mock,celery,django,unicodecsv,isodate,paramiko,sqlalchemy,lxml,Cryptodome,confluent_kafka,docutils,portalocker,html2text,freezegun,jwcrypto,defusedxml
+known-third-party=avro,pytest,pandas,mock,requests_mock,celery,django,unicodecsv,isodate,paramiko,sqlalchemy,lxml,Cryptodome,confluent_kafka,docutils,portalocker,html2text,freezegun,jwcrypto,defusedxml,requests,redbaron
 
 [DESIGN]
 
