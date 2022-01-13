@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 PROXY_DOCKER_SOCKET="${PROXY_DOCKER_SOCKET:-/tmp/docker.sock}"
 REMOTE_DOCKER_SOCKET="${REMOTE_DOCKER_SOCKET:-/var/run/docker.sock}"
