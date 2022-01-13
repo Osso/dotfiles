@@ -36,7 +36,6 @@ source ~/.zsh/alias
 source ~/.zsh/func
 source ~/.zsh/zshmarks
 source ~/.zsh/completion
-source ~/.zsh/terminalapp
 
 # Virtual wrapper
 if [ -f /usr/share/virtualenvwrapper/virtualenvwrapper.sh ]; then
@@ -47,9 +46,6 @@ fi
 if [ -f /etc/zsh_command_not_found ]; then
     source /etc/zsh_command_not_found
 fi
-
-# Colorization of command line similar to fish shell
-# source ~/src/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 
 ####################
@@ -83,6 +79,7 @@ bindkey '^z' undo
 stty -ixon -ixoff
 # Bind interrupt to ctrl+shift+c
 stty intr '^C'
+# Bind suspend to ctrl+shift+z
 stty susp '^Z'
 
 

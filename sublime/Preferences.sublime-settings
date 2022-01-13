@@ -65,7 +65,6 @@
 	"highlight_line": true,
 	"ignored_packages":
 	[
-		"Anaconda",
 		"PHP Completions Kit",
 		"sublime-github",
 		"SublimeCodeIntel",
@@ -100,5 +99,5 @@
 	"use_tab_stops": false,
 	"wide_caret": true,
     "update_check": false,
-    "gtk_client_side_window_decorations": true
+    "gtk_client_side_window_decorations": true,
 }
