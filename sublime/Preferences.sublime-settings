@@ -65,6 +65,7 @@
 	"highlight_line": true,
 	"ignored_packages":
 	[
+		"MarkdownPreview",
 		"PHP Completions Kit",
 		"sublime-github",
 		"SublimeCodeIntel",

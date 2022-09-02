@@ -11,7 +11,7 @@ unset casesensitive
 # Autoindent text
 # set autoindent
 # Display cursor position
-set const
+# set const
 # Characters to display when show invisibles is activated
 set whitespace "»."
 # Don’t wrap text at all.
