@@ -78,6 +78,8 @@
 [mergetool "sublime"]
     cmd = subl -w $MERGED
     trustExitCode = false
+[mergetool "code"]
+    cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
 [mergetool]
     keepBackup = false
 
@@ -89,7 +91,7 @@
     # Include summaries of merged commits in newly created merge commit messages
     log = true
 	conflictstyle = diff3
-	tool = sublime
+	tool = code
 
 [color]
   branch = auto
