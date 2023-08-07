@@ -64,3 +64,15 @@ function pycd () {
     cd $(python -c "import os.path, $1; print(os.path.dirname($1.__file__))")
 }
 
+
+function title() {
+  echo -en "\e]2;$@\a"
+}
+
+
+function ssh()
+{
+   /usr/bin/ssh "$@"
+   # revert the window title after the ssh command
+   title Terminal
+}
