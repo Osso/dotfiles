@@ -3,9 +3,11 @@
 PROXY_DOCKER_SOCKET="${PROXY_DOCKER_SOCKET:-/tmp/docker.sock}"
 REMOTE_DOCKER_SOCKET="${REMOTE_DOCKER_SOCKET:-/var/run/docker.sock}"
 
+function title() {
+  echo -en "\e]2;$@\a"
+}
+
 function connect {
-    rm -f "$PROXY_DOCKER_SOCKET"
-    echo "Redirecting $PROXY_DOCKER_HOST:$REMOTE_DOCKER_SOCKET to $PROXY_DOCKER_SOCKET"
     ssh -N -p 22 -c aes256-ctr \
         "${PROXY_DOCKER_USER:-$USER}"@"${PROXY_DOCKER_HOST}" \
         -L "$PROXY_DOCKER_SOCKET:$REMOTE_DOCKER_SOCKET"
@@ -14,7 +16,13 @@ function connect {
 if [ -S /tmp/nas-docker.sock ]; then
     echo "Already connected, use 'w p'"
 else
+    rm -f "$PROXY_DOCKER_SOCKET"
+    echo "Redirecting $PROXY_DOCKER_HOST:$REMOTE_DOCKER_SOCKET to $PROXY_DOCKER_SOCKET"
+    title "Docker redirect to $PROXY_DOCKER_HOST"
+
     connect
+
+    title "Terminal"
     rm -f "$PROXY_DOCKER_SOCKET"
     echo "Deleted $PROXY_DOCKER_SOCKET"
 fi
