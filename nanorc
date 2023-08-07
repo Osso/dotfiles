@@ -1,5 +1,5 @@
 # Scrolling line by line
-set smooth
+# set smooth
 # Tab size
 set tabsize 4
 # Python syntax coloring
