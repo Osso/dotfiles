@@ -24,7 +24,7 @@ export PROJECTS_DIR="$HOME/Projects"
 # Interactive mode environment
 if [ -n "$PS1" ]; then
     # Sublime as Editor
-    export EDITOR='subl -w'
+    export EDITOR='code --wait'
 
     # Highlight section titles in manual pages (136 is yellow)
     export LESS_TERMCAP_md="$(tput setaf 136)"
