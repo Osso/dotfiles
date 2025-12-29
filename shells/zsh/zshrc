@@ -1,3 +1,6 @@
+# source /etc/profile
+# emulate sh -c '. ~/.profile'
+
 ###################
 # history options #
 ###################
@@ -5,8 +8,8 @@
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
 HISTFILE="$HOME/.zsh/history"
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=50000
+SAVEHIST=50000
 # Ignore these commands
 HISTORY_IGNORE='(ls|bg|fg|history|ll|exit|pwd|cd|cd -|date|* --help|g s|g add -A|e .*|e|g c .*|kill .*|g d|g b|g b -r)'
 # Share history between sessions
@@ -27,6 +30,11 @@ setopt EXTENDED_HISTORY
 # Allows comments in interactive mode
 setopt INTERACTIVE_COMMENTS
 
+# Emit OSC 7 for terminal to track cwd (new tabs open in same dir)
+_osc7_chpwd() { printf '\e]7;file://%s%s\e\\' "${HOST:-$(hostname)}" "$PWD" }
+chpwd_functions+=(_osc7_chpwd)
+_osc7_chpwd  # emit on shell start
+
 #########################
 # included config files #
 #########################
@@ -37,16 +45,22 @@ source ~/.zsh/func
 source ~/.zsh/zshmarks
 source ~/.zsh/completion
 
-# Virtual wrapper
-if [ -f /usr/share/virtualenvwrapper/virtualenvwrapper.sh ]; then
-    source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
-fi
-
 # Hint for missing packages
 if [ -f /etc/zsh_command_not_found ]; then
     source /etc/zsh_command_not_found
 fi
 
+# zsh-autosuggestions (Arch: /usr/share/zsh/plugins, Ubuntu: /usr/share)
+for f in /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
+         /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh; do
+    [[ -f "$f" ]] && source "$f" && break
+done
+
+# zsh-syntax-highlighting (Arch: /usr/share/zsh/plugins, Ubuntu: /usr/share)
+for f in /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+         /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; do
+    [[ -f "$f" ]] && source "$f" && break
+done
 
 ####################
 # terminal options #
@@ -57,15 +71,20 @@ fi
 # delete
 bindkey '^[[3~' delete-char
 # Ctrl+<arrow>
-bindkey ';5C' forward-word
-bindkey ';5D' backward-word
+bindkey "^[[1;5D" backward-word
+bindkey "^[[1;5C" forward-word
+# Ctrl+shift+<arrow>
+bindkey '^[[1;6C' vi-forward-word
+bindkey '^[[1;6D' vi-backward-word
 # Alt+<arrow>
 bindkey ';3D' beginning-of-line
 bindkey ';3C' end-of-line
 # Ctrl+delete
 bindkey '^[[3;5~' kill-word
 # Ctrl+backspace
-bindkey '^H' backward-kill-word
+bindkey '^H' vi-backward-kill-word
+# Ctrl+shift+delete
+bindkey '^[[3;6~' kill-word
 # Ctrl+r
 bindkey '^R' history-incremental-pattern-search-backward
 # Alt+backspace
@@ -75,7 +94,7 @@ bindkey '^[[3;3~' kill-line
 # Ctrl+z
 bindkey '^z' undo
 
-# Disable special handling of ^s and ^q by OS X Terminal
+# Disable flow control (^s/^q)
 stty -ixon -ixoff
 # Bind interrupt to ctrl+shift+c
 stty intr '^C'
@@ -91,11 +110,17 @@ stty susp '^Z'
 setopt autocd
 # Case-insensitive globbing (used in pathname expansion)
 unsetopt CASE_GLOB
+# Powerful glob patterns (#, ~, ^)
+setopt EXTENDED_GLOB
+# Show history expansion before executing
+setopt HIST_VERIFY
 # Complete on tab, leave expansion to _expand
 bindkey '^I' complete-word
 # Stop at directory separator when deleting words
 autoload -U select-word-style
 select-word-style bash
+# Include . as part of words (don't stop at dots)
+zstyle ':zle:*' word-chars '.'
 # Leave background programs running
 setopt NO_HUP
 # Don't beep when autocompleting
@@ -109,8 +134,7 @@ alias zmv="noglob zmv -W"
 # other options #
 #################
 
-# Colored file types for ls
-eval $(dircolors -b "$HOME/.dircolors")
+# dircolors moved to shared env file
 
 # turn off ZLE bracketed paste in dumb term
 # otherwise turn on ZLE bracketed-paste-magic
@@ -120,3 +144,12 @@ else
     autoload -Uz bracketed-paste-magic
     zle -N bracketed-paste bracketed-paste-magic
 fi
+
+# krew/groundcover PATH moved to shared env file
+
+[[ -x /home/linuxbrew/.linuxbrew/bin/brew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# SUDO_ASKPASS and Kitty integration moved to shared env file
+bindkey '^[[H' beginning-of-line
+bindkey '^[[F' end-of-line
+# PATH for ~/bin and ~/.local/bin is in shared env file

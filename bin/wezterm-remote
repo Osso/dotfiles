@@ -1,0 +1,203 @@
+#!/bin/bash
+# WezTerm remote control wrapper for Claude Code
+#
+# Targeting (use before command):
+#   -p <pane-id>   Target by pane ID
+#   -t <title>     Target by tab title (searches list)
+#   -w <window-id> Target window by ID
+#   -T <tab-id>    Target tab by ID
+#
+# Commands:
+#   send-text <text>       - Send text to pane
+#   new-tab [title]        - Open a new tab (optionally with title)
+#   new-window             - Open a new window
+#   split [--right|--bottom] - Split current pane
+#   focus-tab <index>      - Focus tab by index (0-based)
+#   focus-pane             - Focus targeted pane
+#   close-pane             - Close pane
+#   set-title <title>      - Set tab title
+#   zoom [--toggle]        - Zoom/toggle pane zoom
+#   ls                     - List panes (table)
+#   lsj                    - List panes (JSON)
+#   get-text               - Get text from pane
+#   run <cmd>              - Run command in new tab
+#   find-pane <title>      - Find pane ID by title substring
+#
+# Examples:
+#   wezterm-remote ls                           # List all panes
+#   wezterm-remote -p 0 send-text "ls\n"        # Send to pane 0
+#   wezterm-remote -t build send-text "make\n"  # Send to tab titled "build"
+#   wezterm-remote new-tab dev                  # Create tab titled "dev"
+#   wezterm-remote run htop                     # Run htop in new tab
+
+set -e
+
+PANE_ID=""
+TAB_ID=""
+WINDOW_ID=""
+MATCH_TITLE=""
+
+# Parse targeting options
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -p|--pane-id)
+            PANE_ID="$2"
+            shift 2
+            ;;
+        -t|--title)
+            MATCH_TITLE="$2"
+            shift 2
+            ;;
+        -T|--tab-id)
+            TAB_ID="$2"
+            shift 2
+            ;;
+        -w|--window-id)
+            WINDOW_ID="$2"
+            shift 2
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+# Find pane by title if -t was used
+find_pane_by_title() {
+    local title="$1"
+    wezterm cli list --format json | jq -r --arg title "$title" \
+        '.[] | select(.title | test($title; "i")) | .pane_id' | head -1
+}
+
+# Resolve pane ID from title match
+if [[ -n "$MATCH_TITLE" && -z "$PANE_ID" ]]; then
+    PANE_ID=$(find_pane_by_title "$MATCH_TITLE")
+    if [[ -z "$PANE_ID" ]]; then
+        echo "Error: No pane found matching title '$MATCH_TITLE'" >&2
+        exit 1
+    fi
+fi
+
+cmd="$1"
+shift || true
+
+# Build pane-id argument
+PANE_ARG=""
+if [[ -n "$PANE_ID" ]]; then
+    PANE_ARG="--pane-id $PANE_ID"
+fi
+
+TAB_ARG=""
+if [[ -n "$TAB_ID" ]]; then
+    TAB_ARG="--tab-id $TAB_ID"
+fi
+
+WINDOW_ARG=""
+if [[ -n "$WINDOW_ID" ]]; then
+    WINDOW_ARG="--window-id $WINDOW_ID"
+fi
+
+case "$cmd" in
+    send-text)
+        # Join all remaining args as text, interpret escape sequences
+        # Use --no-paste to avoid bracketed paste mode consuming newlines
+        text="$*"
+        # Use printf with %b to interpret escapes without shell interference
+        if [[ -n "$PANE_ARG" ]]; then
+            /usr/bin/printf '%b' "$text" | wezterm cli send-text $PANE_ARG --no-paste
+        else
+            /usr/bin/printf '%b' "$text" | wezterm cli send-text --no-paste
+        fi
+        ;;
+    send-key)
+        # Send text that represents a key (e.g., enter as \n)
+        key="$1"
+        case "$key" in
+            enter) text=$'\n' ;;
+            tab) text=$'\t' ;;
+            escape|esc) text=$'\e' ;;
+            ctrl-c) text=$'\x03' ;;
+            ctrl-d) text=$'\x04' ;;
+            ctrl-z) text=$'\x1a' ;;
+            ctrl-l) text=$'\x0c' ;;
+            *) text="$key" ;;
+        esac
+        if [[ -n "$PANE_ARG" ]]; then
+            echo -n "$text" | wezterm cli send-text $PANE_ARG --no-paste
+        else
+            echo -n "$text" | wezterm cli send-text --no-paste
+        fi
+        ;;
+    new-tab)
+        title="${1:-}"
+        pane_id=$(wezterm cli spawn $WINDOW_ARG)
+        if [[ -n "$title" ]]; then
+            wezterm cli set-tab-title --pane-id "$pane_id" "$title"
+        fi
+        echo "$pane_id"
+        ;;
+    new-window)
+        wezterm cli spawn --new-window "$@"
+        ;;
+    split)
+        wezterm cli split-pane $PANE_ARG "$@"
+        ;;
+    focus-tab)
+        index="$1"
+        wezterm cli activate-tab $PANE_ARG --tab-index "$index"
+        ;;
+    focus-pane|activate-pane)
+        wezterm cli activate-pane $PANE_ARG
+        ;;
+    close-pane|kill-pane)
+        wezterm cli kill-pane $PANE_ARG
+        ;;
+    set-title)
+        wezterm cli set-tab-title $PANE_ARG $TAB_ARG "$1"
+        ;;
+    zoom)
+        if [[ "$1" == "--toggle" || "$1" == "-t" ]]; then
+            wezterm cli zoom-pane $PANE_ARG --toggle
+        elif [[ "$1" == "--unzoom" || "$1" == "-u" ]]; then
+            wezterm cli zoom-pane $PANE_ARG --unzoom
+        else
+            wezterm cli zoom-pane $PANE_ARG --zoom
+        fi
+        ;;
+    ls|list)
+        wezterm cli list
+        ;;
+    lsj|list-json)
+        wezterm cli list --format json
+        ;;
+    get-text)
+        wezterm cli get-text $PANE_ARG "$@"
+        ;;
+    run)
+        # Run command in new tab
+        pane_id=$(wezterm cli spawn $WINDOW_ARG -- "$@")
+        echo "$pane_id"
+        ;;
+    find-pane)
+        title="$1"
+        pane_id=$(find_pane_by_title "$title")
+        if [[ -n "$pane_id" ]]; then
+            echo "$pane_id"
+        else
+            echo "No pane found matching '$title'" >&2
+            exit 1
+        fi
+        ;;
+    help|--help|-h)
+        head -30 "$0" | tail -n +2 | sed 's/^# //' | sed 's/^#//'
+        ;;
+    "")
+        echo "Usage: wezterm-remote [options] <command> [args]" >&2
+        echo "Run 'wezterm-remote help' for more info" >&2
+        exit 1
+        ;;
+    *)
+        # Pass through to wezterm cli
+        wezterm cli "$cmd" $PANE_ARG "$@"
+        ;;
+esac

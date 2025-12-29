@@ -1,0 +1,54 @@
+#!/bin/bash
+# Mount USB devices to /mnt/usb{1,2,3...}
+
+set -e
+
+# List unmounted USB partitions
+list_usb() {
+    lsblk -Ppno NAME,SIZE,FSTYPE,LABEL,MOUNTPOINT,HOTPLUG | \
+        grep 'HOTPLUG="1"' | grep 'FSTYPE="[^"]' | grep 'MOUNTPOINT=""' | \
+        sed 's/NAME="\([^"]*\)" SIZE="\([^"]*\)" FSTYPE="\([^"]*\)" LABEL="\([^"]*\)".*/\1 \2 \4 \3/'
+}
+
+# Find next available /mnt/usb<N>
+next_mountpoint() {
+    local i=1
+    while [[ -d "/mnt/usb$i" ]] && mountpoint -q "/mnt/usb$i" 2>/dev/null; do
+        ((i++))
+    done
+    echo "/mnt/usb$i"
+}
+
+# No args: list devices
+if [[ $# -eq 0 ]]; then
+    echo "USB partitions available to mount:"
+    echo
+    list_usb | nl -w2 -s') '
+    echo
+    echo "Usage: usb-mount <device>  (e.g., usb-mount /dev/sda1)"
+    echo "       usb-mount -u        (unmount all /mnt/usb*)"
+    exit 0
+fi
+
+# Unmount all
+if [[ "$1" == "-u" ]]; then
+    for mnt in /mnt/usb*; do
+        if mountpoint -q "$mnt" 2>/dev/null; then
+            echo "Unmounting $mnt..."
+            sudo -A umount "$mnt"
+        fi
+    done
+    exit 0
+fi
+
+DEV="$1"
+
+if [[ ! -b "$DEV" ]]; then
+    echo "Error: $DEV is not a block device"
+    exit 1
+fi
+
+MNT=$(next_mountpoint)
+sudo -A mkdir -p "$MNT"
+sudo -A mount "$DEV" "$MNT"
+echo "Mounted $DEV at $MNT"

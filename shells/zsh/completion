@@ -11,8 +11,9 @@ fpath=(~/.zsh/autocomplete $fpath)
 autoload -U compinit
 compinit -u
 
-# Add `killall` tab completion
-zstyle ':completion:*:processes-names' command 'ps -e -o comm='
+# Process name completion (killall, pkill, etc)
+zstyle ':completion:*:processes-names' command 'ps -eo comm= | sort -u'
+zstyle ':completion:*:*:killall:*' menu yes select
 
 # Autocomplete projects for `w` and 'j' alias
 compdef work_on_project=jump
@@ -90,3 +91,8 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 # Complete in words
 # e.g. <tab>.yml gives tmux.yml
 setopt completeinword
+
+
+source ~/.zsh/autocomplete/doctl
+source ~/.zsh/autocomplete/kubectl
+source ~/.zsh/autocomplete/flux

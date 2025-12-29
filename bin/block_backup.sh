@@ -1,1 +1,0 @@
-sudo dd if=/dev/nvme0n1 status=progress of=/dev/mmcblk0 bs=1M

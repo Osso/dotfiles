@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -e
+
+# Detect terminal and set send command
+if [ -n "$WEZTERM_PANE" ]; then
+    send_text() { wezterm cli send-text --pane-id "$WEZTERM_PANE" --no-paste "$1"; }
+elif [ -n "$KITTY_WINDOW_ID" ]; then
+    send_text() { printf '%s' "$1" | kitty @ send-text --stdin; }
+else
+    echo "Unknown terminal" >&2
+    exit 1
+fi
+
+if [ -n "$WAYLAND_DISPLAY" ]; then
+    types=$(wl-paste --list-types)
+    if grep -q '^image/' <<<"$types"; then
+        ext=$(grep -m1 '^image/' <<<"$types" | cut -d/ -f2 | cut -d';' -f1)
+        file="/tmp/clip_$(date +%s).${ext}"
+        wl-paste > "$file"
+        send_text "$file"
+    else
+        text=$(wl-paste --no-newline)
+        send_text "$text"
+    fi
+elif [ -n "$DISPLAY" ]; then
+    types=$(xclip -selection clipboard -t TARGETS -o)
+    if grep -q '^image/' <<<"$types"; then
+        ext=$(grep -m1 '^image/' <<<"$types" | cut -d/ -f2 | cut -d';' -f1)
+        file="/tmp/clip_$(date +%s).${ext}"
+        xclip -selection clipboard -t "image/${ext}" -o > "$file"
+        send_text "$file"
+    else
+        text=$(xclip -selection clipboard -o)
+        send_text "$text"
+    fi
+fi

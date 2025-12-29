@@ -1,4 +1,3 @@
-
 ###########
 # history #
 ###########
@@ -8,40 +7,31 @@
 HISTCONTROL=ignoredups:ignorespace:erasedups
 # History file location
 HISTFILE="$HOME/.bash/history"
-# Max number of commmands in history
-HISTSIZE=10000
-# Max size of history file
-HISTFILESIZE=1000000
+# Max commands in history
+HISTSIZE=50000
+HISTFILESIZE=50000
 # Write times in history
 HISTTIMEFORMAT="%F %T "
 # Do not write these commands in history
 HISTIGNORE='ls:bg:fg:history:ll:exit:pwd:cd:cd -:exit:date:* --help'
 # Write history to disk after each command
-PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+# Emit OSC 7 for terminal to track cwd (new tabs open in same dir)
+_osc7_pwd() { printf '\e]7;file://%s%s\e\\' "${HOSTNAME:-$(hostname)}" "$PWD"; }
+PROMPT_COMMAND="_osc7_pwd; history -a; $PROMPT_COMMAND"
 # append to the history file, don't overwrite it
 shopt -s histappend
+# Load history from file on startup (needed for brush shell)
+history -r
 
 
 ############
 # includes #
 ############
 
+source ~/.bash/env
 source ~/.bash/prompt
 source ~/.bash/alias
 source ~/.bash/func
-
-# MacPorts Installer addition on 2012-07-27_at_18:17:16: adding an appropriate PATH variable for use with MacPorts.
-# export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-# Finished adapting your PATH environment variable for use with MacPorts.
-
-# Homebrew virtualenvwrapper
-if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
-    source /usr/local/bin/virtualenvwrapper.sh
-fi
-# System installed virtualenvwrapper
-if [ -f /usr/bin/virtualenvwrapper.sh ]; then
-    source /usr/bin/virtualenvwrapper.sh
-fi
 
 ################
 # autocomplete #
@@ -54,14 +44,14 @@ fi
 
 # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
 complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2 | tr ' ' '\n')" scp sftp ssh;
-# Add `killall` tab completion for common apps
-complete -o "nospace" -W "Dock Finder SystemUIServer" killall;
-# Enable tab completion for `g` by marking it as an alias for `git`
-complete -o bashdefault -o default -o nospace -F _git g
-# Enable tab completion for `v` by marking it as an alias for `vagrant`
-complete -o bashdefault -o default -o nospace -F _vagrant v
-# Autocomplete projects for `p` alias
-complete -o nospace -W "$(/bin/ls ~/Projects)" p;
+# Complete killall with running process names
+_killall_complete() {
+    COMPREPLY=($(compgen -W "$(ps -eo comm= | sort -u)" -- "${COMP_WORDS[COMP_CWORD]}"))
+}
+complete -F _killall_complete killall
+# Git completion
+source /usr/share/git/completion/git-completion.bash
+__git_complete g __git_main
 
 
 ################
@@ -70,10 +60,16 @@ complete -o nospace -W "$(/bin/ls ~/Projects)" p;
 
 # Autocorrect typos in path names when using `cd`
 shopt -s cdspell
-# `**/qux` will enter `./foo/bar/baz/qux` (only avaible in homebrew bash)
-# shopt -s autocd
 # Case-insensitive globbing (used in pathname expansion)
 shopt -s nocaseglob
+# ** recursive glob
+shopt -s globstar
+# Update LINES/COLUMNS after window resize
+shopt -s checkwinsize
+# Autocorrect dir names in completion
+shopt -s dirspell
+# Multi-line commands as single history entry
+shopt -s cmdhist
 
 # Rebind codes to what I expect them to do
 
@@ -91,4 +87,3 @@ shopt -s nocaseglob
 # bind '"\e\C-?": backward-kill-line'
 # # Alt+delete
 # bind '"\e[3;3~": kill-line'
-

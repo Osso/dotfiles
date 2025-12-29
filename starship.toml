@@ -1,0 +1,144 @@
+format = """
+╭─\
+[](fg:peach)\
+$directory\
+[](fg:peach bg:yellow)\
+$git_branch\
+$git_state\
+$git_metrics\
+$git_status\
+[](fg:yellow bg:green)\
+$golang\
+$nodejs\
+$php\
+[](fg:green bg:teal)\
+${env_var.PROJECT_PROMPT}\
+$docker_context\
+[](fg:teal)\
+$fill\
+[](fg:purple)\
+$cmd_duration\
+[](fg:blue bg:purple)\
+$time\
+$line_break\
+╰$character\
+"""
+
+# right_format = """
+# [](fg:mauve)\
+# $cmd_duration\
+# [](fg:blue bg:mauve)\
+# $time\
+# """
+
+add_newline = false
+
+palette = 'ayu_dark'
+
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#a34420"
+yellow = "#8b6914"
+green = "#3d6b1f"
+teal = "#006b5f"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#1e3a5f"
+lavender = "#b4befe"
+text = "#f5e6d0"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"
+
+[palettes.ayu_dark]
+# Gruvbox-rainbow style colors
+peach = "#d65d0e"        # orange/brown (directory)
+yellow = "#d79921"       # yellow (git)
+green = "#689d6a"        # aqua (languages)
+teal = "#458588"         # blue (docker/env)
+blue = "#458588"         # blue (time)
+purple = "#b16286"       # purple (duration)
+text = "#fbf1c7"         # light foreground
+
+[directory]
+style = "fg:text bg:peach"
+format = "[ $path ]($style)"
+truncation_length = 60
+truncation_symbol = "…/"
+
+[directory.substitutions]
+# "Documents" = "󰈙 "
+# "Downloads" = " "
+# "Pictures" = " "
+# "Projects" = "Projects"
+
+[docker_context]
+symbol = ""
+style = "fg:text bg:teal"
+format = '[ $symbol $context ]($style)'
+
+[git_branch]
+symbol = ""
+style = "fg:text bg:yellow"
+format = '[ $symbol $branch]($style)'
+
+[git_status]
+style = "fg:text bg:yellow"
+format = '[ $all_status$ahead_behind ]($style)'
+stashed = ''
+modified = ''
+conflicted = '!'
+
+[golang]
+symbol = " "
+style = "fg:text bg:green"
+format = '[ $symbol ($version) ]($style)'
+
+[nodejs]
+symbol = ""
+style = "fg:text bg:green"
+format = '[ $symbol ($version) ]($style)'
+
+[php]
+symbol = "PHP"
+style = "fg:text bg:green"
+format = '[ $symbol ($version) ]($style)'
+
+[env_var.PROJECT_PROMPT]
+symbol = "env"
+default = ''
+style = "fg:text bg:teal"
+format = '[ $env_value ]($style)'
+
+[character]
+# success_symbol = '[➜](bold green)'
+success_symbol = '─'
+error_symbol = '[✘](bold red)'
+
+[time]
+disabled = false
+style = "fg:text bg:blue"
+format = '[  $time ]($style)'
+
+[cmd_duration]
+style = "fg:text bg:purple"
+format = '[  $duration ]($style)'
+min_time = 1_000
+show_milliseconds = false
+
+[fill]
+symbol = '─'
+style = 'none'

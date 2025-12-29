@@ -1,3 +1,5 @@
+#!/bin/sh
+
 find /usr /bin /sbin /lib /lib64 -xdev \
     -path /usr/local -prune -false -o \
     -path /usr/share/mime -prune -false -o \

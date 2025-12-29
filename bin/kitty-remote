@@ -1,0 +1,138 @@
+#!/bin/bash
+# Kitty remote control wrapper for Claude Code
+#
+# Targeting (use before command):
+#   -m <match>    Match pattern (title:foo, id:1, cwd:/path, recent:1)
+#   -t <title>    Shorthand for -m title:<title>
+#   -i <id>       Shorthand for -m id:<id>
+#   -r            Target most recently focused (before current) window
+#
+# Commands:
+#   send-text <text>          - Send text to window
+#   send-key <key>            - Send key (e.g., enter, ctrl+c)
+#   new-tab [title]           - Open a new tab
+#   new-window [cmd]          - Open a new window
+#   focus-tab <index>         - Focus tab by index (1-based)
+#   focus-window              - Focus matched window
+#   close-tab                 - Close tab
+#   close-window              - Close window
+#   set-title <title>         - Set window title
+#   set-colors <key=value>... - Set colors
+#   set-opacity <value>       - Set background opacity (0.0-1.0)
+#   scroll <lines>            - Scroll by lines (negative=up)
+#   ls                        - List windows/tabs (JSON)
+#   get-text                  - Get text from window
+#   run <cmd>                 - Run command in new tab (stays open)
+#
+# Examples:
+#   kitty-remote ls                           # List all windows
+#   kitty-remote -r send-text "ls\n"          # Send to previous window
+#   kitty-remote -t build send-text "make\n"  # Send to tab titled "build"
+#   kitty-remote new-tab dev                  # Create tab titled "dev"
+#   kitty-remote -t dev send-text "npm run dev\n"
+
+# Find kitty socket (kitty appends -PID to the socket path)
+SOCKET=$(ls /tmp/kitty-socket-* 2>/dev/null | head -1)
+
+if [[ -z "$SOCKET" || ! -S "$SOCKET" ]]; then
+    echo "Error: Kitty socket not found at /tmp/kitty-socket-*" >&2
+    echo "Restart Kitty to create the socket (config reload won't create it)" >&2
+    exit 1
+fi
+
+MATCH=""
+
+# Parse targeting options
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -m)
+            MATCH="$2"
+            shift 2
+            ;;
+        -t)
+            MATCH="title:$2"
+            shift 2
+            ;;
+        -i)
+            MATCH="id:$2"
+            shift 2
+            ;;
+        --match)
+            MATCH="$2"
+            shift 2
+            ;;
+        -r)
+            MATCH="recent:1"
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+cmd="$1"
+shift
+
+# Build match argument
+MATCH_ARG=""
+if [[ -n "$MATCH" ]]; then
+    MATCH_ARG="--match $MATCH"
+fi
+
+case "$cmd" in
+    send-text)
+        kitty @ --to "unix:$SOCKET" send-text $MATCH_ARG -- "$@"
+        ;;
+    send-key)
+        kitty @ --to "unix:$SOCKET" send-key $MATCH_ARG -- "$@"
+        ;;
+    new-tab)
+        if [[ -n "$1" ]]; then
+            kitty @ --to "unix:$SOCKET" launch --type=tab --tab-title "$1"
+        else
+            kitty @ --to "unix:$SOCKET" launch --type=tab
+        fi
+        ;;
+    new-window)
+        kitty @ --to "unix:$SOCKET" launch --type=window "$@"
+        ;;
+    focus-tab)
+        kitty @ --to "unix:$SOCKET" focus-tab --match "index:$1"
+        ;;
+    focus-window)
+        kitty @ --to "unix:$SOCKET" focus-window $MATCH_ARG
+        ;;
+    close-tab)
+        kitty @ --to "unix:$SOCKET" close-tab $MATCH_ARG
+        ;;
+    close-window)
+        kitty @ --to "unix:$SOCKET" close-window $MATCH_ARG
+        ;;
+    set-title)
+        kitty @ --to "unix:$SOCKET" set-tab-title $MATCH_ARG "$1"
+        ;;
+    set-colors)
+        kitty @ --to "unix:$SOCKET" set-colors $MATCH_ARG "$@"
+        ;;
+    set-opacity)
+        kitty @ --to "unix:$SOCKET" set-background-opacity "$1"
+        ;;
+    scroll)
+        kitty @ --to "unix:$SOCKET" scroll-window $MATCH_ARG "$1"
+        ;;
+    ls)
+        kitty @ --to "unix:$SOCKET" ls
+        ;;
+    get-text)
+        kitty @ --to "unix:$SOCKET" get-text $MATCH_ARG
+        ;;
+    run)
+        # Run a command in a new tab and keep it open
+        kitty @ --to "unix:$SOCKET" launch --type=tab --hold "$@"
+        ;;
+    *)
+        # Pass through any other kitty @ command
+        kitty @ --to "unix:$SOCKET" "$cmd" $MATCH_ARG "$@"
+        ;;
+esac

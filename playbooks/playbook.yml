@@ -1,5 +1,5 @@
 ---
-- name: Alessio's Provisioning
+- name: Dotfiles Provisioning
   hosts: 127.0.0.1
   connection: local
 
@@ -7,7 +7,7 @@
     shell_path: "/bin/zsh"
     current_shell: "{{ ansible_env.SHELL }}"
     sublime_path: "{{ ansible_env.SUBLIME_PATH | default('') }}"
-    provisioning_path: "{{ ansible_env.PROVISIONING_PATH | default('~/Sync/Provisioning') }}"
+    provisioning_path: "{{ ansible_env.PROVISIONING_PATH | default('~/dotfiles') }}"
 
   roles:
     - role: debian
@@ -104,16 +104,10 @@
         # Misc
         - from: inputrc
           to: ~/.inputrc
-        - from: wgetrc
-          to: ~/.wgetrc
-        - from: vimrc
-          to: ~/.vimrc
         - from: pylintrc
           to: ~/.pylintrc
         - from: nanorc
           to: ~/.nanorc
-        - from: slate
-          to: ~/.slate
         - from: shells/inputrc
           to: ~/.inputrc
 
@@ -122,33 +116,3 @@
           to: ~/bin
         - from: lib
           to: ~/lib
-        - from: ../src
-          to: ~/src
-
-    - name: create sublime symlinks
-      file: src="{{ provisioning_path }}/{{ item.from }}" dest="{{ sublime_path }}/{{ item.to }}" state=link
-      when: sublime_path != ''
-      with_items:
-        # Sublime
-        - from: sublime/Default (OSX).sublime-keymap
-          to: Packages/User/Default (OSX).sublime-keymap
-        - from: sublime/Preferences.sublime-settings
-          to: Packages/User/Preferences.sublime-settings
-        - from: sublime/RunMultipleCommands.py
-          to: Packages/User/RunMultipleCommands.py
-        - from: sublime/Package Control.sublime-settings
-          to: Packages/User/Package Control.sublime-settings
-        - from: sublime/DetectSyntax.sublime-settings
-          to: Packages/User/DetectSyntax.sublime-settings
-        - from: sublime/Snippets.py
-          to: Packages/User/Snippets.py
-        - from: sublime/delete_subword.sublime-macro
-          to: Packages/User/delete_subword.sublime-macro
-        - from: sublime/delete_subword_forward.sublime-macro
-          to: Packages/User/delete_subword_forward.sublime-macro
-        - from: sublime/PythonSnippets.sublime-commands
-          to: Packages/User/PythonSnippets.sublime-commands
-        - from: sublime/SublimePython.sublime-settings
-          to: Packages/User/SublimePython.sublime-settings
-        - from: sublime/SublimeLinter.sublime-settings
-          to: Packages/User/SublimeLinter.sublime-settings

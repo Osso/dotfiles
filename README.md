@@ -1,55 +1,61 @@
-dotfiles
-========
+# dotfiles
 
-Provisioning of my os x
+Personal dotfiles for Linux (Arch/Debian).
 
-It is using ansible to install packages and configure the environment.
-It will install [Homebrew](http://brew.sh) and install a bunch of python
-packages via pip.
+## What's included
 
-
-It covers the configuration of:
-  * bash
-  * zsh
-  * git
-  * mercurial
-  * vim
-  * nano
-  * wget
-
-There's a bunch of scripts in ~/bin
-
+### Terminal emulators
+- **kitty** - GPU-accelerated terminal with custom theme
+- **wezterm** - Cross-platform terminal with Lua config
 
 ### Shells
+- **bash/zsh** - Shared configuration for both shells
+  - Prompt (starship)
+  - History settings
+  - Aliases and functions
+  - Environment variables
+  - Key bindings
 
-Sets up:
-  * prompt
-  * history
-  * aliases/funcs
-  * autocompletion
-  * env variables (including ls colors)
-  * terminal options (enable ctrl-q/s)
+### Other configs
+- **git** - Aliases, colors, merge settings
+- **starship** - Cross-shell prompt
+- **nano** - Basic editor config
 
+### Utility scripts (`bin/`)
 
-### Sublime Text
+| Script | Description |
+|--------|-------------|
+| `firefox-tabs` | List/search open Firefox tabs |
+| `elgato-light.py` | Control Elgato Key Light |
+| `usb-mount` | Mount USB drives with udisks2 |
+| `docker-cleanup` | Clean up Docker resources |
+| `kube-top.sh` | Kubernetes resource usage |
+| `git-delete-branch` | Delete local and remote branch |
+| `git-strip-diff` | Strip diff headers |
+| `diff-highlight` | Highlight diff changes |
+| `kitty-remote` | Remote control kitty terminal |
+| `wezterm-remote` | Remote control wezterm terminal |
+| `clip2path` | Save clipboard image to file |
+| `focus-firefox.sh` | Focus Firefox window |
+| `fix-keyboard.sh` | Reset keyboard settings |
+| `high-dpi-scaling.sh` | Configure HiDPI scaling |
+| `sudo-askpass.sh` | GUI sudo password prompt |
+| `polkit-agent-wrapper` | Polkit authentication wrapper |
 
-This is my main text editor. The playbook will not install the plugins
-for it yet. So they have to be installed manually.
-Hopefully I get to add them to it soon.
+## Installation
 
+The repo includes Ansible playbooks for automated setup:
 
-Sets up:
-  * keybindings
-  * settings
+```bash
+# Set your dotfiles path
+export PROVISIONING_PATH=~/dotfiles
 
+# Run the playbook
+ansible-playbook playbooks/playbook.yml -i 127.0.0.1, -Kv
+```
 
-### Vim
+Or manually symlink what you need.
 
-I rarely use VIM, so this configuration is mostly to make it a bit prettier
-and easier to use.
+## License
 
-Sets up:
-  * [powerline](https://github.com/Lokaltog/powerline) status bar
-  * disables a bunch of keys till I get familiar with the others
-  * alt+direction to go around in insert mode
-  * ctrl-a and ctrl-e work as expected
+MIT

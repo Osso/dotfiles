@@ -1,6 +1,0 @@
-[submodule "zshmarks"]
-	path = zshmarks
-	url = https://github.com/jocelynmallon/zshmarks.git
-[submodule "shells/zsh/zshmarks"]
-	path = shells/zsh/zshmarks
-	url = https://github.com/jocelynmallon/zshmarks.git

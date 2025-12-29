@@ -1,0 +1,115 @@
+#!/usr/bin/python3
+"""List Firefox open tabs from the session store."""
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+try:
+    import lz4.block
+except ImportError:
+    print("Error: lz4 not installed. Run: sudo apt install python3-lz4", file=sys.stderr)
+    sys.exit(1)
+
+
+def find_session_file():
+    """Find the most recent Firefox session file."""
+    paths = [
+        Path.home() / "snap/firefox/common/.mozilla/firefox",
+        Path.home() / ".var/app/org.mozilla.firefox/.mozilla/firefox",
+        Path.home() / ".mozilla/firefox",
+    ]
+
+    candidates = []
+    for base in paths:
+        if base.exists():
+            for profile in base.iterdir():
+                if profile.is_dir() and not profile.name.startswith('.'):
+                    recovery = profile / "sessionstore-backups" / "recovery.jsonlz4"
+                    if recovery.exists():
+                        candidates.append(recovery)
+
+    if not candidates:
+        return None
+
+    # Return most recently modified
+    return max(candidates, key=lambda p: p.stat().st_mtime)
+
+
+def load_session(fpath):
+    """Load and decompress Firefox session data."""
+    with open(fpath, 'rb') as fd:
+        fd.read(8)  # Skip magic header (mozLz40\0)
+        return json.loads(lz4.block.decompress(fd.read()).decode('utf-8'))
+
+
+def get_tabs(session_data):
+    """Extract tabs from session data."""
+    tabs = []
+    for win_idx, win in enumerate(session_data.get('windows', []), 1):
+        for tab in win.get('tabs', []):
+            i = tab.get('index', 1) - 1
+            entries = tab.get('entries', [])
+            if entries and i < len(entries):
+                entry = entries[i]
+                tabs.append({
+                    'window': win_idx,
+                    'title': entry.get('title', 'No title'),
+                    'url': entry.get('url', ''),
+                })
+    return tabs
+
+
+def main():
+    parser = argparse.ArgumentParser(description='List Firefox open tabs')
+    parser.add_argument('-u', '--urls-only', action='store_true', help='Print URLs only')
+    parser.add_argument('-t', '--titles-only', action='store_true', help='Print titles only')
+    parser.add_argument('-c', '--count', action='store_true', help='Print tab count only')
+    parser.add_argument('-s', '--search', metavar='TERM', help='Search tabs by title or URL')
+    parser.add_argument('-n', '--limit', type=int, help='Limit number of results')
+    parser.add_argument('--json', action='store_true', help='Output as JSON')
+    args = parser.parse_args()
+
+    session_file = find_session_file()
+    if not session_file:
+        print("Error: No Firefox session file found", file=sys.stderr)
+        sys.exit(1)
+
+    try:
+        session_data = load_session(session_file)
+    except Exception as e:
+        print(f"Error reading session file: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    tabs = get_tabs(session_data)
+
+    # Filter by search term
+    if args.search:
+        term = args.search.lower()
+        tabs = [t for t in tabs if term in t['title'].lower() or term in t['url'].lower()]
+
+    # Limit results
+    if args.limit:
+        tabs = tabs[:args.limit]
+
+    # Output
+    if args.count:
+        print(len(tabs))
+    elif args.json:
+        print(json.dumps(tabs, indent=2))
+    elif args.urls_only:
+        for tab in tabs:
+            print(tab['url'])
+    elif args.titles_only:
+        for tab in tabs:
+            print(tab['title'])
+    else:
+        for i, tab in enumerate(tabs, 1):
+            title = tab['title'][:70] if len(tab['title']) > 70 else tab['title']
+            print(f"{i:4}. {title}")
+            print(f"      {tab['url']}")
+
+
+if __name__ == '__main__':
+    main()

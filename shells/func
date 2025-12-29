@@ -25,7 +25,7 @@ function roll()
           DIE_SIDES=6
         fi
         # echo to screen
-        echo $[ ( $RANDOM % $DIE_SIDES )  + 1 ]
+        echo $(( ( RANDOM % DIE_SIDES ) + 1 ))
     }
     # roll_die 10  # returns 1 to 10 as per 10 sides
     # roll_die 2   # returns 1 or 2 as per 2 sides
@@ -51,12 +51,16 @@ function killit() {
 
 # Search packages by name
 function apts() {
-  apt list "*$1*"
+  apt list "*$1*" 2>/dev/null
 }
 
 # List installed packages
 function apti() {
-  apt list "*$1*" | grep installed
+  apt list "*$1*" 2>/dev/null | grep '\[installed'
+}
+
+function aptm() {
+  apt list "*$1*" 2>/dev/null | grep '\[installed\]'
 }
 
 
@@ -76,3 +80,18 @@ function ssh()
    # revert the window title after the ssh command
    title Terminal
 }
+
+
+function domain_cert () {
+  nslookup $1
+  (openssl s_client -showcerts -servername $1 -connect $1:443 <<< "Q" | openssl x509 -text | grep -iA2 "Validity")
+}
+
+
+function publicip() {
+  # Use ipify API via curl since direct OpenDNS is blocked by firewall
+  curl -s https://api.ipify.org && echo
+  curl -s https://api64.ipify.org && echo
+}
+
+

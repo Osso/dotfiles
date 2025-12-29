@@ -2,13 +2,7 @@
 # Alias #
 #########
 
-if [[ "$0" =~ 'zsh' ]]; then
-    alias -g L="|less"
-    alias -g ..="cd .."
-    alias -g ...="cd ../.."
-    alias -g ....="cd ../../.."
-    alias -g .....="cd ../../../.."
-fi
+alias L="|less"
 
 alias  ..="cd .."
 alias  ...="cd ../.."
@@ -16,8 +10,9 @@ alias  ....="cd ../../.."
 alias  .....="cd ../../../.."
 
 # Ls aliases
-alias ll="ls --color -lh"
-alias la="ls --color -lha"
+alias ls="lsd -h"
+alias ll="lsd -lh"
+alias la="lsd -lha"
 
 # Serve a directory via http
 alias pyserve="python -m http.server"
@@ -25,31 +20,36 @@ alias pyserve="python -m http.server"
 alias debug_email="python -m smtpd -n -c DebuggingServer localhost:1025"
 
 # Git pipes
-alias gd="g diff | e"
-alias gs="g show | e"
+# alias gd="g diff | e -"
+# alias gs="g show | e"
 
 # One letter shortcuts
-alias l="ls --color"
+alias l="lsd"
+alias L="bat --paging=always"
 alias t="pytest"
 alias c="cargo"
 alias d="docker"
-alias e="code"
+alias e="zeditor"
 alias g="git"
 alias j="jump"
 alias h="history"
 alias v="vagrant"
 alias w="work_on_project"
-alias p="ipython3"
+alias p="ipython"
 alias m="make"
 alias n="ninja"
-alias a="sudo apt"
-alias k="kubectl"
+alias a="sudo nala"
+alias k="kubectl --kubeconfig=$HOME/.kube/config-reader"
+alias f="yazi"
 
-alias dco="docker-compose"
+alias dco="docker compose"
 alias de="docker exec -it"
+alias dr="docker run -it"
 
-# External IP address
-alias publicip="dig +short myip.opendns.com @resolver1.opendns.com; dig +short -6 myip.opendns.com aaaa @resolver1.opendns.com"
+# DNS lookup (dog replaces dig)
+alias dig="dog"
+
+# External IP address - see ~/.bash/func for publicip function
 # Flush Directory Service cache
 alias flushdns="sudo service nscd restart"
 
@@ -57,36 +57,79 @@ alias flushdns="sudo service nscd restart"
 alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
 alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
 
-# Linux version of OSX pbcopy and pbpaste.
-alias pbcopy="xsel --clipboard --input"
-alias pbpaste="xsel --clipboard --output"
+# Clipboard aliases (Wayland)
+alias copy="wl-copy"
+alias paste="wl-paste"
+
+# macOS-style open command
+alias open="xdg-open"
 
 
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 
-# Provision OS
-alias provision="ansible-playbook ~/Sync/Provisioning/playbooks/*.yml -i 127.0.0.1, -Kv"
-alias provision-facts="ansible localhost -i 127.0.0.1, -m setup --connection=local"
+# Provision OS (customize path to your provisioning repo)
+# alias provision="ansible-playbook ~/Provisioning/playbooks/*.yml -i 127.0.0.1, -Kv"
+# alias provision-facts="ansible localhost -i 127.0.0.1, -m setup --connection=local"
 
 # Pipe my public key to my clipboard.
-alias pubkey="more ~/.ssh/id_ed25519.pub | pbcopy | echo '=> Public key copied to pasteboard.'"
+alias pubkey="wl-copy < ~/.ssh/id_ed25519.pub && echo '=> Public key copied to clipboard.'"
 # Display python path
-alias pypath='python -c "import sys; print sys.path" | tr "," "\n" | grep -v "egg"'
+alias pypath='python -c "import sys; print(sys.path)" | tr "," "\n" | grep -v "egg"'
 # Clean python pyc files
 alias pycclean='find . -name "*.pyc" -exec rm {} \;'
 
 # More human utilities
 alias df="df -h"
+alias part="duf /"
 alias du="du -h -c"
 alias mkdir="mkdir -vp"
 alias tree="tree -Cs"
 
-alias docker-dangling="docker rmi \$(docker images -q -f dangling=true)"
 alias grep="grep --color=auto"
-alias ua="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
+alias ua="sudo nala upgrade -y && sudo nala autoremove -y"
 alias psg="ps aux | grep -v grep | grep -i"
-alias ipy="ipython3"
 alias aptrm="a autoremove --purge"
-alias aptsh="apt show"
+alias aptsh="nala show"
 alias py.test="py.test-3"
+alias yarn="yarnpkg"
+
+# Use kitten ssh in Kitty terminal for proper terminfo handling (interactive only)
+[[ -n "$KITTY_WINDOW_ID" && -o interactive ]] && alias ssh="kitten ssh"
+# Terminal-aware icat alias
+if [[ "$TERM_PROGRAM" == "WezTerm" ]]; then
+    alias icat="wezterm imgcat"
+else
+    alias icat="kitty +kitten icat"
+fi
+alias warp-reauth="warp-cli debug access-reauth"
+
+# Android SDK tools
+alias adb="~/Android/Sdk/platform-tools/adb"
+alias emulator="~/Android/Sdk/emulator/emulator"
+alias android-emu="~/Android/Sdk/emulator/emulator @Medium_Phone_API_34 -gpu host"
+
+# Ayu-themed nmtui
+alias nmtui='NEWT_COLORS="root=white,gray
+window=white,gray
+border=cyan,gray
+shadow=black,black
+title=yellow,gray
+button=gray,cyan
+actbutton=gray,yellow
+compactbutton=cyan,gray
+checkbox=white,gray
+actcheckbox=gray,cyan
+entry=cyan,gray
+disentry=white,gray
+label=white,gray
+listbox=white,gray
+actlistbox=gray,cyan
+sellistbox=cyan,gray
+actsellistbox=gray,yellow
+textbox=white,gray
+acttextbox=gray,cyan
+emptyscale=gray,gray
+fullscale=cyan,gray
+helpline=cyan,gray
+roottext=cyan,gray" nmtui'

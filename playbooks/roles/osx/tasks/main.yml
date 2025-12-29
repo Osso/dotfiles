@@ -5,7 +5,6 @@
 - name: add homebrew taps
   homebrew_tap: tap={{ item }} state=present
   with_items:
-    - osso/formula
     - caskroom/cask
     - caskroom/homebrew-fonts
     - homebrew/completions

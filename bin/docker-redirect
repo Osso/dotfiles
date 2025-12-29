@@ -8,7 +8,7 @@ function title() {
 }
 
 function connect {
-    ssh -N -p 22 -c aes256-ctr \
+    /usr/bin/ssh -N -p 22 -c aes256-ctr \
         "${PROXY_DOCKER_USER:-$USER}"@"${PROXY_DOCKER_HOST}" \
         -L "$PROXY_DOCKER_SOCKET:$REMOTE_DOCKER_SOCKET"
 }

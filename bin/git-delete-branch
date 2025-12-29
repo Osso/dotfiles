@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 # current_branch="$(git symbolic-ref --quiet --short HEAD)"
 # remote_ref="$(git rev-parse --abbrev-ref --symbolic-full-name @{u} | sed 's#/# #')"
@@ -6,6 +6,48 @@
 
 
 # git push origin --delete "refs/remotes/origin/$1" && git b -D "$1"
-git co origin/master
-git b -D "$1"
-git push origin :"$1"
+
+# Handle multiple branches
+if [ $# -gt 1 ]; then
+    for branch in "$@"; do
+        echo "Deleting branch: $branch"
+        "$0" "$branch"
+    done
+    exit 0
+fi
+
+branch="$1"
+current_branch="$(git symbolic-ref --quiet --short HEAD || true)"
+
+if [ -z "$branch" ]; then
+    branch="$current_branch"
+    echo "Using current branch: $branch"
+fi
+
+if [ -z "$branch" ]; then
+    echo "No branch specified"
+    exit 1
+fi
+
+if [ "$branch" = "master" ]; then
+    echo "Can't delete master branch"
+    exit 1
+fi
+
+if [ "$branch" = "$current_branch" ]; then
+    git co master
+fi
+
+
+# Check that branch exists
+git show-ref --verify -- "refs/heads/$branch" && git b -D "$branch"
+
+git fetch --prune
+
+# Check that remote branch exists and delete it if it does
+if git show-ref --verify --quiet -- "refs/remotes/origin/$branch"; then
+    echo "Deleting remote branch: $branch"
+    git push origin :"$branch"
+else
+    echo "Remote branch $branch does not exist or was already deleted"
+fi

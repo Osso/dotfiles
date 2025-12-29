@@ -15,3 +15,9 @@ Thumbs.db
 
 # Backup files
 *~
+
+# Jetbrains
+/.idea
+
+# Claude
+.claude

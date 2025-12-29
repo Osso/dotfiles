@@ -1,0 +1,15 @@
+#!/bin/sh
+# Wrapper for polkit-gnome that respects color-scheme preference
+
+scheme=$(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null | tr -d "'")
+
+case "$scheme" in
+    prefer-dark|dark)
+        export GTK_THEME=Adwaita:dark
+        ;;
+    *)
+        export GTK_THEME=Adwaita
+        ;;
+esac
+
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 "$@"

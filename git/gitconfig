@@ -2,9 +2,9 @@
     # For username / creds / etc
     path = ~/.gitconfig_local
 [core]
-    excludesfile = /Users/osso/.gitignore
+    excludesfile = ~/.gitignore
     quotepath = false
-	attributesfile = /home/osso/.gitattributes
+	attributesfile = ~/.gitattributes
     # pager = diff-highlight | git-strip-diff | less
 [alias]
     ci = commit
@@ -12,9 +12,10 @@
     ls = ls-files
     pull-overwrite = pull -s recursive -X theirs
     sh = show --color
-    pm = pull
+    sh-code = !"git show | code -"
+    d-code = !"git diff | code -"
     pu = push
-    pf = push -f
+    pf = push --force-with-lease
     ups = reset HEAD~1
 
     # One letter shortcuts
@@ -44,16 +45,19 @@
 
     mt = mergetool -y
     ds = diff --staged
+    sw = switch
 
     # Branches listing
-    lbi = !"git for-each-ref --format='%(committerdate:short) %(refname)' --sort=committerdate refs/heads/*$1*"
-    rbi = !"git for-each-ref --format='%(committerdate:short) %(refname)' --sort=committerdate refs/remotes/$1"
+    lbi = !"git for-each-ref --format='%(committerdate:short) %(refname:short)' --sort=committerdate refs/heads/*$1*"
+    rbi = !"git for-each-ref --format='%(committerdate:short) %(refname:short)' --sort=committerdate refs/remotes/$1"
     # Logs
     l = log --graph --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %s %C(bold)- %an%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
     ll = log --oneline --abbrev=8 --stat --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %s %C(bold)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+    refl = reflog --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %s %C(bold)- %an%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
+    refll = reflog --oneline --abbrev=8 --stat --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %s %C(bold)- %an%C(reset)%C(bold yellow)%d%C(reset)'
     lp = log -p --patience
     promote = !"git push --set-upstream origin \"$(git symbolic-ref --quiet --short HEAD)\""
-    delete-branch = !"~/bin/git-delete-branch"
+    db = !"~/bin/git-delete-branch"
 
     # merge
     mff = merge --ff-only
@@ -69,19 +73,18 @@
     sd = stash drop
     sp = stash pop
 
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
-[mergetool "sourcetree"]
-	cmd = opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
-[mergetool "sublime"]
-    cmd = subl -w $MERGED
-    trustExitCode = false
 [mergetool "code"]
-    cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
+    # cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
+    cmd = code --wait \"$MERGED\"
 [mergetool]
     keepBackup = false
+# [difftool "phpstorm"]
+# 	cmd = phpstorm diff \"$LOCAL\" \"$REMOTE\"
+# 	trustExitCode = true
+# [mergetool "phpstorm"]
+# 	# cmd = phpstorm merge \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
+# 	cmd = phpstorm --wait \"$MERGED\"
+# 	trustExitCode = true
 
 [branch]
     autosetuprebase = always
@@ -92,7 +95,8 @@
     log = true
 	conflictstyle = diff3
 	tool = code
-
+[diff]
+	tool = code
 [color]
   branch = auto
   diff = auto
@@ -108,8 +112,8 @@
     whitespace = normal red
     meta = yellow
     frag = yellow bold
-    old = red
-    new = green
+    old = dim brightred
+    new = dim brightgreen
 [color "diff-highlight"]
    oldNormal = "red"
    oldHighlight = "red ul"
@@ -152,17 +156,17 @@
 [credential]
 	helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 [diff]
-	context = 3
+	context = 6
     #algorithm = patience
-
-[merge "py"]
-    name = A python merge driver using the AST
-    driver = git-merge-py %O %A %B
 
 [merge "lock"]
     name = A python lockfile merge driver using the AST
     driver = git-merge-lock %O %A %B
-
 [merge "in"]
     name = A python deps merge driver using the AST
     driver = git-merge-deps %O %A %B
+
+[init]
+	defaultBranch = master
+[http]
+	postBuffer = 524288000

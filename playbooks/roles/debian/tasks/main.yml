@@ -14,32 +14,18 @@
     # Common dev stuff
     - autoconf
     - automake
-    # Version control
-    - mercurial
-    - git
     # More up to date and avoids poluting the system packages dir
     - python
-    # Golang
-    - golang
-    # Http client
-    - wget
-    - httpie
     # For watching network traffic
     - ngrep
     # Mass rename
     - rename
     # OpenVPN in network manager
     - network-manager-openvpn-gnome
-    # More apps
-    - dropbox
-    - skypeforlinux
-    - vagrant
     # Required by shell prompt
     # - vcprompt
     # File synching
     # - syncthing
-    # - spotify
-    # - mattermost
     # SSH tunnels
     - gstm
     # Python packages

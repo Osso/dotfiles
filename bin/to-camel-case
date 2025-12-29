@@ -1,0 +1,40 @@
+#!/usr/bin/env python
+
+import os
+import re
+
+def to_camel_case(name):
+    # First split the name by common separators
+    words = re.split(r'[-_\s.]', os.path.splitext(name)[0])
+
+    # Create camelCase - first word lowercase, rest capitalized
+    if words:
+        # camel = words[0].lower()
+        # camel += ''.join(word.capitalize() for word in words[1:])
+        camel = ''.join(word.capitalize() for word in words)
+
+        # Add the extension back
+        ext = os.path.splitext(name)[1]
+        return camel + ext
+
+    return name
+
+def rename_files_to_camel_case():
+    # Get all files in current directory
+    files = [f for f in os.listdir('.') if os.path.isfile(f)]
+
+    # Rename each file
+    for filename in files:
+        # Skip the script itself
+        if filename == os.path.basename(__file__):
+            continue
+
+        new_name = to_camel_case(filename)
+
+        # Only rename if the name would actually change
+        if new_name != filename:
+            print(f"Renaming: {filename} -> {new_name}")
+            os.rename(filename,new_name)
+
+if __name__ == "__main__":
+    rename_files_to_camel_case()
