@@ -34,91 +34,154 @@ impl Module {
 
     fn has_files(&self, base: &Path) -> bool {
         let src = self.source_dir(base);
-        src.exists() && src.read_dir().map(|mut d| d.next().is_some()).unwrap_or(false)
+        src.exists()
+            && src
+                .read_dir()
+                .map(|mut d| d.next().is_some())
+                .unwrap_or(false)
     }
 
     fn apply(&self, base: &Path, dry_run: bool) -> Result<()> {
         let src_dir = self.source_dir(base);
-        let dest_dir = self.dest_dir()?;
-
         if !src_dir.exists() {
             return Ok(());
         }
 
-        // Ensure dest dir exists
-        if !dest_dir.exists() {
-            if dry_run {
-                println!("  Would create directory: {}", dest_dir.display());
-            } else if self.needs_sudo {
-                run_command("mkdir", &["-p", &dest_dir.to_string_lossy()], true)?;
-            } else {
-                fs::create_dir_all(&dest_dir)?;
-            }
-        }
+        let dest_dir = self.dest_dir()?;
+        self.ensure_dest_dir(&dest_dir, dry_run)?;
 
         for entry in fs::read_dir(&src_dir)? {
             let entry = entry?;
             let src_path = entry.path();
             let file_name = entry.file_name();
             let dest_path = dest_dir.join(&file_name);
-
-            match self.method {
-                Method::Copy => {
-                    if dry_run {
-                        println!("  Would copy: {} -> {}", src_path.display(), dest_path.display());
-                    } else if self.needs_sudo {
-                        run_command(
-                            "cp",
-                            &[&src_path.to_string_lossy(), &dest_path.to_string_lossy()],
-                            true,
-                        )?;
-                        println!("  Copied: {} -> {}", src_path.display(), dest_path.display());
-                    } else {
-                        fs::copy(&src_path, &dest_path)
-                            .with_context(|| format!("Failed to copy {}", src_path.display()))?;
-                        println!("  Copied: {} -> {}", src_path.display(), dest_path.display());
-                    }
-                }
-                Method::Symlink => {
-                    // Remove existing if present
-                    if dest_path.symlink_metadata().is_ok() {
-                        if dry_run {
-                            println!("  Would remove: {}", dest_path.display());
-                        } else if self.needs_sudo {
-                            run_command("rm", &["-f", &dest_path.to_string_lossy()], true)?;
-                        } else {
-                            fs::remove_file(&dest_path)?;
-                        }
-                    }
-
-                    if dry_run {
-                        println!("  Would link: {} -> {}", dest_path.display(), src_path.display());
-                    } else if self.needs_sudo {
-                        run_command(
-                            "ln",
-                            &["-s", &src_path.to_string_lossy(), &dest_path.to_string_lossy()],
-                            true,
-                        )?;
-                        println!("  Linked: {} -> {}", dest_path.display(), src_path.display());
-                    } else {
-                        symlink(&src_path, &dest_path)?;
-                        println!("  Linked: {} -> {}", dest_path.display(), src_path.display());
-                    }
-                }
-            }
+            self.apply_entry(&src_path, &dest_path, dry_run)?;
         }
 
-        // Run post-hook if any
-        if let Some((cmd, args)) = self.post_hook {
-            if dry_run {
-                println!("  Would run: {} {:?}", cmd, args);
-            } else {
-                println!("  Running: {} {:?}", cmd, args);
-                run_command(cmd, args, self.needs_sudo)?;
-            }
+        self.run_post_hook(dry_run)?;
+        Ok(())
+    }
+
+    fn ensure_dest_dir(&self, dest_dir: &Path, dry_run: bool) -> Result<()> {
+        if dest_dir.exists() {
+            return Ok(());
+        }
+
+        if dry_run {
+            println!("  Would create directory: {}", dest_dir.display());
+            return Ok(());
+        }
+
+        if self.needs_sudo {
+            run_command("mkdir", &["-p", &dest_dir.to_string_lossy()], true)?;
+        } else {
+            fs::create_dir_all(dest_dir)?;
         }
 
         Ok(())
+    }
+
+    fn apply_entry(&self, src_path: &Path, dest_path: &Path, dry_run: bool) -> Result<()> {
+        match self.method {
+            Method::Copy => self.copy_entry(src_path, dest_path, dry_run),
+            Method::Symlink => self.symlink_entry(src_path, dest_path, dry_run),
+        }
+    }
+
+    fn copy_entry(&self, src_path: &Path, dest_path: &Path, dry_run: bool) -> Result<()> {
+        if dry_run {
+            println!(
+                "  Would copy: {} -> {}",
+                src_path.display(),
+                dest_path.display()
+            );
+            return Ok(());
+        }
+
+        if self.needs_sudo {
+            run_command(
+                "cp",
+                &[&src_path.to_string_lossy(), &dest_path.to_string_lossy()],
+                true,
+            )?;
+        } else {
+            fs::copy(src_path, dest_path)
+                .with_context(|| format!("Failed to copy {}", src_path.display()))?;
+        }
+
+        println!(
+            "  Copied: {} -> {}",
+            src_path.display(),
+            dest_path.display()
+        );
+        Ok(())
+    }
+
+    fn symlink_entry(&self, src_path: &Path, dest_path: &Path, dry_run: bool) -> Result<()> {
+        self.remove_existing_dest(dest_path, dry_run)?;
+
+        if dry_run {
+            println!(
+                "  Would link: {} -> {}",
+                dest_path.display(),
+                src_path.display()
+            );
+            return Ok(());
+        }
+
+        if self.needs_sudo {
+            run_command(
+                "ln",
+                &[
+                    "-s",
+                    &src_path.to_string_lossy(),
+                    &dest_path.to_string_lossy(),
+                ],
+                true,
+            )?;
+        } else {
+            symlink(src_path, dest_path)?;
+        }
+
+        println!(
+            "  Linked: {} -> {}",
+            dest_path.display(),
+            src_path.display()
+        );
+        Ok(())
+    }
+
+    fn remove_existing_dest(&self, dest_path: &Path, dry_run: bool) -> Result<()> {
+        if dest_path.symlink_metadata().is_err() {
+            return Ok(());
+        }
+
+        if dry_run {
+            println!("  Would remove: {}", dest_path.display());
+            return Ok(());
+        }
+
+        if self.needs_sudo {
+            run_command("rm", &["-f", &dest_path.to_string_lossy()], true)?;
+        } else {
+            fs::remove_file(dest_path)?;
+        }
+
+        Ok(())
+    }
+
+    fn run_post_hook(&self, dry_run: bool) -> Result<()> {
+        let Some((cmd, args)) = self.post_hook else {
+            return Ok(());
+        };
+
+        if dry_run {
+            println!("  Would run: {} {:?}", cmd, args);
+            return Ok(());
+        }
+
+        println!("  Running: {} {:?}", cmd, args);
+        run_command(cmd, args, self.needs_sudo)
     }
 }
 

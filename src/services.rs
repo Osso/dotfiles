@@ -1,54 +1,81 @@
 use anyhow::Result;
 
 use crate::config::SetupConfig;
-use crate::utils::run_command;
+use crate::utils::{expand_path, run_command};
 
 pub fn run_services(config: &SetupConfig, dry_run: bool) -> Result<()> {
     if dry_run {
         println!("Dry run - no changes will be made\n");
     }
 
-    // User services
-    if !config.services.user.is_empty() {
-        println!("User services:");
-        for service in &config.services.user {
-            if dry_run {
-                println!("  Would enable: {}", service);
-            } else {
-                println!("  Enabling: {}", service);
-                run_command("systemctl", &["--user", "enable", "--now", service], false)?;
-            }
-        }
+    run_service_group("User services", &config.services.user, dry_run, false)?;
+    run_service_group("System services", &config.services.system, dry_run, true)?;
+    create_directories(&config.directories, dry_run)?;
+    Ok(())
+}
+
+fn run_service_group(
+    title: &str,
+    services: &[String],
+    dry_run: bool,
+    use_sudo: bool,
+) -> Result<()> {
+    if services.is_empty() {
+        return Ok(());
     }
 
-    // System services
-    if !config.services.system.is_empty() {
-        println!("\nSystem services:");
-        for service in &config.services.system {
-            if dry_run {
-                println!("  Would enable: {}", service);
-            } else {
-                println!("  Enabling: {}", service);
-                run_command("systemctl", &["enable", "--now", service], true)?;
-            }
-        }
+    println!("{title}:");
+    for service in services {
+        run_service(service, dry_run, use_sudo)?;
+    }
+    println!();
+    Ok(())
+}
+
+fn run_service(service: &str, dry_run: bool, use_sudo: bool) -> Result<()> {
+    if dry_run {
+        println!("  Would enable: {}", service);
+        return Ok(());
     }
 
-    // Create directories
-    if !config.directories.is_empty() {
-        println!("\nDirectories:");
-        for dir in &config.directories {
-            let path = crate::utils::expand_path(dir)?;
-            if path.exists() {
-                println!("  {} (exists)", dir);
-            } else if dry_run {
-                println!("  Would create: {}", dir);
-            } else {
-                std::fs::create_dir_all(&path)?;
-                println!("  Created: {}", dir);
-            }
-        }
+    println!("  Enabling: {}", service);
+    let args = service_args(service, use_sudo);
+    run_command("systemctl", &args, use_sudo)
+}
+
+fn service_args<'a>(service: &'a str, system_service: bool) -> Vec<&'a str> {
+    if system_service {
+        vec!["enable", "--now", service]
+    } else {
+        vec!["--user", "enable", "--now", service]
+    }
+}
+
+fn create_directories(directories: &[String], dry_run: bool) -> Result<()> {
+    if directories.is_empty() {
+        return Ok(());
     }
 
+    println!("Directories:");
+    for dir in directories {
+        create_directory(dir, dry_run)?;
+    }
+    Ok(())
+}
+
+fn create_directory(dir: &str, dry_run: bool) -> Result<()> {
+    let path = expand_path(dir)?;
+    if path.exists() {
+        println!("  {} (exists)", dir);
+        return Ok(());
+    }
+
+    if dry_run {
+        println!("  Would create: {}", dir);
+        return Ok(());
+    }
+
+    std::fs::create_dir_all(&path)?;
+    println!("  Created: {}", dir);
     Ok(())
 }
