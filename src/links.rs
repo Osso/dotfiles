@@ -1,4 +1,4 @@
-use anyhow::{bail, Context, Result};
+use anyhow::{Context, Result, bail};
 use std::collections::BTreeMap;
 use std::fs::{self, read_dir};
 use std::os::unix::fs::symlink;
@@ -143,7 +143,12 @@ pub fn run_status(config: &LinksConfig, source_dir: &Path) -> Result<()> {
                 ok += 1;
             }
             LinkStatus::Missing => {
-                println!("  {}○{} {} (missing)", color::YELLOW, color::RESET, dest.display());
+                println!(
+                    "  {}○{} {} (missing)",
+                    color::YELLOW,
+                    color::RESET,
+                    dest.display()
+                );
                 issues += 1;
             }
             LinkStatus::WrongTarget { current } => {
@@ -157,11 +162,21 @@ pub fn run_status(config: &LinksConfig, source_dir: &Path) -> Result<()> {
                 issues += 1;
             }
             LinkStatus::NotASymlink => {
-                println!("  {}!{} {} (not a symlink)", color::RED, color::RESET, dest.display());
+                println!(
+                    "  {}!{} {} (not a symlink)",
+                    color::RED,
+                    color::RESET,
+                    dest.display()
+                );
                 issues += 1;
             }
             LinkStatus::BrokenSymlink => {
-                println!("  {}⚠{} {} (broken symlink)", color::RED, color::RESET, dest.display());
+                println!(
+                    "  {}⚠{} {} (broken symlink)",
+                    color::RED,
+                    color::RESET,
+                    dest.display()
+                );
                 issues += 1;
             }
         }
@@ -184,7 +199,12 @@ pub fn run_apply(config: &LinksConfig, source_dir: &Path, dry_run: bool) -> Resu
         let dest = expand_path(dest)?;
 
         if !source.exists() {
-            println!("  {}!{} Skipping {} (source missing)", color::YELLOW, color::RESET, src);
+            println!(
+                "  {}!{} Skipping {} (source missing)",
+                color::YELLOW,
+                color::RESET,
+                src
+            );
             skipped += 1;
             continue;
         }

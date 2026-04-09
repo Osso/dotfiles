@@ -4,7 +4,7 @@ mod modules;
 mod services;
 mod utils;
 
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 use clap::{Parser, Subcommand};
 
 use config::{LinksConfig, SetupConfig};
