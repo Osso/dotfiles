@@ -1,60 +1,44 @@
 # dotfiles
 
-Personal dotfiles for Linux (Arch/Debian).
+Declarative system/config manager for Linux (Arch). A small Rust CLI that
+applies a single source-of-truth provisioning repo onto the machine —
+symlinks, `/etc` modules, and systemd service enablement — replacing the old
+Ansible playbooks.
 
-## What's included
+This repo is the **engine**. The **data** (configs, scripts, package lists,
+`/etc` modules) lives in the provisioning repo it points at.
 
-### Terminal emulators
-- **kitty** - GPU-accelerated terminal with custom theme
-- **wezterm** - Cross-platform terminal with Lua config
+## Layout
 
-### Shells
-- **bash/zsh** - Shared configuration for both shells
-  - Prompt (starship)
-  - History settings
-  - Aliases and functions
-  - Environment variables
-  - Key bindings
+- `src/` — the `dotfiles` CLI
+  - `links.rs` — dotfile symlinks (`config/*` → `~/.config/*`, explicit links)
+  - `modules/` — `/etc` and user modules (sysctl, modprobe, udev, fonts,
+    systemd-user, environment, sentinel): copy/symlink `system/<name>/*` to a
+    destination, with post-hooks (e.g. `fc-cache`, `udevadm`)
+  - `services.rs` — enable systemd user/system units
+  - `config.rs` — `config.toml` (links) + `setup.yaml` (modules/services)
 
-### Other configs
-- **git** - Aliases, colors, merge settings
-- **starship** - Cross-shell prompt
-- **nano** - Basic editor config
+## Source repo
 
-### Utility scripts (`bin/`)
+The engine reads its source from `~/.config/dotfiles/config.toml`
+(`source_dir`). Current source: `/syncthing/Sync/Provisioning`.
 
-| Script | Description |
-|--------|-------------|
-| `firefox-tabs` | List/search open Firefox tabs |
-| `elgato-light.py` | Control Elgato Key Light |
-| `usb-mount` | Mount USB drives with udisks2 |
-| `docker-cleanup` | Clean up Docker resources |
-| `kube-top.sh` | Kubernetes resource usage |
-| `git-delete-branch` | Delete local and remote branch |
-| `git-strip-diff` | Strip diff headers |
-| `diff-highlight` | Highlight diff changes |
-| `kitty-remote` | Remote control kitty terminal |
-| `wezterm-remote` | Remote control wezterm terminal |
-| `clip2path` | Save clipboard image to file |
-| `focus-firefox.sh` | Focus Firefox window |
-| `fix-keyboard.sh` | Reset keyboard settings |
-| `high-dpi-scaling.sh` | Configure HiDPI scaling |
-| `sudo-askpass.sh` | GUI sudo password prompt |
-| `polkit-agent-wrapper` | Polkit authentication wrapper |
+- `config/<app>/` → linked into `~/.config/<app>` (pattern `config/* → ~/.config/*`)
+- `system/<module>/` → applied to `/etc` (or user dirs) by the matching module
+- `setup.yaml` → which modules are enabled, which services to enable
+- `bin/` → linked to `~/bin`
+- `packages/` → pacdef groups (package layer; separate tool, see below)
 
-## Installation
-
-The repo includes Ansible playbooks for automated setup:
+## Usage
 
 ```bash
-# Set your dotfiles path
-export PROVISIONING_PATH=~/dotfiles
-
-# Run the playbook
-ansible-playbook playbooks/playbook.yml -i 127.0.0.1, -Kv
+dotfiles status              # show symlink state
+dotfiles apply [-n]          # create/update symlinks (-n = dry run)
+dotfiles check               # verify symlinks
+dotfiles system [status] [-n]# apply /etc + user modules
+dotfiles services [-n]       # enable systemd services
+dotfiles setup [-n]          # apply + system + services
 ```
-
-Or manually symlink what you need.
 
 ## License
 

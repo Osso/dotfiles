@@ -1,3 +1,0 @@
-#!/bin/sh -xe
-
-docker system prune -a --volumes
