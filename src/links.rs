@@ -131,57 +131,17 @@ pub fn create_symlink(source: &Path, dest: &Path, dry_run: bool) -> Result<()> {
 pub fn run_status(config: &LinksConfig, source_dir: &Path) -> Result<()> {
     let mut ok = 0;
     let mut issues = 0;
-
-    for (src, dest) in &config.links {
+    for (src, dest_pattern) in &config.links {
         let source = source_dir.join(src);
-        let dest = expand_path(dest)?;
+        let dest = expand_path(dest_pattern)?;
         let status = get_link_status(&source, &dest);
-
-        match &status {
-            LinkStatus::Ok => {
-                println!("  {}✓{} {}", color::GREEN, color::RESET, dest.display());
-                ok += 1;
-            }
-            LinkStatus::Missing => {
-                println!(
-                    "  {}○{} {} (missing)",
-                    color::YELLOW,
-                    color::RESET,
-                    dest.display()
-                );
-                issues += 1;
-            }
-            LinkStatus::WrongTarget { current } => {
-                println!(
-                    "  {}✗{} {} (points to {})",
-                    color::RED,
-                    color::RESET,
-                    dest.display(),
-                    current.display()
-                );
-                issues += 1;
-            }
-            LinkStatus::NotASymlink => {
-                println!(
-                    "  {}!{} {} (not a symlink)",
-                    color::RED,
-                    color::RESET,
-                    dest.display()
-                );
-                issues += 1;
-            }
-            LinkStatus::BrokenSymlink => {
-                println!(
-                    "  {}⚠{} {} (broken symlink)",
-                    color::RED,
-                    color::RESET,
-                    dest.display()
-                );
-                issues += 1;
-            }
+        print_link_status(&dest, &status);
+        if matches!(status, LinkStatus::Ok) {
+            ok += 1;
+        } else {
+            issues += 1;
         }
     }
-
     println!("\n{ok} ok, {issues} issues");
     Ok(())
 }
@@ -198,41 +158,79 @@ pub fn run_apply(config: &LinksConfig, source_dir: &Path, dry_run: bool) -> Resu
         let source = source_dir.join(src);
         let dest = expand_path(dest)?;
 
-        if !source.exists() {
-            println!(
-                "  {}!{} Skipping {} (source missing)",
-                color::YELLOW,
-                color::RESET,
-                src
-            );
-            skipped += 1;
-            continue;
-        }
-
-        let status = get_link_status(&source, &dest);
-
-        match status {
-            LinkStatus::Ok => {
-                skipped += 1;
-            }
-            LinkStatus::Missing | LinkStatus::WrongTarget { .. } | LinkStatus::BrokenSymlink => {
-                create_symlink(&source, &dest, dry_run)?;
-                created += 1;
-            }
-            LinkStatus::NotASymlink => {
-                println!(
-                    "  {}!{} Skipping {} (exists and not a symlink)",
-                    color::RED,
-                    color::RESET,
-                    dest.display()
-                );
-                skipped += 1;
-            }
+        match apply_link(&source, &dest, src, dry_run)? {
+            ApplyOutcome::Created => created += 1,
+            ApplyOutcome::Skipped => skipped += 1,
         }
     }
 
     println!("\n{created} created, {skipped} skipped");
     Ok(())
+}
+
+fn print_link_status(dest: &Path, status: &LinkStatus) {
+    match status {
+        LinkStatus::Ok => println!("  {}✓{} {}", color::GREEN, color::RESET, dest.display()),
+        LinkStatus::Missing => println!(
+            "  {}○{} {} (missing)",
+            color::YELLOW,
+            color::RESET,
+            dest.display()
+        ),
+        LinkStatus::WrongTarget { current } => println!(
+            "  {}✗{} {} (points to {})",
+            color::RED,
+            color::RESET,
+            dest.display(),
+            current.display()
+        ),
+        LinkStatus::NotASymlink => println!(
+            "  {}!{} {} (not a symlink)",
+            color::RED,
+            color::RESET,
+            dest.display()
+        ),
+        LinkStatus::BrokenSymlink => println!(
+            "  {}⚠{} {} (broken symlink)",
+            color::RED,
+            color::RESET,
+            dest.display()
+        ),
+    }
+}
+
+enum ApplyOutcome {
+    Created,
+    Skipped,
+}
+
+fn apply_link(source: &Path, dest: &Path, src_label: &str, dry_run: bool) -> Result<ApplyOutcome> {
+    if !source.exists() {
+        println!(
+            "  {}!{} Skipping {} (source missing)",
+            color::YELLOW,
+            color::RESET,
+            src_label
+        );
+        return Ok(ApplyOutcome::Skipped);
+    }
+
+    match get_link_status(source, dest) {
+        LinkStatus::Ok => Ok(ApplyOutcome::Skipped),
+        LinkStatus::Missing | LinkStatus::WrongTarget { .. } | LinkStatus::BrokenSymlink => {
+            create_symlink(source, dest, dry_run)?;
+            Ok(ApplyOutcome::Created)
+        }
+        LinkStatus::NotASymlink => {
+            println!(
+                "  {}!{} Skipping {} (exists and not a symlink)",
+                color::RED,
+                color::RESET,
+                dest.display()
+            );
+            Ok(ApplyOutcome::Skipped)
+        }
+    }
 }
 
 pub fn run_check(config: &LinksConfig, source_dir: &Path) -> Result<()> {
