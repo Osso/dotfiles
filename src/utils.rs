@@ -4,9 +4,9 @@ use std::process::Command;
 
 /// Expand ~ to home directory
 pub fn expand_path(path: &str) -> Result<PathBuf> {
-    if path.starts_with("~/") {
+    if let Some(rest) = path.strip_prefix("~/") {
         let home = dirs::home_dir().context("Could not determine home directory")?;
-        Ok(home.join(&path[2..]))
+        Ok(home.join(rest))
     } else {
         Ok(PathBuf::from(path))
     }

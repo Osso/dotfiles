@@ -1,5 +1,5 @@
 use anyhow::{Context, Result, bail};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
 use std::fs::{self, read_dir};
 use std::os::unix::fs::symlink;
 use std::path::{Path, PathBuf};
@@ -97,8 +97,8 @@ pub fn get_link_status(source: &Path, dest: &Path) -> LinkStatus {
 }
 
 pub fn create_symlink(source: &Path, dest: &Path, dry_run: bool) -> Result<()> {
-    if let Some(parent) = dest.parent() {
-        if !parent.exists() {
+    if let Some(parent) = dest.parent()
+        && !parent.exists() {
             if dry_run {
                 println!("  Would create directory: {}", parent.display());
             } else {
@@ -106,7 +106,6 @@ pub fn create_symlink(source: &Path, dest: &Path, dry_run: bool) -> Result<()> {
                     .with_context(|| format!("Failed to create directory: {}", parent.display()))?;
             }
         }
-    }
 
     if dest.symlink_metadata().is_ok() {
         if dry_run {
@@ -146,7 +145,12 @@ pub fn run_status(config: &LinksConfig, source_dir: &Path) -> Result<()> {
     Ok(())
 }
 
-pub fn run_apply(config: &LinksConfig, source_dir: &Path, dry_run: bool) -> Result<()> {
+pub fn run_apply(
+    config: &LinksConfig,
+    source_dir: &Path,
+    dry_run: bool,
+    prune: bool,
+) -> Result<()> {
     if dry_run {
         println!("Dry run - no changes will be made\n");
     }
@@ -165,7 +169,77 @@ pub fn run_apply(config: &LinksConfig, source_dir: &Path, dry_run: bool) -> Resu
     }
 
     println!("\n{created} created, {skipped} skipped");
+
+    if prune {
+        let pruned = prune_orphans(config, source_dir, dry_run)?;
+        let verb = if dry_run { "to prune" } else { "pruned" };
+        println!("{pruned} orphaned link(s) {verb}");
+    }
+
     Ok(())
+}
+
+/// Remove symlinks under managed destination dirs that point into `source_dir`
+/// but are no longer declared — orphans left behind when a config is removed
+/// from the source repo. Only ever removes symlinks whose target resolves
+/// inside `source_dir`; never touches real files or foreign symlinks.
+fn prune_orphans(config: &LinksConfig, source_dir: &Path, dry_run: bool) -> Result<usize> {
+    let canon_source = source_dir
+        .canonicalize()
+        .unwrap_or_else(|_| source_dir.to_path_buf());
+
+    // Declared destinations we intend to keep, and the dirs we scan for orphans.
+    let mut declared: HashSet<PathBuf> = HashSet::new();
+    let mut scan_dirs: HashSet<PathBuf> = HashSet::new();
+    for dest in config.links.values() {
+        let path = expand_path(dest)?;
+        if let Some(parent) = path.parent() {
+            scan_dirs.insert(parent.to_path_buf());
+        }
+        declared.insert(path);
+    }
+
+    let mut pruned = 0;
+    for dir in &scan_dirs {
+        let Ok(entries) = read_dir(dir) else { continue };
+        for entry in entries {
+            let path = entry?.path();
+            if declared.contains(&path) || !points_into(&path, &canon_source) {
+                continue;
+            }
+            if dry_run {
+                println!("  Would prune orphan: {}", path.display());
+            } else {
+                fs::remove_file(&path)
+                    .with_context(|| format!("Failed to prune: {}", path.display()))?;
+                println!("  Pruned orphan: {}", path.display());
+            }
+            pruned += 1;
+        }
+    }
+    Ok(pruned)
+}
+
+/// True only if `path` is a symlink whose target resolves inside `canon_source`.
+fn points_into(path: &Path, canon_source: &Path) -> bool {
+    let Ok(meta) = path.symlink_metadata() else {
+        return false;
+    };
+    if !meta.file_type().is_symlink() {
+        return false;
+    }
+    let Ok(raw) = path.read_link() else {
+        return false;
+    };
+    let abs = if raw.is_absolute() {
+        raw
+    } else {
+        path.parent().map(|p| p.join(&raw)).unwrap_or(raw)
+    };
+    match abs.canonicalize() {
+        Ok(canonical) => canonical.starts_with(canon_source),
+        Err(_) => abs.starts_with(canon_source),
+    }
 }
 
 fn print_link_status(dest: &Path, status: &LinkStatus) {

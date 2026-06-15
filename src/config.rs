@@ -62,6 +62,24 @@ pub struct ModulesConfig {
     pub environment: bool,
     #[serde(default)]
     pub sentinel: bool,
+    #[serde(default)]
+    pub etc: bool,
+    #[serde(default)]
+    pub systemd_system: bool,
+    #[serde(default)]
+    pub systemd_etc: bool,
+    #[serde(default)]
+    pub samba: bool,
+    #[serde(default)]
+    pub udev_hwdb: bool,
+    #[serde(default)]
+    pub appfw: bool,
+    #[serde(default)]
+    pub authd: bool,
+    #[serde(default)]
+    pub config_guard: bool,
+    #[serde(default)]
+    pub enpass: bool,
 }
 
 impl SetupConfig {

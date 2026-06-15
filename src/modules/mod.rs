@@ -243,6 +243,78 @@ const MODULES: &[Module] = &[
         post_hook: None,
         needs_sudo: true,
     },
+    Module {
+        name: "etc",
+        source_subdir: "etc",
+        dest_dir: "/etc",
+        method: Method::Copy,
+        post_hook: None,
+        needs_sudo: true,
+    },
+    Module {
+        name: "systemd-system",
+        source_subdir: "systemd-system",
+        dest_dir: "/etc/systemd/system",
+        method: Method::Copy,
+        post_hook: Some(("systemctl", &["daemon-reload"])),
+        needs_sudo: true,
+    },
+    Module {
+        name: "systemd-etc",
+        source_subdir: "systemd-etc",
+        dest_dir: "/etc/systemd",
+        method: Method::Copy,
+        post_hook: Some(("systemctl", &["daemon-reload"])),
+        needs_sudo: true,
+    },
+    Module {
+        name: "samba",
+        source_subdir: "samba",
+        dest_dir: "/etc/samba",
+        method: Method::Copy,
+        post_hook: None,
+        needs_sudo: true,
+    },
+    Module {
+        name: "udev-hwdb",
+        source_subdir: "udev-hwdb",
+        dest_dir: "/etc/udev/hwdb.d",
+        method: Method::Copy,
+        post_hook: Some(("systemd-hwdb", &["update"])),
+        needs_sudo: true,
+    },
+    Module {
+        name: "appfw",
+        source_subdir: "appfw",
+        dest_dir: "/etc/appfw/rules.d",
+        method: Method::Copy,
+        post_hook: None,
+        needs_sudo: true,
+    },
+    Module {
+        name: "authd",
+        source_subdir: "authd",
+        dest_dir: "/etc/authd/policies.d",
+        method: Method::Copy,
+        post_hook: None,
+        needs_sudo: true,
+    },
+    Module {
+        name: "config-guard",
+        source_subdir: "config-guard",
+        dest_dir: "/etc/config-guard",
+        method: Method::Copy,
+        post_hook: None,
+        needs_sudo: true,
+    },
+    Module {
+        name: "enpass",
+        source_subdir: "enpass",
+        dest_dir: "/etc/Enpass",
+        method: Method::Copy,
+        post_hook: None,
+        needs_sudo: true,
+    },
 ];
 
 fn is_module_enabled(config: &SetupConfig, name: &str) -> bool {
@@ -254,6 +326,15 @@ fn is_module_enabled(config: &SetupConfig, name: &str) -> bool {
         "systemd-user" => config.modules.systemd_user,
         "environment" => config.modules.environment,
         "sentinel" => config.modules.sentinel,
+        "etc" => config.modules.etc,
+        "systemd-system" => config.modules.systemd_system,
+        "systemd-etc" => config.modules.systemd_etc,
+        "samba" => config.modules.samba,
+        "udev-hwdb" => config.modules.udev_hwdb,
+        "appfw" => config.modules.appfw,
+        "authd" => config.modules.authd,
+        "config-guard" => config.modules.config_guard,
+        "enpass" => config.modules.enpass,
         _ => false,
     }
 }
@@ -271,7 +352,7 @@ pub fn run_status(config: &SetupConfig, source_dir: &Path) -> Result<()> {
         } else if has_files {
             format!("{}○{} disabled, has files", color::YELLOW, color::RESET)
         } else {
-            format!("  disabled")
+            "  disabled".to_string()
         };
 
         println!("  {}: {}", module.name, status);

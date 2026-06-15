@@ -43,7 +43,7 @@ fn run_service(service: &str, dry_run: bool, use_sudo: bool) -> Result<()> {
     run_command("systemctl", &args, use_sudo)
 }
 
-fn service_args<'a>(service: &'a str, system_service: bool) -> Vec<&'a str> {
+fn service_args(service: &str, system_service: bool) -> Vec<&str> {
     if system_service {
         vec!["enable", "--now", service]
     } else {

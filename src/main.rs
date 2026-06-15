@@ -31,6 +31,9 @@ enum Command {
         /// Don't actually make changes, just show what would happen
         #[arg(short = 'n', long)]
         dry_run: bool,
+        /// Also remove orphaned symlinks no longer in the source repo
+        #[arg(long)]
+        prune: bool,
     },
     /// Verify all symlinks are correct
     Check,
@@ -53,6 +56,9 @@ enum Command {
         /// Don't actually make changes
         #[arg(short = 'n', long)]
         dry_run: bool,
+        /// Also remove orphaned symlinks no longer in the source repo
+        #[arg(long)]
+        prune: bool,
     },
 }
 
@@ -87,10 +93,10 @@ fn main() -> Result<()> {
             let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
             services::run_services(&setup_config, dry_run)?;
         }
-        Command::Setup { dry_run } => {
+        Command::Setup { dry_run, prune } => {
             // Run all steps
             println!("=== Applying symlinks ===");
-            run_links_command_with_dry_run(&cli, dry_run)?;
+            run_links_command_with_dry_run(&cli, dry_run, prune)?;
 
             let source_dir = get_source_dir(&cli.config)?;
             let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
@@ -129,13 +135,15 @@ fn run_links_command(cli: &Cli) -> Result<()> {
 
     match &cli.command {
         Command::Status => links::run_status(&config, &source_dir),
-        Command::Apply { dry_run } => links::run_apply(&config, &source_dir, *dry_run),
+        Command::Apply { dry_run, prune } => {
+            links::run_apply(&config, &source_dir, *dry_run, *prune)
+        }
         Command::Check => links::run_check(&config, &source_dir),
         _ => Ok(()),
     }
 }
 
-fn run_links_command_with_dry_run(cli: &Cli, dry_run: bool) -> Result<()> {
+fn run_links_command_with_dry_run(cli: &Cli, dry_run: bool, prune: bool) -> Result<()> {
     let mut config = LinksConfig::load(&cli.config)?;
     let source_dir = expand_path(&config.source_dir)?;
 
@@ -148,5 +156,5 @@ fn run_links_command_with_dry_run(cli: &Cli, dry_run: bool) -> Result<()> {
         config.links.entry(src).or_insert(dest);
     }
 
-    links::run_apply(&config, &source_dir, dry_run)
+    links::run_apply(&config, &source_dir, dry_run, prune)
 }
