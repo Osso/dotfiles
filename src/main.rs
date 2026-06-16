@@ -46,6 +46,9 @@ enum Command {
         /// Don't actually make changes
         #[arg(short = 'n', long)]
         dry_run: bool,
+        /// Also remove /etc files we placed before but no longer produce
+        #[arg(long)]
+        prune: bool,
     },
     /// Enable/disable systemd services
     Services {
@@ -83,7 +86,11 @@ fn main() -> Result<()> {
         Command::Status | Command::Apply { .. } | Command::Check => {
             run_links_command(&cli)?;
         }
-        Command::System { command, dry_run } => {
+        Command::System {
+            command,
+            dry_run,
+            prune,
+        } => {
             let source_dir = get_source_dir(&cli.config)?;
             let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
 
@@ -92,7 +99,7 @@ fn main() -> Result<()> {
                     modules::run_status(&setup_config, &source_dir)?;
                 }
                 None => {
-                    modules::run_apply(&setup_config, &source_dir, dry_run)?;
+                    modules::run_apply(&setup_config, &source_dir, dry_run, prune)?;
                     timezone::run_timezone(&setup_config, dry_run)?;
                 }
             }
@@ -119,7 +126,7 @@ fn main() -> Result<()> {
             run_links_command_with_dry_run(&cli, dry_run, prune)?;
 
             println!("\n=== Applying system modules ===");
-            modules::run_apply(&setup_config, &source_dir, dry_run)?;
+            modules::run_apply(&setup_config, &source_dir, dry_run, prune)?;
             timezone::run_timezone(&setup_config, dry_run)?;
 
             println!("\n=== Enabling services ===");

@@ -1,10 +1,15 @@
 use anyhow::{Context, Result};
+use std::collections::BTreeSet;
 use std::fs;
 use std::os::unix::fs::symlink;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use crate::config::SetupConfig;
 use crate::utils::{color, expand_path, run_command};
+
+/// Record of every file the modules have placed, so pruning can remove our own
+/// stale files without ever touching package files or hand-edits.
+const MANIFEST: &str = "/var/lib/dotfiles/placed";
 
 /// Method for applying module files
 #[derive(Clone, Copy)]
@@ -41,25 +46,29 @@ impl Module {
                 .unwrap_or(false)
     }
 
-    fn apply(&self, base: &Path, dry_run: bool) -> Result<()> {
+    /// Apply the module and return the destination paths it placed (used to
+    /// build the prune manifest). In dry-run, returns what it *would* place.
+    fn apply(&self, base: &Path, dry_run: bool) -> Result<Vec<PathBuf>> {
         let src_dir = self.source_dir(base);
         if !src_dir.exists() {
-            return Ok(());
+            return Ok(Vec::new());
         }
 
         let dest_dir = self.dest_dir()?;
         self.ensure_dest_dir(&dest_dir, dry_run)?;
 
+        let mut placed = Vec::new();
         for entry in fs::read_dir(&src_dir)? {
             let entry = entry?;
             let src_path = entry.path();
             let file_name = entry.file_name();
             let dest_path = dest_dir.join(&file_name);
             self.apply_entry(&src_path, &dest_path, dry_run)?;
+            placed.push(dest_path);
         }
 
         self.run_post_hook(dry_run)?;
-        Ok(())
+        Ok(placed)
     }
 
     fn ensure_dest_dir(&self, dest_dir: &Path, dry_run: bool) -> Result<()> {
@@ -378,30 +387,89 @@ pub fn run_status(config: &SetupConfig, source_dir: &Path) -> Result<()> {
     Ok(())
 }
 
-pub fn run_apply(config: &SetupConfig, source_dir: &Path, dry_run: bool) -> Result<()> {
+pub fn run_apply(
+    config: &SetupConfig,
+    source_dir: &Path,
+    dry_run: bool,
+    prune: bool,
+) -> Result<()> {
     if dry_run {
         println!("Dry run - no changes will be made\n");
     }
 
     let mut applied = 0;
     let mut skipped = 0;
+    let mut placed: BTreeSet<PathBuf> = BTreeSet::new();
 
     for module in MODULES {
-        if !is_module_enabled(config, module.name) {
-            skipped += 1;
-            continue;
-        }
-
-        if !module.has_files(source_dir) {
+        if !is_module_enabled(config, module.name) || !module.has_files(source_dir) {
             skipped += 1;
             continue;
         }
 
         println!("\n[{}]", module.name);
-        module.apply(source_dir, dry_run)?;
+        placed.extend(module.apply(source_dir, dry_run)?);
         applied += 1;
     }
 
     println!("\n{applied} modules applied, {skipped} skipped");
+    reconcile_manifest(&placed, dry_run, prune)?;
     Ok(())
+}
+
+/// Read the set of files we placed on a previous run.
+fn load_manifest() -> BTreeSet<PathBuf> {
+    fs::read_to_string(MANIFEST)
+        .map(|s| {
+            s.lines()
+                .filter(|l| !l.trim().is_empty())
+                .map(PathBuf::from)
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
+/// Persist the manifest (root-owned, under /var/lib) via sudo.
+fn write_manifest(paths: &BTreeSet<PathBuf>) -> Result<()> {
+    let body: String = paths.iter().map(|p| format!("{}\n", p.display())).collect();
+    let tmp = std::env::temp_dir().join("dotfiles-placed");
+    fs::write(&tmp, body).context("Failed to write temp manifest")?;
+    run_command("mkdir", &["-p", "/var/lib/dotfiles"], true)?;
+    run_command("cp", &[&tmp.to_string_lossy(), MANIFEST], true)?;
+    let _ = fs::remove_file(&tmp);
+    Ok(())
+}
+
+/// Compare what we just placed against the manifest. Files we placed before but
+/// no longer produce are "stale"; with --prune they're removed (only ever files
+/// in our own manifest — never package files or hand-edits). Unpruned stale
+/// stays tracked so a later prune can still catch it.
+fn reconcile_manifest(placed: &BTreeSet<PathBuf>, dry_run: bool, prune: bool) -> Result<()> {
+    let previous = load_manifest();
+    let stale: Vec<PathBuf> = previous
+        .iter()
+        .filter(|p| !placed.contains(*p))
+        .cloned()
+        .collect();
+
+    for path in &stale {
+        if !prune {
+            println!("  Stale (run --prune to remove): {}", path.display());
+        } else if dry_run {
+            println!("  Would prune /etc orphan: {}", path.display());
+        } else if path.exists() {
+            run_command("rm", &["-f", &path.to_string_lossy()], true)?;
+            println!("  Pruned /etc orphan: {}", path.display());
+        }
+    }
+
+    if dry_run {
+        return Ok(());
+    }
+
+    let mut manifest = placed.clone();
+    if !prune {
+        manifest.extend(stale); // keep unpruned orphans tracked
+    }
+    write_manifest(&manifest)
 }
