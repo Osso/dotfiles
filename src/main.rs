@@ -1,4 +1,5 @@
 mod config;
+mod generations;
 mod links;
 mod modules;
 mod services;
@@ -62,6 +63,14 @@ enum Command {
         #[arg(short = 'n', long)]
         dry_run: bool,
     },
+    /// Take a pre-apply root snapshot ("generation"), pruning to the configured keep
+    Snapshot {
+        /// Don't actually make changes
+        #[arg(short = 'n', long)]
+        dry_run: bool,
+    },
+    /// List generation snapshots
+    Generations,
     /// Run full setup: apply + system + services
     Setup {
         /// Don't actually make changes
@@ -114,12 +123,23 @@ fn main() -> Result<()> {
             let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
             users::run_users(&setup_config, dry_run)?;
         }
+        Command::Snapshot { dry_run } => {
+            let source_dir = get_source_dir(&cli.config)?;
+            let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
+            generations::run_snapshot(setup_config.generations, dry_run)?;
+        }
+        Command::Generations => {
+            generations::run_list()?;
+        }
         Command::Setup { dry_run, prune } => {
             let source_dir = get_source_dir(&cli.config)?;
             let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
 
-            // Run all steps
-            println!("=== Ensuring users ===");
+            // Run all steps. Snapshot first so a bad apply can be rolled back.
+            println!("=== Taking generation snapshot ===");
+            generations::run_snapshot(setup_config.generations, dry_run)?;
+
+            println!("\n=== Ensuring users ===");
             users::run_users(&setup_config, dry_run)?;
 
             println!("\n=== Applying symlinks ===");

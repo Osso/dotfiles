@@ -40,6 +40,9 @@ pub struct SetupConfig {
     pub users: Vec<UserSpec>,
     #[serde(default)]
     pub timezone: Option<String>,
+    /// Number of pre-apply root snapshots ("generations") to keep. 0 = disabled.
+    #[serde(default)]
+    pub generations: u32,
 }
 
 /// A declaratively-managed user account.
