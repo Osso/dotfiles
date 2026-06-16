@@ -124,12 +124,7 @@ fn reconcile_user(user: &UserSpec, info: &UserInfo, dry_run: bool) -> Result<()>
         }
     }
 
-    let missing: Vec<&str> = user
-        .groups
-        .iter()
-        .filter(|g| !info.groups.contains(g))
-        .map(String::as_str)
-        .collect();
+    let missing = missing_groups(&user.groups, &info.groups);
     if !missing.is_empty() {
         changed = true;
         let add = missing.join(",");
@@ -141,12 +136,7 @@ fn reconcile_user(user: &UserSpec, info: &UserInfo, dry_run: bool) -> Result<()>
         }
     }
 
-    let extra: Vec<&str> = info
-        .groups
-        .iter()
-        .filter(|g| **g != user.name && !user.groups.contains(g))
-        .map(String::as_str)
-        .collect();
+    let extra = undeclared_groups(&user.groups, &info.groups, &user.name);
     if !extra.is_empty() {
         println!(
             "  Note: {} also in undeclared groups (not removed): {}",
@@ -159,4 +149,61 @@ fn reconcile_user(user: &UserSpec, info: &UserInfo, dry_run: bool) -> Result<()>
         println!("  {} (ok)", user.name);
     }
     Ok(())
+}
+
+/// Declared groups the user isn't a member of yet (to add).
+fn missing_groups<'a>(declared: &'a [String], current: &[String]) -> Vec<&'a str> {
+    declared
+        .iter()
+        .filter(|g| !current.contains(g))
+        .map(String::as_str)
+        .collect()
+}
+
+/// Current supplementary groups that aren't declared — reported, never removed.
+/// The primary group (same name as the user) is ignored.
+fn undeclared_groups<'a>(
+    declared: &[String],
+    current: &'a [String],
+    primary: &str,
+) -> Vec<&'a str> {
+    current
+        .iter()
+        .filter(|g| g.as_str() != primary && !declared.contains(g))
+        .map(String::as_str)
+        .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn s(items: &[&str]) -> Vec<String> {
+        items.iter().map(|x| x.to_string()).collect()
+    }
+
+    #[test]
+    fn missing_groups_are_declared_minus_current() {
+        let declared = s(&["wheel", "docker", "video"]);
+        let current = s(&["osso", "wheel"]);
+        assert_eq!(missing_groups(&declared, &current), vec!["docker", "video"]);
+    }
+
+    #[test]
+    fn missing_groups_empty_when_all_present() {
+        let declared = s(&["wheel"]);
+        let current = s(&["osso", "wheel", "docker"]);
+        assert!(missing_groups(&declared, &current).is_empty());
+    }
+
+    #[test]
+    fn undeclared_groups_excludes_primary_and_declared() {
+        let declared = s(&["wheel"]);
+        let current = s(&["osso", "wheel", "docker", "input"]);
+        // primary "osso" and declared "wheel" excluded; docker+input reported
+        assert_eq!(
+            undeclared_groups(&declared, &current, "osso"),
+            vec!["docker", "input"]
+        );
+    }
 }

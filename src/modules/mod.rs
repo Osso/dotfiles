@@ -420,13 +420,27 @@ pub fn run_apply(
 /// Read the set of files we placed on a previous run.
 fn load_manifest() -> BTreeSet<PathBuf> {
     fs::read_to_string(MANIFEST)
-        .map(|s| {
-            s.lines()
-                .filter(|l| !l.trim().is_empty())
-                .map(PathBuf::from)
-                .collect()
-        })
+        .map(|s| parse_manifest(&s))
         .unwrap_or_default()
+}
+
+/// Parse a manifest body (one path per line, blanks ignored).
+fn parse_manifest(text: &str) -> BTreeSet<PathBuf> {
+    text.lines()
+        .filter(|l| !l.trim().is_empty())
+        .map(PathBuf::from)
+        .collect()
+}
+
+/// Files we placed before (`previous`) that we no longer produce (`placed`).
+/// These are the only candidates for pruning — never anything outside the
+/// manifest, so package files and hand-edits are safe.
+fn stale_entries(previous: &BTreeSet<PathBuf>, placed: &BTreeSet<PathBuf>) -> Vec<PathBuf> {
+    previous
+        .iter()
+        .filter(|p| !placed.contains(*p))
+        .cloned()
+        .collect()
 }
 
 /// Persist the manifest (root-owned, under /var/lib) via sudo.
@@ -446,11 +460,7 @@ fn write_manifest(paths: &BTreeSet<PathBuf>) -> Result<()> {
 /// stays tracked so a later prune can still catch it.
 fn reconcile_manifest(placed: &BTreeSet<PathBuf>, dry_run: bool, prune: bool) -> Result<()> {
     let previous = load_manifest();
-    let stale: Vec<PathBuf> = previous
-        .iter()
-        .filter(|p| !placed.contains(*p))
-        .cloned()
-        .collect();
+    let stale = stale_entries(&previous, placed);
 
     for path in &stale {
         if !prune {
@@ -472,4 +482,45 @@ fn reconcile_manifest(placed: &BTreeSet<PathBuf>, dry_run: bool, prune: bool) ->
         manifest.extend(stale); // keep unpruned orphans tracked
     }
     write_manifest(&manifest)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn set(paths: &[&str]) -> BTreeSet<PathBuf> {
+        paths.iter().map(PathBuf::from).collect()
+    }
+
+    #[test]
+    fn parse_manifest_ignores_blank_lines() {
+        let m = parse_manifest("/etc/a\n\n  \n/etc/b\n");
+        assert_eq!(m, set(&["/etc/a", "/etc/b"]));
+    }
+
+    #[test]
+    fn stale_is_previous_minus_placed() {
+        let previous = set(&["/etc/a", "/etc/b", "/etc/c"]);
+        let placed = set(&["/etc/a", "/etc/c"]);
+        assert_eq!(
+            stale_entries(&previous, &placed),
+            vec![PathBuf::from("/etc/b")]
+        );
+    }
+
+    #[test]
+    fn nothing_stale_when_placed_superset() {
+        let previous = set(&["/etc/a"]);
+        let placed = set(&["/etc/a", "/etc/b"]);
+        assert!(stale_entries(&previous, &placed).is_empty());
+    }
+
+    #[test]
+    fn never_stale_outside_manifest() {
+        // a file we never placed (not in `previous`) is never a prune candidate
+        let previous = set(&["/etc/ours"]);
+        let placed = set(&["/etc/ours"]);
+        let stale = stale_entries(&previous, &placed);
+        assert!(!stale.iter().any(|p| p == &PathBuf::from("/etc/passwd")));
+    }
 }

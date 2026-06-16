@@ -87,16 +87,25 @@ fn list_generations() -> Result<Vec<String>> {
         .args(["btrfs", "subvolume", "list", "/"])
         .output()
         .context("Failed to list subvolumes")?;
-    let text = String::from_utf8_lossy(&out.stdout);
-    let mut gens: Vec<String> = text
+    Ok(parse_generation_names(&String::from_utf8_lossy(
+        &out.stdout,
+    )))
+}
+
+/// Extract our generation names (gen-*) from `btrfs subvolume list` output,
+/// sorted oldest first. Excludes manual `@arch-*`/`@home-*` snapshots — the
+/// prefix filter is the safety boundary that keeps auto-prune from touching them.
+fn parse_generation_names(list_output: &str) -> Vec<String> {
+    let prefix = format!("{SNAP_SUBVOL}/");
+    let mut gens: Vec<String> = list_output
         .lines()
         .filter_map(|line| line.split_whitespace().last())
-        .filter_map(|path| path.strip_prefix(&format!("{SNAP_SUBVOL}/")))
+        .filter_map(|path| path.strip_prefix(prefix.as_str()))
         .filter(|name| name.starts_with(PREFIX))
         .map(String::from)
         .collect();
     gens.sort();
-    Ok(gens)
+    gens
 }
 
 /// Generations beyond the newest `keep` (the ones to delete).
@@ -131,4 +140,47 @@ fn with_snapshots_mounted<F: FnOnce() -> Result<()>>(f: F) -> Result<()> {
     let result = f();
     let _ = run_command("umount", &[MOUNT], true);
     result
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const SAMPLE: &str = "\
+ID 256 gen 1 top level 5 path @arch
+ID 258 gen 1 top level 5 path @snapshots
+ID 263 gen 1 top level 258 path @snapshots/@arch-2025-12-24-clean
+ID 264 gen 1 top level 258 path @snapshots/@home-2025-12-24-clean
+ID 290 gen 1 top level 258 path @snapshots/gen-20260616-062601
+ID 288 gen 1 top level 258 path @snapshots/gen-20260616-062548
+ID 289 gen 1 top level 258 path @snapshots/gen-20260616-062554";
+
+    #[test]
+    fn parse_keeps_only_gen_prefixed_sorted() {
+        let gens = parse_generation_names(SAMPLE);
+        assert_eq!(
+            gens,
+            vec![
+                "gen-20260616-062548",
+                "gen-20260616-062554",
+                "gen-20260616-062601",
+            ]
+        );
+    }
+
+    #[test]
+    fn parse_excludes_manual_snapshots() {
+        // the @arch-*/@home-* manual snapshots must never appear (prune safety)
+        let gens = parse_generation_names(SAMPLE);
+        assert!(gens.iter().all(|g| g.starts_with("gen-")));
+    }
+
+    #[test]
+    fn prunable_respects_keep() {
+        let g: Vec<String> = (0..6).map(|i| format!("gen-{i}")).collect();
+        assert_eq!(prunable(&g, 5), &g[..1]); // oldest one over the cap
+        assert_eq!(prunable(&g, 6).len(), 0);
+        assert_eq!(prunable(&g, 10).len(), 0); // keep > count
+        assert_eq!(prunable(&g, 0), &g[..]); // keep 0 → all prunable
+    }
 }

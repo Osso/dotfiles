@@ -329,3 +329,118 @@ pub fn run_check(config: &LinksConfig, source_dir: &Path) -> Result<()> {
         bail!("Some symlinks are incorrect")
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::atomic::{AtomicU32, Ordering};
+
+    fn temp_dir(tag: &str) -> PathBuf {
+        static N: AtomicU32 = AtomicU32::new(0);
+        let n = N.fetch_add(1, Ordering::Relaxed);
+        let p =
+            std::env::temp_dir().join(format!("dotfiles-test-{tag}-{}-{n}", std::process::id()));
+        fs::create_dir_all(&p).unwrap();
+        p
+    }
+
+    #[test]
+    fn expand_patterns_lists_subdirs_and_honors_exclude() {
+        let src = temp_dir("expand");
+        for d in ["kitty", "git", "firefox"] {
+            fs::create_dir_all(src.join("config").join(d)).unwrap();
+        }
+        // a file (not a dir) under config/ must be ignored
+        fs::write(src.join("config/loose.txt"), "x").unwrap();
+
+        let mut patterns = BTreeMap::new();
+        patterns.insert("config/*".to_string(), "~/.config/*".to_string());
+        let exclude = vec!["config/firefox".to_string()];
+
+        let out = expand_patterns(&patterns, &exclude, &src).unwrap();
+
+        assert_eq!(out.get("config/kitty").unwrap(), "~/.config/kitty");
+        assert_eq!(out.get("config/git").unwrap(), "~/.config/git");
+        assert!(!out.contains_key("config/firefox")); // excluded
+        assert!(!out.contains_key("config/loose.txt")); // not a dir
+        fs::remove_dir_all(&src).ok();
+    }
+
+    #[test]
+    fn prune_removes_only_orphans_into_source() {
+        let root = temp_dir("prune");
+        let src = root.join("src");
+        let home = root.join("home");
+        fs::create_dir_all(src.join("keep")).unwrap();
+        fs::create_dir_all(src.join("orphan")).unwrap();
+        fs::create_dir_all(&home).unwrap();
+        fs::create_dir_all(root.join("elsewhere")).unwrap();
+
+        // declared + correctly linked
+        symlink(src.join("keep"), home.join("keep")).unwrap();
+        // orphan: points INTO source but not declared -> must be pruned
+        symlink(src.join("orphan"), home.join("orphan")).unwrap();
+        // foreign: symlink NOT into source -> must be left alone
+        symlink(root.join("elsewhere"), home.join("foreign")).unwrap();
+
+        let mut links = BTreeMap::new();
+        links.insert(
+            "keep".to_string(),
+            home.join("keep").to_string_lossy().to_string(),
+        );
+        let config = LinksConfig {
+            source_dir: src.to_string_lossy().to_string(),
+            links,
+            patterns: BTreeMap::new(),
+            exclude: vec![],
+        };
+
+        let pruned = prune_orphans(&config, &src, false).unwrap();
+        assert_eq!(pruned, 1);
+        assert!(
+            home.join("keep").symlink_metadata().is_ok(),
+            "declared link kept"
+        );
+        assert!(
+            home.join("orphan").symlink_metadata().is_err(),
+            "orphan pruned"
+        );
+        assert!(
+            home.join("foreign").symlink_metadata().is_ok(),
+            "foreign link untouched"
+        );
+        fs::remove_dir_all(&root).ok();
+    }
+
+    #[test]
+    fn prune_dry_run_removes_nothing() {
+        let root = temp_dir("prune-dry");
+        let src = root.join("src");
+        let home = root.join("home");
+        fs::create_dir_all(src.join("orphan")).unwrap();
+        fs::create_dir_all(&home).unwrap();
+        fs::create_dir_all(src.join("keep")).unwrap();
+        symlink(src.join("keep"), home.join("keep")).unwrap();
+        symlink(src.join("orphan"), home.join("orphan")).unwrap();
+
+        let mut links = BTreeMap::new();
+        links.insert(
+            "keep".to_string(),
+            home.join("keep").to_string_lossy().to_string(),
+        );
+        let config = LinksConfig {
+            source_dir: src.to_string_lossy().to_string(),
+            links,
+            patterns: BTreeMap::new(),
+            exclude: vec![],
+        };
+
+        let pruned = prune_orphans(&config, &src, true).unwrap();
+        assert_eq!(pruned, 1); // counted
+        assert!(
+            home.join("orphan").symlink_metadata().is_ok(),
+            "dry run kept orphan"
+        );
+        fs::remove_dir_all(&root).ok();
+    }
+}

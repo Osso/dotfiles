@@ -42,3 +42,28 @@ pub mod color {
     pub const RED: &str = "\x1b[31m";
     pub const RESET: &str = "\x1b[0m";
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn expand_path_leaves_absolute_unchanged() {
+        assert_eq!(expand_path("/etc/foo").unwrap(), PathBuf::from("/etc/foo"));
+    }
+
+    #[test]
+    fn expand_path_expands_tilde() {
+        let home = dirs::home_dir().unwrap();
+        assert_eq!(expand_path("~/x/y").unwrap(), home.join("x/y"));
+    }
+
+    #[test]
+    fn expand_path_does_not_touch_bare_tilde_or_midstring() {
+        // only a leading "~/" is expanded
+        assert_eq!(
+            expand_path("relative/p").unwrap(),
+            PathBuf::from("relative/p")
+        );
+    }
+}
