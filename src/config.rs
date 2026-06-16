@@ -92,6 +92,8 @@ pub struct ModulesConfig {
     pub config_guard: bool,
     #[serde(default)]
     pub enpass: bool,
+    #[serde(default)]
+    pub locale: bool,
 }
 
 impl SetupConfig {

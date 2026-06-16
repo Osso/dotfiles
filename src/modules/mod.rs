@@ -315,6 +315,14 @@ const MODULES: &[Module] = &[
         post_hook: None,
         needs_sudo: true,
     },
+    Module {
+        name: "locale",
+        source_subdir: "locale",
+        dest_dir: "/etc",
+        method: Method::Copy,
+        post_hook: Some(("locale-gen", &[])),
+        needs_sudo: true,
+    },
 ];
 
 fn is_module_enabled(config: &SetupConfig, name: &str) -> bool {
@@ -335,6 +343,7 @@ fn is_module_enabled(config: &SetupConfig, name: &str) -> bool {
         "authd" => config.modules.authd,
         "config-guard" => config.modules.config_guard,
         "enpass" => config.modules.enpass,
+        "locale" => config.modules.locale,
         _ => false,
     }
 }

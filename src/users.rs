@@ -21,12 +21,39 @@ pub fn run_users(config: &SetupConfig, dry_run: bool) -> Result<()> {
 
     println!("Users:");
     for user in &config.users {
+        ensure_groups(&user.groups, dry_run)?;
         match user_info(&user.name)? {
             None => create_user(user, dry_run)?,
             Some(info) => reconcile_user(user, &info, dry_run)?,
         }
     }
     Ok(())
+}
+
+/// Create any referenced groups that don't exist yet, so the user's group
+/// memberships can be applied on a fresh machine.
+fn ensure_groups(groups: &[String], dry_run: bool) -> Result<()> {
+    for group in groups {
+        if group_exists(group)? {
+            continue;
+        }
+        if dry_run {
+            println!("  Would create group: {}", group);
+        } else {
+            println!("  Creating group: {}", group);
+            run_command("groupadd", &[group], true)?;
+        }
+    }
+    Ok(())
+}
+
+fn group_exists(name: &str) -> Result<bool> {
+    Ok(Command::new("getent")
+        .args(["group", name])
+        .output()
+        .context("Failed to run getent")?
+        .status
+        .success())
 }
 
 /// Read a user's shell and group membership, or `None` if it doesn't exist.
