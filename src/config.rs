@@ -36,6 +36,18 @@ pub struct SetupConfig {
     pub directories: Vec<String>,
     #[serde(default)]
     pub modules: ModulesConfig,
+    #[serde(default)]
+    pub users: Vec<UserSpec>,
+}
+
+/// A declaratively-managed user account.
+#[derive(Deserialize, Default)]
+pub struct UserSpec {
+    pub name: String,
+    #[serde(default)]
+    pub shell: Option<String>,
+    #[serde(default)]
+    pub groups: Vec<String>,
 }
 
 #[derive(Deserialize, Default)]

@@ -98,14 +98,15 @@ pub fn get_link_status(source: &Path, dest: &Path) -> LinkStatus {
 
 pub fn create_symlink(source: &Path, dest: &Path, dry_run: bool) -> Result<()> {
     if let Some(parent) = dest.parent()
-        && !parent.exists() {
-            if dry_run {
-                println!("  Would create directory: {}", parent.display());
-            } else {
-                fs::create_dir_all(parent)
-                    .with_context(|| format!("Failed to create directory: {}", parent.display()))?;
-            }
+        && !parent.exists()
+    {
+        if dry_run {
+            println!("  Would create directory: {}", parent.display());
+        } else {
+            fs::create_dir_all(parent)
+                .with_context(|| format!("Failed to create directory: {}", parent.display()))?;
         }
+    }
 
     if dest.symlink_metadata().is_ok() {
         if dry_run {

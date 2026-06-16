@@ -2,6 +2,7 @@ mod config;
 mod links;
 mod modules;
 mod services;
+mod users;
 mod utils;
 
 use anyhow::{Result, bail};
@@ -51,6 +52,12 @@ enum Command {
         #[arg(short = 'n', long)]
         dry_run: bool,
     },
+    /// Ensure declared users exist with the right shell and groups
+    Users {
+        /// Don't actually make changes
+        #[arg(short = 'n', long)]
+        dry_run: bool,
+    },
     /// Run full setup: apply + system + services
     Setup {
         /// Don't actually make changes
@@ -93,13 +100,21 @@ fn main() -> Result<()> {
             let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
             services::run_services(&setup_config, dry_run)?;
         }
-        Command::Setup { dry_run, prune } => {
-            // Run all steps
-            println!("=== Applying symlinks ===");
-            run_links_command_with_dry_run(&cli, dry_run, prune)?;
-
+        Command::Users { dry_run } => {
             let source_dir = get_source_dir(&cli.config)?;
             let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
+            users::run_users(&setup_config, dry_run)?;
+        }
+        Command::Setup { dry_run, prune } => {
+            let source_dir = get_source_dir(&cli.config)?;
+            let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
+
+            // Run all steps
+            println!("=== Ensuring users ===");
+            users::run_users(&setup_config, dry_run)?;
+
+            println!("\n=== Applying symlinks ===");
+            run_links_command_with_dry_run(&cli, dry_run, prune)?;
 
             println!("\n=== Applying system modules ===");
             modules::run_apply(&setup_config, &source_dir, dry_run)?;
