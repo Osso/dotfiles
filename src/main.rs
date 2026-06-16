@@ -2,6 +2,7 @@ mod config;
 mod links;
 mod modules;
 mod services;
+mod timezone;
 mod users;
 mod utils;
 
@@ -92,6 +93,7 @@ fn main() -> Result<()> {
                 }
                 None => {
                     modules::run_apply(&setup_config, &source_dir, dry_run)?;
+                    timezone::run_timezone(&setup_config, dry_run)?;
                 }
             }
         }
@@ -118,6 +120,7 @@ fn main() -> Result<()> {
 
             println!("\n=== Applying system modules ===");
             modules::run_apply(&setup_config, &source_dir, dry_run)?;
+            timezone::run_timezone(&setup_config, dry_run)?;
 
             println!("\n=== Enabling services ===");
             services::run_services(&setup_config, dry_run)?;

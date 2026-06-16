@@ -38,6 +38,8 @@ pub struct SetupConfig {
     pub modules: ModulesConfig,
     #[serde(default)]
     pub users: Vec<UserSpec>,
+    #[serde(default)]
+    pub timezone: Option<String>,
 }
 
 /// A declaratively-managed user account.
