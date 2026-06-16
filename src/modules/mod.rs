@@ -323,6 +323,14 @@ const MODULES: &[Module] = &[
         post_hook: Some(("locale-gen", &[])),
         needs_sudo: true,
     },
+    Module {
+        name: "mkinitcpio",
+        source_subdir: "mkinitcpio",
+        dest_dir: "/etc",
+        method: Method::Copy,
+        post_hook: Some(("mkinitcpio", &["-P"])),
+        needs_sudo: true,
+    },
 ];
 
 fn is_module_enabled(config: &SetupConfig, name: &str) -> bool {
@@ -344,6 +352,7 @@ fn is_module_enabled(config: &SetupConfig, name: &str) -> bool {
         "config-guard" => config.modules.config_guard,
         "enpass" => config.modules.enpass,
         "locale" => config.modules.locale,
+        "mkinitcpio" => config.modules.mkinitcpio,
         _ => false,
     }
 }

@@ -96,6 +96,8 @@ pub struct ModulesConfig {
     pub enpass: bool,
     #[serde(default)]
     pub locale: bool,
+    #[serde(default)]
+    pub mkinitcpio: bool,
 }
 
 impl SetupConfig {
