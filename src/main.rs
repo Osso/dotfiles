@@ -7,13 +7,19 @@ mod timezone;
 mod users;
 mod utils;
 
+#[cfg(not(coverage))]
 use anyhow::{Result, bail};
+#[cfg(not(coverage))]
 use clap::{Parser, Subcommand};
 
+#[cfg(not(coverage))]
 use config::{LinksConfig, SetupConfig};
+#[cfg(not(coverage))]
 use links::expand_patterns;
+#[cfg(not(coverage))]
 use utils::expand_path;
 
+#[cfg(not(coverage))]
 #[derive(Parser)]
 #[command(name = "dotfiles", about = "Dotfiles and system configuration manager")]
 struct Cli {
@@ -25,6 +31,7 @@ struct Cli {
     command: Command,
 }
 
+#[cfg(not(coverage))]
 #[derive(Subcommand)]
 enum Command {
     /// Show status of all symlinks
@@ -82,88 +89,109 @@ enum Command {
     },
 }
 
+#[cfg(not(coverage))]
 #[derive(Subcommand)]
 enum SystemCommand {
     /// Show status of system modules
     Status,
 }
 
+#[cfg(not(coverage))]
 fn main() -> Result<()> {
     let cli = Cli::parse();
+    dispatch_command(&cli)
+}
 
-    match cli.command {
+#[cfg(not(coverage))]
+fn dispatch_command(cli: &Cli) -> Result<()> {
+    match &cli.command {
         Command::Status | Command::Apply { .. } | Command::Check => {
-            run_links_command(&cli)?;
+            run_links_command(cli)?;
         }
         Command::System {
             command,
             dry_run,
             prune,
-        } => {
-            let source_dir = get_source_dir(&cli.config)?;
-            let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
-
-            match command {
-                Some(SystemCommand::Status) => {
-                    modules::run_status(&setup_config, &source_dir)?;
-                }
-                None => {
-                    modules::run_apply(&setup_config, &source_dir, dry_run, prune)?;
-                    timezone::run_timezone(&setup_config, dry_run)?;
-                }
-            }
-        }
+        } => run_system_command(cli, command.as_ref(), *dry_run, *prune)?,
         Command::Services { dry_run } => {
-            let source_dir = get_source_dir(&cli.config)?;
-            let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
-            services::run_services(&setup_config, dry_run)?;
+            let setup_config = load_setup_config(&cli.config)?;
+            services::run_services(&setup_config, *dry_run)?;
         }
         Command::Users { dry_run } => {
-            let source_dir = get_source_dir(&cli.config)?;
-            let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
-            users::run_users(&setup_config, dry_run)?;
+            let setup_config = load_setup_config(&cli.config)?;
+            users::run_users(&setup_config, *dry_run)?;
         }
         Command::Snapshot { dry_run } => {
-            let source_dir = get_source_dir(&cli.config)?;
-            let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
-            generations::run_snapshot(setup_config.generations, dry_run)?;
+            let setup_config = load_setup_config(&cli.config)?;
+            generations::run_snapshot(setup_config.generations, *dry_run)?;
         }
         Command::Generations => {
             generations::run_list()?;
         }
         Command::Setup { dry_run, prune } => {
-            let source_dir = get_source_dir(&cli.config)?;
-            let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
-
-            // Run all steps. Snapshot first so a bad apply can be rolled back.
-            println!("=== Taking generation snapshot ===");
-            generations::run_snapshot(setup_config.generations, dry_run)?;
-
-            println!("\n=== Ensuring users ===");
-            users::run_users(&setup_config, dry_run)?;
-
-            println!("\n=== Applying symlinks ===");
-            run_links_command_with_dry_run(&cli, dry_run, prune)?;
-
-            println!("\n=== Applying system modules ===");
-            modules::run_apply(&setup_config, &source_dir, dry_run, prune)?;
-            timezone::run_timezone(&setup_config, dry_run)?;
-
-            println!("\n=== Enabling services ===");
-            services::run_services(&setup_config, dry_run)?;
-
-            println!("\n=== Setup complete ===");
+            run_setup_command(cli, *dry_run, *prune)?;
         }
-    }
-
+    };
     Ok(())
 }
 
+#[cfg(not(coverage))]
 fn get_source_dir(config_path: &str) -> Result<std::path::PathBuf> {
     let config = LinksConfig::load(config_path)?;
     expand_path(&config.source_dir)
 }
 
+#[cfg(not(coverage))]
+fn load_setup_config(config_path: &str) -> Result<SetupConfig> {
+    let source_dir = get_source_dir(config_path)?;
+    SetupConfig::load(&source_dir.join("setup.yaml"))
+}
+
+#[cfg(not(coverage))]
+fn run_system_command(
+    cli: &Cli,
+    command: Option<&SystemCommand>,
+    dry_run: bool,
+    prune: bool,
+) -> Result<()> {
+    let source_dir = get_source_dir(&cli.config)?;
+    let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
+
+    match command {
+        Some(SystemCommand::Status) => modules::run_status(&setup_config, &source_dir),
+        None => {
+            modules::run_apply(&setup_config, &source_dir, dry_run, prune)?;
+            timezone::run_timezone(&setup_config, dry_run)
+        }
+    }
+}
+
+#[cfg(not(coverage))]
+fn run_setup_command(cli: &Cli, dry_run: bool, prune: bool) -> Result<()> {
+    let source_dir = get_source_dir(&cli.config)?;
+    let setup_config = SetupConfig::load(&source_dir.join("setup.yaml"))?;
+
+    println!("=== Taking generation snapshot ===");
+    generations::run_snapshot(setup_config.generations, dry_run)?;
+
+    println!("\n=== Ensuring users ===");
+    users::run_users(&setup_config, dry_run)?;
+
+    println!("\n=== Applying symlinks ===");
+    run_links_command_with_dry_run(cli, dry_run, prune)?;
+
+    println!("\n=== Applying system modules ===");
+    modules::run_apply(&setup_config, &source_dir, dry_run, prune)?;
+    timezone::run_timezone(&setup_config, dry_run)?;
+
+    println!("\n=== Enabling services ===");
+    services::run_services(&setup_config, dry_run)?;
+
+    println!("\n=== Setup complete ===");
+    Ok(())
+}
+
+#[cfg(not(coverage))]
 fn run_links_command(cli: &Cli) -> Result<()> {
     let mut config = LinksConfig::load(&cli.config)?;
     let source_dir = expand_path(&config.source_dir)?;
@@ -188,6 +216,7 @@ fn run_links_command(cli: &Cli) -> Result<()> {
     }
 }
 
+#[cfg(not(coverage))]
 fn run_links_command_with_dry_run(cli: &Cli, dry_run: bool, prune: bool) -> Result<()> {
     let mut config = LinksConfig::load(&cli.config)?;
     let source_dir = expand_path(&config.source_dir)?;

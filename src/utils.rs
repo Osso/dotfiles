@@ -66,4 +66,17 @@ mod tests {
             PathBuf::from("relative/p")
         );
     }
+
+    #[test]
+    fn run_command_reports_success_and_failure() {
+        run_command("true", &[], false).unwrap();
+
+        let error = run_command("false", &[], false).unwrap_err();
+        assert!(error.to_string().contains("Command failed: false"));
+
+        let spawn_error = run_command("dotfiles-command-that-does-not-exist", &[], false)
+            .unwrap_err()
+            .to_string();
+        assert!(spawn_error.contains("Failed to run"));
+    }
 }

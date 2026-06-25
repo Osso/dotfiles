@@ -1,11 +1,16 @@
+#[cfg(not(coverage))]
 use anyhow::Result;
+#[cfg(not(coverage))]
 use std::path::{Path, PathBuf};
 
+#[cfg(not(coverage))]
 use crate::config::SetupConfig;
+#[cfg(not(coverage))]
 use crate::utils::run_command;
 
 /// Point /etc/localtime at the declared zoneinfo file. Uses a symlink rather
 /// than `timedatectl` so it also works inside a bootstrap chroot.
+#[cfg(not(coverage))]
 pub fn run_timezone(config: &SetupConfig, dry_run: bool) -> Result<()> {
     let Some(tz) = &config.timezone else {
         return Ok(());

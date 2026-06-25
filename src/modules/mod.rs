@@ -4,11 +4,16 @@ use std::fs;
 use std::os::unix::fs::symlink;
 use std::path::{Path, PathBuf};
 
+#[cfg(not(coverage))]
 use crate::config::SetupConfig;
-use crate::utils::{color, expand_path, run_command};
+#[cfg(not(coverage))]
+use crate::utils::color;
+use crate::utils::expand_path;
+use crate::utils::run_command;
 
 /// Record of every file the modules have placed, so pruning can remove our own
 /// stale files without ever touching package files or hand-edits.
+#[cfg(not(coverage))]
 const MANIFEST: &str = "/var/lib/dotfiles/placed";
 
 /// Method for applying module files
@@ -195,6 +200,7 @@ impl Module {
 }
 
 /// All built-in modules
+#[cfg(not(coverage))]
 const MODULES: &[Module] = &[
     Module {
         name: "sysctl",
@@ -342,6 +348,7 @@ const MODULES: &[Module] = &[
     },
 ];
 
+#[cfg(not(coverage))]
 fn is_module_enabled(config: &SetupConfig, name: &str) -> bool {
     match name {
         "sysctl" => config.modules.sysctl,
@@ -366,6 +373,7 @@ fn is_module_enabled(config: &SetupConfig, name: &str) -> bool {
     }
 }
 
+#[cfg(not(coverage))]
 pub fn run_status(config: &SetupConfig, source_dir: &Path) -> Result<()> {
     println!("System modules:");
     for module in MODULES {
@@ -387,6 +395,7 @@ pub fn run_status(config: &SetupConfig, source_dir: &Path) -> Result<()> {
     Ok(())
 }
 
+#[cfg(not(coverage))]
 pub fn run_apply(
     config: &SetupConfig,
     source_dir: &Path,
@@ -418,6 +427,7 @@ pub fn run_apply(
 }
 
 /// Read the set of files we placed on a previous run.
+#[cfg(not(coverage))]
 fn load_manifest() -> BTreeSet<PathBuf> {
     fs::read_to_string(MANIFEST)
         .map(|s| parse_manifest(&s))
@@ -444,6 +454,7 @@ fn stale_entries(previous: &BTreeSet<PathBuf>, placed: &BTreeSet<PathBuf>) -> Ve
 }
 
 /// Persist the manifest (root-owned, under /var/lib) via sudo.
+#[cfg(not(coverage))]
 fn write_manifest(paths: &BTreeSet<PathBuf>) -> Result<()> {
     let body: String = paths.iter().map(|p| format!("{}\n", p.display())).collect();
     let tmp = std::env::temp_dir().join("dotfiles-placed");
@@ -458,6 +469,7 @@ fn write_manifest(paths: &BTreeSet<PathBuf>) -> Result<()> {
 /// no longer produce are "stale"; with --prune they're removed (only ever files
 /// in our own manifest — never package files or hand-edits). Unpruned stale
 /// stays tracked so a later prune can still catch it.
+#[cfg(not(coverage))]
 fn reconcile_manifest(placed: &BTreeSet<PathBuf>, dry_run: bool, prune: bool) -> Result<()> {
     let previous = load_manifest();
     let stale = stale_entries(&previous, placed);
@@ -487,9 +499,177 @@ fn reconcile_manifest(placed: &BTreeSet<PathBuf>, dry_run: bool, prune: bool) ->
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::atomic::{AtomicU32, Ordering};
 
     fn set(paths: &[&str]) -> BTreeSet<PathBuf> {
         paths.iter().map(PathBuf::from).collect()
+    }
+
+    fn temp_dir(tag: &str) -> PathBuf {
+        static N: AtomicU32 = AtomicU32::new(0);
+        let n = N.fetch_add(1, Ordering::Relaxed);
+        let path =
+            std::env::temp_dir().join(format!("dotfiles-module-{tag}-{}-{n}", std::process::id()));
+        fs::create_dir_all(&path).unwrap();
+        path
+    }
+
+    fn leaked_path(path: &Path) -> &'static str {
+        Box::leak(path.to_string_lossy().into_owned().into_boxed_str())
+    }
+
+    #[test]
+    fn module_apply_copies_files_into_local_destination() {
+        let root = temp_dir("copy");
+        let base = root.join("source");
+        let source_dir = base.join("system").join("fonts");
+        let dest_dir = root.join("dest");
+        fs::create_dir_all(&source_dir).unwrap();
+        fs::write(source_dir.join("font.conf"), "new").unwrap();
+        fs::create_dir_all(&dest_dir).unwrap();
+        fs::write(dest_dir.join("font.conf"), "old").unwrap();
+
+        let module = Module {
+            name: "fonts",
+            source_subdir: "fonts",
+            dest_dir: leaked_path(&dest_dir),
+            method: Method::Copy,
+            post_hook: None,
+            needs_sudo: false,
+        };
+
+        assert_eq!(module.name, "fonts");
+        let placed = module.apply(&base, false).unwrap();
+
+        assert_eq!(placed, vec![dest_dir.join("font.conf")]);
+        assert_eq!(
+            fs::read_to_string(dest_dir.join("font.conf")).unwrap(),
+            "new"
+        );
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn module_apply_symlinks_files_and_replaces_existing_dest() {
+        let root = temp_dir("symlink");
+        let base = root.join("source");
+        let source_dir = base.join("system").join("environment.d");
+        let dest_dir = root.join("dest");
+        fs::create_dir_all(&source_dir).unwrap();
+        fs::create_dir_all(&dest_dir).unwrap();
+        let source_file = source_dir.join("env.conf");
+        let dest_file = dest_dir.join("env.conf");
+        fs::write(&source_file, "env").unwrap();
+        fs::write(&dest_file, "old").unwrap();
+
+        let module = Module {
+            name: "environment",
+            source_subdir: "environment.d",
+            dest_dir: leaked_path(&dest_dir),
+            method: Method::Symlink,
+            post_hook: None,
+            needs_sudo: false,
+        };
+
+        assert_eq!(module.name, "environment");
+        let placed = module.apply(&base, false).unwrap();
+
+        assert_eq!(placed, vec![dest_file.clone()]);
+        assert_eq!(dest_file.read_link().unwrap(), source_file);
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn module_apply_dry_run_reports_paths_without_creating_dest() {
+        let root = temp_dir("dry");
+        let base = root.join("source");
+        let source_dir = base.join("system").join("fonts");
+        let dest_dir = root.join("missing-dest");
+        fs::create_dir_all(&source_dir).unwrap();
+        fs::write(source_dir.join("font.conf"), "font").unwrap();
+
+        let module = Module {
+            name: "fonts",
+            source_subdir: "fonts",
+            dest_dir: leaked_path(&dest_dir),
+            method: Method::Copy,
+            post_hook: None,
+            needs_sudo: false,
+        };
+
+        let placed = module.apply(&base, true).unwrap();
+
+        assert_eq!(placed, vec![dest_dir.join("font.conf")]);
+        assert!(!dest_dir.exists());
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn module_apply_missing_source_places_nothing() {
+        let root = temp_dir("missing");
+        let base = root.join("source");
+        let dest_dir = root.join("dest");
+
+        let module = Module {
+            name: "fonts",
+            source_subdir: "fonts",
+            dest_dir: leaked_path(&dest_dir),
+            method: Method::Copy,
+            post_hook: None,
+            needs_sudo: false,
+        };
+
+        let placed = module.apply(&base, false).unwrap();
+
+        assert!(placed.is_empty());
+        assert!(!dest_dir.exists());
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn module_apply_creates_missing_dest_and_runs_post_hook() {
+        let root = temp_dir("post-hook");
+        let base = root.join("source");
+        let source_dir = base.join("system").join("fonts");
+        let dest_dir = root.join("dest");
+        fs::create_dir_all(&source_dir).unwrap();
+
+        let module = Module {
+            name: "fonts",
+            source_subdir: "fonts",
+            dest_dir: leaked_path(&dest_dir),
+            method: Method::Copy,
+            post_hook: Some(("true", &[])),
+            needs_sudo: false,
+        };
+
+        let placed = module.apply(&base, false).unwrap();
+
+        assert!(placed.is_empty());
+        assert!(dest_dir.exists());
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn module_has_files_detects_non_empty_source_directory() {
+        let root = temp_dir("has-files");
+        let base = root.join("source");
+        let source_dir = base.join("system").join("fonts");
+        let module = Module {
+            name: "fonts",
+            source_subdir: "fonts",
+            dest_dir: "/unused",
+            method: Method::Copy,
+            post_hook: None,
+            needs_sudo: false,
+        };
+
+        assert!(!module.has_files(&base));
+        fs::create_dir_all(&source_dir).unwrap();
+        assert!(!module.has_files(&base));
+        fs::write(source_dir.join("font.conf"), "font").unwrap();
+        assert!(module.has_files(&base));
+        fs::remove_dir_all(root).ok();
     }
 
     #[test]

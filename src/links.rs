@@ -350,20 +350,182 @@ mod tests {
         for d in ["kitty", "git", "firefox"] {
             fs::create_dir_all(src.join("config").join(d)).unwrap();
         }
-        // a file (not a dir) under config/ must be ignored
         fs::write(src.join("config/loose.txt"), "x").unwrap();
-
         let mut patterns = BTreeMap::new();
         patterns.insert("config/*".to_string(), "~/.config/*".to_string());
         let exclude = vec!["config/firefox".to_string()];
-
         let out = expand_patterns(&patterns, &exclude, &src).unwrap();
-
         assert_eq!(out.get("config/kitty").unwrap(), "~/.config/kitty");
         assert_eq!(out.get("config/git").unwrap(), "~/.config/git");
-        assert!(!out.contains_key("config/firefox")); // excluded
-        assert!(!out.contains_key("config/loose.txt")); // not a dir
+        assert!(!out.contains_key("config/firefox"));
+        assert!(!out.contains_key("config/loose.txt"));
         fs::remove_dir_all(&src).ok();
+    }
+
+    #[test]
+    fn expand_patterns_rejects_patterns_without_wildcards() {
+        let src = temp_dir("expand-invalid");
+        let mut patterns = BTreeMap::new();
+        patterns.insert("config".to_string(), "~/.config/*".to_string());
+        let error = expand_patterns(&patterns, &[], &src).unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("Pattern must end with /*: config = ~/.config/*")
+        );
+        fs::remove_dir_all(src).ok();
+    }
+
+    #[test]
+    fn expand_patterns_ignores_missing_source_directory() {
+        let src = temp_dir("expand-missing");
+        let mut patterns = BTreeMap::new();
+        patterns.insert("config/*".to_string(), "~/.config/*".to_string());
+        let out = expand_patterns(&patterns, &[], &src).unwrap();
+        assert!(out.is_empty());
+        fs::remove_dir_all(src).ok();
+    }
+
+    #[test]
+    fn get_link_status_reports_missing_plain_wrong_and_ok() {
+        let root = temp_dir("status");
+        let source = root.join("source");
+        let other = root.join("other");
+        let dest = root.join("dest");
+        fs::create_dir_all(&source).unwrap();
+        fs::create_dir_all(&other).unwrap();
+        assert_eq!(get_link_status(&source, &dest), LinkStatus::Missing);
+        fs::write(&dest, "not a link").unwrap();
+        assert_eq!(get_link_status(&source, &dest), LinkStatus::NotASymlink);
+        fs::remove_file(&dest).unwrap();
+        symlink(&other, &dest).unwrap();
+        assert_eq!(
+            get_link_status(&source, &dest),
+            LinkStatus::WrongTarget {
+                current: other.clone()
+            }
+        );
+        fs::remove_file(&dest).unwrap();
+        symlink(&source, &dest).unwrap();
+        assert_eq!(get_link_status(&source, &dest), LinkStatus::Ok);
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn get_link_status_reports_broken_when_source_is_missing() {
+        let root = temp_dir("broken");
+        let missing_source = root.join("missing-source");
+        let dest = root.join("dest");
+
+        symlink(&missing_source, &dest).unwrap();
+        assert_eq!(
+            get_link_status(&missing_source, &dest),
+            LinkStatus::BrokenSymlink
+        );
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn create_symlink_makes_parent_and_replaces_existing_link() {
+        let root = temp_dir("create");
+        let source = root.join("source");
+        let old_source = root.join("old-source");
+        let existing_dest = root.join("existing").join("dest");
+        let missing_parent_dest = root.join("missing").join("dest");
+        fs::create_dir_all(&source).unwrap();
+        fs::create_dir_all(&old_source).unwrap();
+        fs::create_dir_all(existing_dest.parent().unwrap()).unwrap();
+        symlink(&old_source, &existing_dest).unwrap();
+        create_symlink(&source, &existing_dest, false).unwrap();
+        create_symlink(&source, &missing_parent_dest, false).unwrap();
+        assert_eq!(get_link_status(&source, &existing_dest), LinkStatus::Ok);
+        assert_eq!(
+            get_link_status(&source, &missing_parent_dest),
+            LinkStatus::Ok
+        );
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn create_symlink_dry_run_leaves_filesystem_unchanged() {
+        let root = temp_dir("create-dry");
+        let source = root.join("source");
+        let existing_source = root.join("existing-source");
+        let new_dest = root.join("nested").join("dest");
+        let existing_dest = root.join("existing").join("dest");
+        fs::create_dir_all(&source).unwrap();
+        fs::create_dir_all(&existing_source).unwrap();
+        fs::create_dir_all(existing_dest.parent().unwrap()).unwrap();
+        symlink(&existing_source, &existing_dest).unwrap();
+        create_symlink(&source, &new_dest, true).unwrap();
+        create_symlink(&source, &existing_dest, true).unwrap();
+        assert!(new_dest.symlink_metadata().is_err());
+        assert_eq!(
+            get_link_status(&existing_source, &existing_dest),
+            LinkStatus::Ok
+        );
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn apply_link_creates_missing_and_skips_existing_ok_link() {
+        let root = temp_dir("apply-link");
+        let source = root.join("source");
+        let dest = root.join("dest");
+        fs::create_dir_all(&source).unwrap();
+        let first = apply_link(&source, &dest, "source", false).unwrap();
+        let second = apply_link(&source, &dest, "source", false).unwrap();
+        assert!(matches!(first, ApplyOutcome::Created));
+        assert!(matches!(second, ApplyOutcome::Skipped));
+        assert_eq!(get_link_status(&source, &dest), LinkStatus::Ok);
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn apply_link_skips_missing_source_and_plain_destination() {
+        let root = temp_dir("apply-skip");
+        let missing_source = root.join("missing");
+        let existing_source = root.join("source");
+        let dest = root.join("dest");
+        fs::create_dir_all(&existing_source).unwrap();
+        fs::write(&dest, "plain file").unwrap();
+        let missing = apply_link(&missing_source, &dest, "missing", false).unwrap();
+        let blocked = apply_link(&existing_source, &dest, "source", false).unwrap();
+        assert!(matches!(missing, ApplyOutcome::Skipped));
+        assert!(matches!(blocked, ApplyOutcome::Skipped));
+        assert_eq!(fs::read_to_string(&dest).unwrap(), "plain file");
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn run_apply_creates_declared_links_and_prunes_orphans() {
+        let root = temp_dir("run-apply");
+        let source_dir = root.join("src");
+        let dest_dir = root.join("dest");
+        fs::create_dir_all(source_dir.join("keep")).unwrap();
+        fs::create_dir_all(source_dir.join("orphan")).unwrap();
+        fs::create_dir_all(&dest_dir).unwrap();
+        symlink(source_dir.join("orphan"), dest_dir.join("orphan")).unwrap();
+
+        let mut links = BTreeMap::new();
+        links.insert(
+            "keep".to_string(),
+            dest_dir.join("keep").to_string_lossy().to_string(),
+        );
+        let config = LinksConfig {
+            source_dir: source_dir.to_string_lossy().to_string(),
+            links,
+            patterns: BTreeMap::new(),
+            exclude: vec![],
+        };
+        run_apply(&config, &source_dir, false, true).unwrap();
+
+        assert_eq!(
+            get_link_status(&source_dir.join("keep"), &dest_dir.join("keep")),
+            LinkStatus::Ok
+        );
+        assert!(dest_dir.join("orphan").symlink_metadata().is_err());
+        fs::remove_dir_all(root).ok();
     }
 
     #[test]
@@ -394,7 +556,6 @@ mod tests {
             patterns: BTreeMap::new(),
             exclude: vec![],
         };
-
         let pruned = prune_orphans(&config, &src, false).unwrap();
         assert_eq!(pruned, 1);
         assert!(
@@ -434,7 +595,6 @@ mod tests {
             patterns: BTreeMap::new(),
             exclude: vec![],
         };
-
         let pruned = prune_orphans(&config, &src, true).unwrap();
         assert_eq!(pruned, 1); // counted
         assert!(
@@ -442,5 +602,148 @@ mod tests {
             "dry run kept orphan"
         );
         fs::remove_dir_all(&root).ok();
+    }
+
+    #[test]
+    fn run_status_counts_ok_and_problem_links() {
+        let root = temp_dir("status");
+        let src = root.join("src");
+        let home = root.join("home");
+        fs::create_dir_all(src.join("ok")).unwrap();
+        fs::create_dir_all(&home).unwrap();
+        symlink(src.join("ok"), home.join("ok")).unwrap();
+
+        let mut links = BTreeMap::new();
+        links.insert(
+            "ok".to_string(),
+            home.join("ok").to_string_lossy().to_string(),
+        );
+        links.insert(
+            "missing".to_string(),
+            home.join("missing").to_string_lossy().to_string(),
+        );
+        let config = LinksConfig {
+            source_dir: src.to_string_lossy().to_string(),
+            links,
+            patterns: BTreeMap::new(),
+            exclude: vec![],
+        };
+        run_status(&config, &src).unwrap();
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn run_check_accepts_all_ok_links() {
+        let root = temp_dir("check-ok");
+        let src = root.join("src");
+        let home = root.join("home");
+        fs::create_dir_all(src.join("ok")).unwrap();
+        fs::create_dir_all(&home).unwrap();
+        symlink(src.join("ok"), home.join("ok")).unwrap();
+
+        let mut links = BTreeMap::new();
+        links.insert(
+            "ok".to_string(),
+            home.join("ok").to_string_lossy().to_string(),
+        );
+        let config = LinksConfig {
+            source_dir: src.to_string_lossy().to_string(),
+            links,
+            patterns: BTreeMap::new(),
+            exclude: vec![],
+        };
+        run_check(&config, &src).unwrap();
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn run_check_reports_bad_links() {
+        let root = temp_dir("check-bad");
+        let src = root.join("src");
+        let home = root.join("home");
+        fs::create_dir_all(&src).unwrap();
+        fs::create_dir_all(&home).unwrap();
+
+        let mut links = BTreeMap::new();
+        links.insert(
+            "missing".to_string(),
+            home.join("missing").to_string_lossy().to_string(),
+        );
+        let config = LinksConfig {
+            source_dir: src.to_string_lossy().to_string(),
+            links,
+            patterns: BTreeMap::new(),
+            exclude: vec![],
+        };
+        let error = run_check(&config, &src).unwrap_err();
+        assert!(error.to_string().contains("Some symlinks are incorrect"));
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn run_apply_dry_run_counts_would_create_and_prune() {
+        let root = temp_dir("apply-dry-prune");
+        let src = root.join("src");
+        let home = root.join("home");
+        fs::create_dir_all(src.join("new")).unwrap();
+        fs::create_dir_all(src.join("orphan")).unwrap();
+        fs::create_dir_all(&home).unwrap();
+        symlink(src.join("orphan"), home.join("orphan")).unwrap();
+
+        let mut links = BTreeMap::new();
+        links.insert(
+            "new".to_string(),
+            home.join("new").to_string_lossy().to_string(),
+        );
+        let config = LinksConfig {
+            source_dir: src.to_string_lossy().to_string(),
+            links,
+            patterns: BTreeMap::new(),
+            exclude: vec![],
+        };
+        run_apply(&config, &src, true, true).unwrap();
+        assert!(home.join("orphan").symlink_metadata().is_ok());
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn points_into_handles_missing_plain_relative_and_absolute_links() {
+        let root = temp_dir("points-into");
+        let src = root.join("src");
+        let home = root.join("home");
+        fs::create_dir_all(src.join("target")).unwrap();
+        fs::create_dir_all(&home).unwrap();
+        let canon_source = src.canonicalize().unwrap();
+
+        assert!(!points_into(&home.join("missing"), &canon_source));
+
+        let plain = home.join("plain");
+        fs::write(&plain, "not a link").unwrap();
+        assert!(!points_into(&plain, &canon_source));
+
+        let relative = home.join("relative");
+        symlink("../src/target", &relative).unwrap();
+        assert!(points_into(&relative, &canon_source));
+
+        let outside = home.join("outside");
+        symlink(root.join("outside"), &outside).unwrap();
+        assert!(!points_into(&outside, &canon_source));
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn print_link_status_accepts_all_statuses() {
+        let dest = PathBuf::from("/tmp/dotfiles-print-status");
+
+        print_link_status(&dest, &LinkStatus::Ok);
+        print_link_status(&dest, &LinkStatus::Missing);
+        print_link_status(
+            &dest,
+            &LinkStatus::WrongTarget {
+                current: PathBuf::from("/tmp/other"),
+            },
+        );
+        print_link_status(&dest, &LinkStatus::NotASymlink);
+        print_link_status(&dest, &LinkStatus::BrokenSymlink);
     }
 }

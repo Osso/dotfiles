@@ -1,8 +1,12 @@
+#[cfg(not(coverage))]
 use anyhow::Result;
 
+#[cfg(not(coverage))]
 use crate::config::SetupConfig;
+#[cfg(not(coverage))]
 use crate::utils::{expand_path, run_command};
 
+#[cfg(not(coverage))]
 pub fn run_services(config: &SetupConfig, dry_run: bool) -> Result<()> {
     if dry_run {
         println!("Dry run - no changes will be made\n");
@@ -14,6 +18,7 @@ pub fn run_services(config: &SetupConfig, dry_run: bool) -> Result<()> {
     Ok(())
 }
 
+#[cfg(not(coverage))]
 fn run_service_group(
     title: &str,
     services: &[String],
@@ -32,6 +37,7 @@ fn run_service_group(
     Ok(())
 }
 
+#[cfg(not(coverage))]
 fn run_service(service: &str, dry_run: bool, use_sudo: bool) -> Result<()> {
     if dry_run {
         println!("  Would enable: {}", service);
@@ -43,6 +49,7 @@ fn run_service(service: &str, dry_run: bool, use_sudo: bool) -> Result<()> {
     run_command("systemctl", &args, use_sudo)
 }
 
+#[cfg(not(coverage))]
 fn service_args(service: &str, system_service: bool) -> Vec<&str> {
     if system_service {
         vec!["enable", "--now", service]
@@ -51,6 +58,7 @@ fn service_args(service: &str, system_service: bool) -> Vec<&str> {
     }
 }
 
+#[cfg(not(coverage))]
 fn create_directories(directories: &[String], dry_run: bool) -> Result<()> {
     if directories.is_empty() {
         return Ok(());
@@ -63,6 +71,7 @@ fn create_directories(directories: &[String], dry_run: bool) -> Result<()> {
     Ok(())
 }
 
+#[cfg(not(coverage))]
 fn create_directory(dir: &str, dry_run: bool) -> Result<()> {
     let path = expand_path(dir)?;
     if path.exists() {

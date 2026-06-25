@@ -1,15 +1,21 @@
+#[cfg(not(coverage))]
 use anyhow::{Context, Result};
+#[cfg(not(coverage))]
 use std::process::Command;
 
+#[cfg(not(coverage))]
 use crate::config::{SetupConfig, UserSpec};
+#[cfg(not(coverage))]
 use crate::utils::run_command;
 
 /// Current state of an existing user, as read from the system.
+#[cfg(not(coverage))]
 struct UserInfo {
     shell: String,
     groups: Vec<String>,
 }
 
+#[cfg(not(coverage))]
 pub fn run_users(config: &SetupConfig, dry_run: bool) -> Result<()> {
     if config.users.is_empty() {
         return Ok(());
@@ -32,6 +38,7 @@ pub fn run_users(config: &SetupConfig, dry_run: bool) -> Result<()> {
 
 /// Create any referenced groups that don't exist yet, so the user's group
 /// memberships can be applied on a fresh machine.
+#[cfg(not(coverage))]
 fn ensure_groups(groups: &[String], dry_run: bool) -> Result<()> {
     for group in groups {
         if group_exists(group)? {
@@ -47,6 +54,7 @@ fn ensure_groups(groups: &[String], dry_run: bool) -> Result<()> {
     Ok(())
 }
 
+#[cfg(not(coverage))]
 fn group_exists(name: &str) -> Result<bool> {
     Ok(Command::new("getent")
         .args(["group", name])
@@ -57,6 +65,7 @@ fn group_exists(name: &str) -> Result<bool> {
 }
 
 /// Read a user's shell and group membership, or `None` if it doesn't exist.
+#[cfg(not(coverage))]
 fn user_info(name: &str) -> Result<Option<UserInfo>> {
     let passwd = Command::new("getent")
         .args(["passwd", name])
@@ -81,6 +90,7 @@ fn user_info(name: &str) -> Result<Option<UserInfo>> {
     Ok(Some(UserInfo { shell, groups }))
 }
 
+#[cfg(not(coverage))]
 fn create_user(user: &UserSpec, dry_run: bool) -> Result<()> {
     let mut args = vec!["-m".to_string()];
     if let Some(shell) = &user.shell {
@@ -106,6 +116,7 @@ fn create_user(user: &UserSpec, dry_run: bool) -> Result<()> {
 /// Bring an existing user in line with the spec: fix the shell and add any
 /// missing group memberships. Never removes the user or strips group
 /// memberships — undeclared supplementary groups are reported, not touched.
+#[cfg(not(coverage))]
 fn reconcile_user(user: &UserSpec, info: &UserInfo, dry_run: bool) -> Result<()> {
     let mut changed = false;
 

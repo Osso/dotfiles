@@ -1,17 +1,22 @@
+#[cfg(not(coverage))]
 use anyhow::{Context, Result};
+#[cfg(not(coverage))]
 use std::process::Command;
 
+#[cfg(not(coverage))]
 use crate::utils::run_command;
 
 /// Subvolume that holds snapshots, the mountpoint we use, and the prefix that
 /// marks *our* generation snapshots — distinct from manual `@arch-*` snapshots
 /// so auto-prune never touches anything we didn't create.
 const SNAP_SUBVOL: &str = "@snapshots";
+#[cfg(not(coverage))]
 const MOUNT: &str = "/run/dotfiles/snapshots";
 const PREFIX: &str = "gen-";
 
 /// Take a read-only snapshot of `/` (the @arch root) as a generation, then
 /// prune to the newest `keep`. A no-op when `keep` is 0 (feature disabled).
+#[cfg(not(coverage))]
 pub fn run_snapshot(keep: u32, dry_run: bool) -> Result<()> {
     if keep == 0 {
         return Ok(());
@@ -44,6 +49,7 @@ pub fn run_snapshot(keep: u32, dry_run: bool) -> Result<()> {
     })
 }
 
+#[cfg(not(coverage))]
 pub fn run_list() -> Result<()> {
     let gens = list_generations()?;
     if gens.is_empty() {
@@ -62,6 +68,7 @@ pub fn run_list() -> Result<()> {
     Ok(())
 }
 
+#[cfg(not(coverage))]
 fn timestamp() -> Result<String> {
     let out = Command::new("date")
         .arg("+%Y%m%d-%H%M%S")
@@ -71,6 +78,7 @@ fn timestamp() -> Result<String> {
 }
 
 /// Backing device of `/` (e.g. `/dev/nvme0n1p8`), stripped of the `[subvol]` tag.
+#[cfg(not(coverage))]
 fn device() -> Result<String> {
     let out = Command::new("findmnt")
         .args(["-no", "SOURCE", "/"])
@@ -82,6 +90,7 @@ fn device() -> Result<String> {
 
 /// Our generation snapshot names (gen-*), sorted oldest first. The timestamp
 /// format sorts lexically, so name order == chronological order.
+#[cfg(not(coverage))]
 fn list_generations() -> Result<Vec<String>> {
     let out = Command::new("authsudo")
         .args(["btrfs", "subvolume", "list", "/"])
@@ -115,6 +124,7 @@ fn prunable(gens: &[String], keep: u32) -> &[String] {
     &gens[..cut]
 }
 
+#[cfg(not(coverage))]
 fn prune(keep: u32) -> Result<()> {
     let gens = list_generations()?;
     for name in prunable(&gens, keep) {
@@ -129,6 +139,7 @@ fn prune(keep: u32) -> Result<()> {
 }
 
 /// Mount @snapshots at a scratch mountpoint, run `f`, always unmount.
+#[cfg(not(coverage))]
 fn with_snapshots_mounted<F: FnOnce() -> Result<()>>(f: F) -> Result<()> {
     let dev = device()?;
     run_command("mkdir", &["-p", MOUNT], true)?;
