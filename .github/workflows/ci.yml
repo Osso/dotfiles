@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  shell-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check shell syntax
+        run: |
+          while IFS= read -r file; do
+            if head -n 1 "$file" | grep -Eq '^#!.*(bash|sh|zsh)'; then
+              bash -n "$file"
+            fi
+          done < <(git ls-files)
